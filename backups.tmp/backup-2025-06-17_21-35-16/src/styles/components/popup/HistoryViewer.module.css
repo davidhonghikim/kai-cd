@@ -1,0 +1,116 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.panel {
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  background-color: #1e1e1e;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid var(--background-primary);
+  gap: 15px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  white-space: nowrap;
+}
+
+.headerActions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+}
+
+.headerActions button,
+.importButton {
+  padding: 5px 10px;
+  border: 1px solid var(--background-primary);
+  background-color: var(--background-primary);
+  color: #eee;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.headerActions button:hover,
+.importButton:hover {
+  background-color: var(--background-primary);
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.content {
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.convoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--background-primary);
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.convoInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.convoInfo small {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.convoActions {
+  display: flex;
+  gap: 10px;
+}
+
+.convoActions button {
+  padding: 5px 10px;
+  border: 1px solid var(--background-primary);
+  background-color: var(--background-primary);
+  color: #eee;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.deleteButton {
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+} 

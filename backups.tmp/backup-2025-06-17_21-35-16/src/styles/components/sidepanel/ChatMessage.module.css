@@ -1,0 +1,117 @@
+.message {
+  display: flex;
+  align-items: flex-start;
+  max-width: 90%;
+  gap: 10px;
+}
+
+.messageContent {
+    padding: 10px 15px;
+    border-radius: 12px;
+    word-break: break-word;
+    flex-grow: 1;
+}
+
+.messageActions {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-top: 5px;
+}
+
+.messageActions button {
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 2px;
+}
+.messageActions button:hover {
+    color: var(--background-primary);
+}
+
+.user {
+  align-self: flex-end;
+}
+
+.user .messageContent {
+  background-color: var(--background-primary);
+  color: white;
+  border-bottom-right-radius: 2px;
+}
+
+.ai {
+  align-self: flex-start;
+}
+
+.ai .messageContent {
+  background-color: #3a3a3c;
+  color: #f0f0f0;
+  border-bottom-left-radius: 2px;
+}
+
+.codeBlock {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 10px 0;
+  border: 1px solid var(--background-primary);
+}
+
+.codeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  background-color: #2d2d2d;
+  font-size: 0.8rem;
+  color: #ccc;
+}
+
+.codeHeader span {
+  font-weight: bold;
+}
+
+.codeActions {
+    display: flex;
+    gap: 8px;
+}
+
+.codeActions button {
+  background: none;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.codeActions button:hover {
+    color: var(--background-primary);
+}
+
+.inlineCode {
+  background-color: #2d2d2d;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+pre {
+  margin: 0;
+  padding: 10px;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+}
+
+/* Markdown Styles */
+.message p {
+  margin: 0 0 10px 0;
+}
+.message p:last-child {
+  margin-bottom: 0;
+}
+
+.message ul, .message ol {
+  padding-left: 20px;
+} 

@@ -1,0 +1,290 @@
+.optionsPage {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--background-primary);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.header h1 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Make buttons a bit smaller in the header */
+.headerActions button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.primaryButton {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+}
+.primaryButton:hover {
+  background-color: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+}
+
+.secondaryButton {
+  background-color: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+}
+.secondaryButton:hover {
+  background-color: var(--background-tertiary);
+}
+
+.serviceListContainer {
+  flex-grow: 1;
+  overflow-y: auto; /* This is the key to fixing the scroll */
+  padding: 2rem;
+}
+
+.serviceList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.noServicesMessage {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--text-secondary);
+}
+
+.serviceItem {
+  background-color: var(--background-primary);
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid var(--background-primary);
+}
+
+.serviceHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.statusIndicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-color: #6c757d; /* unknown */
+}
+.statusIndicator.online { background-color: #28a745; }
+.statusIndicator.offline { background-color: #dc3545; }
+.statusIndicator.checking { background-color: #ffc107; }
+
+.statusMessage {
+    font-style: italic;
+    color: #aaa;
+    margin-top: -5px;
+    margin-bottom: 10px;
+}
+
+.serviceItem div:last-child {
+  display: flex;
+  gap: 10px;
+}
+
+.serviceItem button {
+   padding: 6px 10px;
+   border: 1px solid #555;
+   background-color: #3e3e3e;
+   color: #f0f0f0;
+   border-radius: 4px;
+   cursor: pointer;
+}
+
+.deleteButton {
+  background-color: #7d2a2a !important;
+}
+
+/* Form specific styles */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form input,
+.form select {
+  padding: 8px;
+  background-color: var(--background-primary);
+  border: 1px solid #555;
+  color: #f0f0f0;
+  border-radius: 4px;
+}
+
+.formActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.optionsContainer {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #343541;
+  border-radius: 8px;
+}
+
+.dangerButton {
+  background-color: #d9534f;
+  color: white;
+}
+.dangerButton:hover {
+  background-color: #c9302c;
+}
+
+.serviceInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.serviceName {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: var(--text-primary);
+}
+
+.serviceType {
+  color: var(--text-secondary);
+  font-size: 0.9em;
+}
+
+.statusDetails {
+  font-size: 0.8em;
+  color: #aaa;
+}
+
+.serviceActions {
+  display: flex;
+  gap: 10px;
+}
+
+.serviceActions button {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.serviceActions button:hover {
+  background-color: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+}
+.serviceActions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Modal Styles */
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: var(--background-primary);
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modelList {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+}
+
+.modelList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid var(--background-primary);
+}
+
+.defaultButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.5;
+}
+.defaultButtonActive {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: default;
+    opacity: 1;
+    color: #ffc107;
+}
+
+.errorText {
+    color: #d9534f;
+}
+
+.serviceItemWrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.dragHandle {
+  touch-action: none;
+  cursor: grab;
+  margin-right: 1rem;
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+}
+
+.serviceItemContainer {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+
+.checkbox {
+    margin-right: 1rem;
+    width: 18px;
+    height: 18px;
+} 

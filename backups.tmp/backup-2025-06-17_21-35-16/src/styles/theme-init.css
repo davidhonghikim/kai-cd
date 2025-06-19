@@ -1,0 +1,132 @@
+/* Theme initialization styles */
+:root {
+  color-scheme: light dark;
+}
+
+/* Force dark mode for specific elements */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+.dark button {
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.dark button:hover {
+  background-color: var(--background-tertiary);
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.dark .theme-card {
+  background-color: var(--background-primary);
+  border: 1px solid var(--border-color);
+}
+
+.dark .theme-button {
+  background-color: var(--accent-primary);
+  color: #ffffff;
+}
+
+.dark .theme-button:hover {
+  background-color: var(--accent-secondary);
+}
+
+/* Ensure all components inherit dark mode colors */
+.dark * {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+/* Override specific component backgrounds */
+.dark .modal,
+.dark .dialog,
+.dark .card,
+.dark .sidebar {
+  background-color: var(--background-primary);
+}
+
+.dark .modal-header,
+.dark .dialog-header,
+.dark .card-header,
+.dark .sidebar-header {
+  background-color: var(--background-secondary);
+}
+
+.dark .modal-body,
+.dark .dialog-body,
+.dark .card-body {
+  background-color: var(--background-primary);
+}
+
+.dark .modal-footer,
+.dark .dialog-footer,
+.dark .card-footer {
+  background-color: var(--background-secondary);
+}
+
+/* Table styles */
+.dark table {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+.dark th {
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.dark td {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dark tr:hover {
+  background-color: var(--background-secondary);
+}
+
+/* Code block styles */
+.dark pre,
+.dark code {
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+/* List styles */
+.dark ul,
+.dark ol {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+.dark li {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+/* Scrollbar styles */
+.dark ::-webkit-scrollbar-track {
+  background: var(--background-primary);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--background-tertiary);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--border-color);
+} 

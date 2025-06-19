@@ -1,0 +1,47 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: var(--background-primary);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+  
+.titleContainer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    overflow: hidden;
+}
+
+.title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+}
+  
+.modelSelector {
+    max-width: 200px;
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.switchButton {
+    background-color: var(--background-tertiary);
+    color: var(--background-primary);
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+  
+.switchButton:hover {
+    background-color: var(--background-primary);
+    color: white;
+    border-color: var(--background-primary);
+} 

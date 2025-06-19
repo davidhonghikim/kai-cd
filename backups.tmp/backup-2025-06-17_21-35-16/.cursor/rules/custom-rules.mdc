@@ -1,0 +1,7 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+do not use edit_tool
+use temp file swap, using grep and sed

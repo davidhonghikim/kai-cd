@@ -1,0 +1,144 @@
+/* Overall App Container */
+.appContainer {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--background-primary);
+  color: var(--background-primary);
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  width: 240px;
+  background-color: var(--background-primary);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color);
+  padding: 1rem;
+  flex-shrink: 0;
+}
+
+.sidebarHeader {
+  margin-bottom: 1rem;
+}
+
+.newChatButton {
+  width: 100%;
+  padding: 0.75rem;
+  font-weight: 600;
+}
+
+.chatHistory {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.historyTitle {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.sidebarFooter {
+  margin-top: 1rem;
+}
+
+.settingsButton {
+  width: 100%;
+  background-color: var(--background-tertiary);
+}
+
+/* --- Main Chat Area --- */
+.mainChatArea {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.conversationArea {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.message {
+  max-width: 80%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius-md);
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.userMessage {
+  background-color: var(--background-primary);
+  color: white;
+  margin-left: auto;
+  border-bottom-right-radius: var(--border-radius-sm);
+}
+
+.aiMessage {
+  background-color: var(--background-primary);
+  color: var(--background-primary);
+  margin-right: auto;
+  border-bottom-left-radius: var(--border-radius-sm);
+}
+
+.inputArea {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--background-primary);
+  display: flex;
+  gap: 1rem;
+}
+
+.textInput {
+  flex-grow: 1;
+  background-color: var(--background-primary);
+  color: var(--background-primary);
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  resize: none; /* Disable manual resizing */
+  line-height: 1.5;
+  max-height: 150px; /* Max height before scrolling */
+  overflow-y: auto; /* Show scrollbar when content exceeds max-height */
+}
+
+.textInput:focus {
+  outline: none;
+}
+
+.sendButton {
+  flex-shrink: 0;
+}
+
+/* Panel-specific adjustments */
+.panel .sidebar {
+  display: none; /* Hide sidebar completely in panel view for now */
+}
+
+.panel {
+  grid-template-columns: 1fr; /* Single column for panel */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none; /* Hide sidebar on smaller screens */
+  }
+  .appContainer {
+    grid-template-columns: 1fr; /* Full width chat area */
+  }
+}
+
+.modelSelector {
+  background-color: #202123;
+  color: #ececec;
+  border: 1px solid #565869;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 0.9em;
+} 

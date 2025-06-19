@@ -1,0 +1,76 @@
+/* src/popup/components/ImageGenQuickForm.module.css */
+
+.quickForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.promptGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--background-primary);
+}
+
+.textarea {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: 1rem;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: auto; /* Pushes the button to the bottom */
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.stopButton {
+  background-color: #dc3545;
+}
+
+.stopButton:hover {
+  background-color: #c82333;
+}
+
+.artifactPreview {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.artifactPreview img {
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+} 

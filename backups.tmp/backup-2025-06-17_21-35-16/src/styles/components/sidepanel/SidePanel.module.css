@@ -1,0 +1,284 @@
+/* Overall App Container */
+.appContainer {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: 100vh;
+  width: 100%;
+  background-color: #343541;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  background-color: #202123;
+  color: #ececec;
+  height: 100%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebarHeader {
+  padding: 10px;
+}
+
+.newChatButton {
+  width: 100%;
+  padding: 10px;
+  background-color: #343541;
+  color: #ececec;
+  border: 1px solid #565869;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  text-align: left;
+}
+
+.newChatButton:hover {
+  background-color: #40414f;
+}
+
+.chatHistory {
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.historyTitle {
+  font-size: 0.8em;
+  color: #8e8ea0;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.chatHistory ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.historyItem {
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.historyItem:hover {
+  background-color: #343541;
+}
+
+.sidebarFooter {
+  padding: 10px;
+  border-top: 1px solid #343541;
+}
+
+.settingsButton {
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: none;
+  color: #ececec;
+  text-align: left;
+  cursor: pointer;
+}
+
+.settingsButton:hover {
+  background-color: #343541;
+}
+
+
+/* --- Main Chat Area --- */
+.mainChatArea {
+  background-color: #343541;
+  color: #ececec;
+  height: 100vh;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatHeader {
+  padding: 20px;
+  border-bottom: 1px solid #202123;
+}
+
+.chatTitle {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.conversationArea {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  max-width: 80%;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.aiMessage {
+  background-color: var(--background-primary)654;
+  align-self: flex-start;
+}
+
+.userMessage {
+  background-color: #202123;
+  margin-left: auto;
+}
+
+.inputArea {
+  display: flex;
+  padding: 20px;
+  border-top: 1px solid #202123;
+}
+
+.textInput {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #565869;
+  background-color: #40414f;
+  color: #ececec;
+  font-size: 1em;
+}
+
+.sendButton {
+  margin-left: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #10a37f;
+  color: white;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.sendButton:hover {
+  background-color: #0d8c6c;
+}
+
+.sidePanel {
+  height: 100vh;
+  width: 100%;
+  background-color: #202123;
+  color: #ececec;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+}
+
+.iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.promptForm {
+  display: flex;
+  gap: 5px;
+  padding: 10px;
+  border-top: 1px solid var(--background-primary);
+  background-color: var(--background-primary);
+}
+
+.promptControls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 30px;
+}
+
+.navArrow {
+    background-color: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.promptControls:hover .navArrow {
+    opacity: 1;
+}
+
+.navArrow:hover {
+    color: var(--background-primary);
+}
+
+.navArrow.hidden {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.promptInput {
+  flex-grow: 1;
+  padding: 10px;
+  background-color: var(--background-primary);
+  border: 1px solid #555;
+  color: #f0f0f0;
+  border-radius: 5px;
+  resize: vertical;
+  min-height: 40px;
+  max-height: 200px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.utilityButton {
+  background: none;
+  border: none;
+  color: #f0f0f0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+}
+.utilityButton:hover {
+    background-color: var(--background-primary);
+    border-radius: 4px;
+}
+
+.errorText {
+    color: #dc3545;
+}
+
+.modelList {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.modelList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid var(--background-primary);
+}
+
+.modelList li.defaultModel {
+    background-color: var(--background-primary)20;
+}
+
+.modelList button {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+} 

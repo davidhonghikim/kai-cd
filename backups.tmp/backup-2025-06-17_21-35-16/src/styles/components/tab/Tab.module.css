@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-primary);
+  color: #f0f0f0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: var(--background-primary);
+  border-bottom: 1px solid var(--background-primary);
+  flex-shrink: 0;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.header a {
+  color: #0099ff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.iframe {
+  flex-grow: 1;
+  border: none;
+} 

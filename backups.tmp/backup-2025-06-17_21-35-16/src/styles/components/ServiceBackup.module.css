@@ -1,0 +1,182 @@
+.container {
+  padding: 1.5rem;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.createButton,
+.exportButton,
+.importButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.createButton {
+  background-color: var(--primary);
+  color: white;
+}
+
+.createButton:hover {
+  background-color: var(--primary-dark);
+}
+
+.createButton:disabled {
+  background-color: var(--disabled);
+  cursor: not-allowed;
+}
+
+.exportButton {
+  background-color: var(--info);
+  color: white;
+}
+
+.exportButton:hover {
+  background-color: var(--info-dark);
+}
+
+.exportButton:disabled {
+  background-color: var(--disabled);
+  cursor: not-allowed;
+}
+
+.importButton {
+  background-color: var(--warning);
+  color: white;
+  display: inline-block;
+  text-align: center;
+}
+
+.importButton:hover {
+  background-color: var(--warning-dark);
+}
+
+.importButton:disabled {
+  background-color: var(--disabled);
+  cursor: not-allowed;
+}
+
+.backupsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.emptyMessage {
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--background-tertiary);
+  border-radius: 4px;
+}
+
+.backupItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--background-tertiary);
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.backupItem:hover {
+  background-color: var(--background-hover);
+}
+
+.backupInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.backupName {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.backupDate {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.backupActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.restoreButton {
+  padding: 0.375rem 0.75rem;
+  background-color: var(--success);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.restoreButton:hover {
+  background-color: var(--success-dark);
+}
+
+.restoreButton:disabled {
+  background-color: var(--disabled);
+  cursor: not-allowed;
+}
+
+.deleteButton {
+  padding: 0.375rem 0.75rem;
+  background-color: var(--error);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.deleteButton:hover {
+  background-color: var(--error-dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: var(--background-secondary-dark);
+  }
+
+  .emptyMessage {
+    background-color: var(--background-tertiary-dark);
+  }
+
+  .backupItem {
+    background-color: var(--background-tertiary-dark);
+  }
+
+  .backupItem:hover {
+    background-color: var(--background-hover-dark);
+  }
+} 

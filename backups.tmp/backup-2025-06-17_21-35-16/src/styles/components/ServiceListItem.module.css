@@ -1,0 +1,58 @@
+.serviceItem {
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--box-shadow-sm);
+  font-size: 17px;
+  color: var(--text-primary);
+  padding: 18px 24px;
+  margin-bottom: 18px;
+  gap: 18px;
+}
+.summary {
+  display: flex;
+  align-items: center;
+  min-height: 80px;
+  padding: 0 20px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+}
+.serviceName {
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+.serviceType {
+  font-size: 14px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+.summaryActions button {
+  background: var(--accent-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 20px;
+  margin: 0 8px;
+}
+.details {
+  padding: 24px;
+  background: var(--background-tertiary);
+  border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+} 

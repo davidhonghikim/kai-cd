@@ -1,0 +1,32 @@
+# 00_Index.md
+# ChatDemon Project Documentation (Table of Contents)
+**Title:** Table of Contents
+
+This document outlines the complete plan for developing ChatDemon, a browser extension designed to manage and integrate various AI services. It's structured for use by both human developers and coding agents.
+
+*   [01_ProjectOverview.md: Project Overview and Goals](01_ProjectOverview.md)
+*   [02_ArchitectureTechStack.md: Architecture and Tech Stack](02_ArchitectureTechStack.md)
+*   [03_DevelopmentTesting.md: Development and Testing](03_DevelopmentTesting.md)
+*   [04_UserGuide.md: User Guide](04_UserGuide.md)
+*   [05_AgentProtocol.md: Agent Protocol](05_AgentProtocol.md)
+*   [06_BackupMaintenance.md: Backup and Maintenance](06_BackupMaintenance.md)
+*   [07_ContributingGuide.md: Contributing Guide](07_ContributingGuide.md)
+*   [08_ReleaseProcess.md: Release Process](08_ReleaseProcess.md)
+*   [09_Troubleshooting.md: Troubleshooting Guide](09_Troubleshooting.md)
+*   [10_Shortcuts.md: Shortcuts](10_Shortcuts.md)
+*   [11_DevelopmentResources.md: Development Resources](11_DevelopmentResources.md)
+*   [12_BestPractices.md: Best Practices](12_BestPractices.md)
+*   [13_RefactorPlan.md: Refactor Plan](13_RefactorPlan.md)
+*   [14_ProjectManagement.md: Project Management](14_ProjectManagement.md)
+*   [15_UpdateGuide.md: Update Guide](15_UpdateGuide.md)
+*   [16_ServicesLLMs.md: Service Integration Guide - LLMs](16_ServicesLLMs.md)
+*   [17_ServicesImageGen.md: Service Integration Guide - Image Generation](17_ServicesImageGen.md)
+*   [18_ServicesAutomation.md: Service Integration Guide - Automation](18_ServicesAutomation.md)
+*   [19_ServicesVectorSearch.md: Service Integration Guide - Vector Search](19_ServicesVectorSearch.md)
+*   [20_ProjectStructure.md: Project Structure](20_ProjectStructure.md)
+*   [22_AgentJournal.md: Agent Journal](22_AgentJournal.md)
+*   [23_CurrentIssues.md: Current Issues](23_CurrentIssues.md)
+*   [24_ROADMAP.md: Roadmap](24_ROADMAP.md)
+*   [25_AdvancedSettings.md: Advanced Settings](25_AdvancedSettings.md)
+*   [24_ProjectLogicAndAgentOnboarding.md: Project Logic & Agent Onboarding Guide](24_ProjectLogicAndAgentOnboarding.md)
+*   [24_ProjectLogicAndAgentOnboarding.mmd: Project Architecture Mermaid Diagram](24_ProjectLogicAndAgentOnboarding.mmd)

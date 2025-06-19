@@ -1,1 +1,26 @@
-{\n  "manifest_version": 3,\n  "name": "Kai-CD",\n  "version": "0.1.0",\n  "description": "AI service bridge & chat extension",\n  "action": { "default_popup": "index.html" },\n  "background": { "service_worker": "src/background/index.ts", "type": "module" },\n  "permissions": ["storage"],\n  "host_permissions": ["http://*/*", "https://*/*" ]\n}
+{
+  "manifest_version": 3,
+  "name": "kai-cd",
+  "version": "0.0.1",
+  "description": "A modular, portable, high-performance Chrome Extension for managing multiple AI services.",
+  "permissions": [
+    "storage",
+    "sidePanel"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+} 
