@@ -75,7 +75,7 @@ const chatParameters: ParameterDefinition[] = [
 	}
 ];
 
-const LlmChat: LlmChatCapability = {
+const llmChatCapability: LlmChatCapability = {
 	capability: 'llm_chat',
 	endpoints: {
 		chat: {
@@ -104,5 +104,5 @@ export const anthropicDefinition: ServiceDefinition = {
 		keyName: 'x-api-key',
 		help: 'Get your API key from the Anthropic Console.'
 	},
-	capabilities: [LlmChat, models]
+	capabilities: [llmChatCapability]
 }; 

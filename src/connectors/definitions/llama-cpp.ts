@@ -55,7 +55,8 @@ const llmChatParameters: ParameterDefinition[] = [
 const llmChatCapability: LlmChatCapability = {
   capability: 'llm_chat',
   endpoints: {
-    chat: { path: '/v1/chat/completions', method: 'POST' }
+    chat: { path: '/v1/chat/completions', method: 'POST' },
+    getModels: { path: '/v1/models', method: 'GET' },
   },
   parameters: {
     chat: llmChatParameters
@@ -76,16 +77,4 @@ const LlamaCppDefinition: ServiceDefinition = {
   defaultPort: 8000
 };
 
-export const llamaCppDefinition: ServiceDefinition = {
-  type: 'llama-cpp',
-  name: 'Llama.cpp',
-  category: SERVICE_CATEGORIES.LLM,
-  docs: {
-    api: 'https://github.com/abetlen/llama-cpp-python#openai-compatible-web-server'
-  },
-  authentication: {
-    type: 'none'
-  },
-  capabilities: [llmChatCapability],
-  defaultPort: 8000
-}; 
+export const llamaCppDefinition: ServiceDefinition = LlamaCppDefinition; 

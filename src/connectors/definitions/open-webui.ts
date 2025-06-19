@@ -5,6 +5,7 @@ const llmChatCapability: LlmChatCapability = {
   capability: 'llm_chat',
   endpoints: {
     chat: { path: '/api/chat/completions', method: 'POST' },
+    getModels: { path: '/api/models', method: 'GET' },
   },
   parameters: {
     chat: [

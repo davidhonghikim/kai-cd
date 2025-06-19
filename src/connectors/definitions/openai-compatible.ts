@@ -4,7 +4,8 @@ import { SERVICE_CATEGORIES } from '../../config/constants';
 const llmChatCapability: LlmChatCapability = {
   capability: 'llm_chat',
   endpoints: {
-    chat: { path: '/v1/chat/completions', method: 'POST' }
+    chat: { path: '/v1/chat/completions', method: 'POST' },
+    getModels: { path: '/v1/models', method: 'GET' },
   },
   parameters: {
     chat: [
