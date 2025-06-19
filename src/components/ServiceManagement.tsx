@@ -120,15 +120,6 @@ const ServiceManagerCore: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    services.forEach(service => {
-        if (service.enabled && !status[service.id]) {
-            handleCheckStatus(service);
-        }
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [services]); 
-
   const onDragEnd = (result: any) => {
     // This functionality is temporarily disabled until a React 19 compatible library is found.
     toast.error('Reordering is currently disabled.');
@@ -192,25 +183,20 @@ const ServiceManagerCore: React.FC = () => {
   };
 
     return (
-        <div className="p-4 h-full flex flex-col">
-            <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-semibold text-slate-100">Configure Services</h3>
-                 <div className="flex items-center gap-2">
-                    <button onClick={handleExportServices} className="px-3 py-2 text-sm bg-slate-700 rounded-md hover:bg-slate-600" title="Export service configurations">Export</button>
-                    <input type="file" id="import-services" className="hidden" onChange={handleImportServices} accept=".json" />
-                    <label htmlFor="import-services" className="cursor-pointer px-3 py-2 text-sm bg-slate-700 rounded-md hover:bg-slate-600" title="Import service configurations">Import</label>
-                    <button onClick={handleAddClick} className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700" title="Add new service">Add New Service</button>
-                </div>
-            </div>
-
+        <div className="p-4 md:p-6 h-full flex flex-col">
             {isFormOpen && (
-                <div className="mb-4">
-                    <AddServiceForm onClose={handleCloseForm} serviceToEdit={serviceToEdit} />
+                <div className="mb-4 fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+                    <div className="bg-slate-800 rounded-lg shadow-2xl w-full max-w-2xl">
+                         <AddServiceForm onClose={handleCloseForm} serviceToEdit={serviceToEdit} />
+                    </div>
                 </div>
             )}
-
-            <div className="flex-grow overflow-y-auto pr-2 max-w-4xl w-full mx-auto">
+            
+            <div className="flex-grow overflow-y-auto pr-2">
                 <div className="space-y-4">
+                    <div className="flex justify-end mb-4">
+                        <button onClick={handleAddClick} className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700" title="Add new service">Add New Service</button>
+                    </div>
                     {services.map((service, index) => (
                     <div key={service.id} className="bg-slate-800 rounded-lg shadow-md transition-all hover:shadow-lg">
                         <div className="flex items-center p-4">

@@ -3,37 +3,27 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DocsIndex from './DocsIndex';
 import { docModules, getDocKey } from './doc-loader';
+import { logger } from '../utils/logger';
 
 const DocsViewer: React.FC = () => {
   const [docParam, setDocParam] = useState('00_Index');
   const [content, setContent] = useState('');
 
   useEffect(() => {
-    // One-time log to inspect the structure of the imported modules.
-    console.log('[DocsViewer] Inspecting docModules:', docModules);
-  }, []); // Runs only once on component mount
-
-  useEffect(() => {
-    console.log(`[DocsViewer] useEffect triggered for docParam: "${docParam}"`);
     const key = getDocKey(docParam);
-    console.log(`[DocsViewer] Looking for document with key: "${key}"`);
-    
     const module = (docModules as Record<string, { default: string }>)[key];
-    console.log(`[DocsViewer] Found module:`, module);
     
     if (module && typeof module.default === 'string') {
-        const newContent = module.default;
-        console.log(`[DocsViewer] Found content of length: ${newContent.length}`);
-        setContent(newContent);
+        setContent(module.default);
+        logger.log(`[DocsViewer] Successfully loaded: ${key}`);
     } else {
-        console.error(`[DocsViewer] Document module not found or malformed for key: "${key}"`);
-        console.log('[DocsViewer] Available keys:', Object.keys(docModules));
+        logger.error(`[DocsViewer] Failed to load document for key: "${key}"`);
         setContent('# 404\nDocument not found. Please check the console for a list of available documents.');
     }
   }, [docParam]);
   
   const handleSelect = (docName: string) => {
-    console.log(`Selected doc: ${docName}`);
+    logger.log(`[DocsViewer] Navigating to: ${docName}`);
     setDocParam(docName);
   };
 
@@ -42,7 +32,6 @@ const DocsViewer: React.FC = () => {
       const targetDoc = href.replace('./', '').replace('.md', '');
       const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
-        console.log(`[LinkRenderer] Intercepted click for doc: ${targetDoc}`);
         handleSelect(targetDoc);
       };
       return (

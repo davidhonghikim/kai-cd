@@ -16,6 +16,7 @@ import type { TabView } from '../store/viewStateStore';
 const Tab: React.FC = () => {
   const { services, selectedServiceId, setSelectedServiceId } = useServiceStore();
   const [activeKey, setActiveKey] = useState<TabView>('chat');
+  const [initialStateLoaded, setInitialStateLoaded] = useState(false);
 
   useEffect(() => {
     const getInitialState = async () => {
@@ -38,22 +39,25 @@ const Tab: React.FC = () => {
 
       } catch (error) {
         console.error('Failed to get initial state from storage', error);
+      } finally {
+        setInitialStateLoaded(true);
       }
     };
 
     getInitialState();
-  }, []);
+  }, [setSelectedServiceId]);
 
   useEffect(() => {
     // When the chat tab is active, ensure a chat service is selected.
-    if (activeKey === 'chat' && !selectedServiceId) {
+    // This should only run AFTER the initial state has been loaded from storage.
+    if (initialStateLoaded && activeKey === 'chat' && !selectedServiceId) {
         const firstChatService = services.find(s => s.enabled && s.capabilities.some(c => c.capability === 'llm_chat'));
         if (firstChatService) {
             console.log(`[Tab] No chat service selected. Defaulting to first available: ${firstChatService.name}`);
             setSelectedServiceId(firstChatService.id);
         }
     }
-  }, [activeKey, services, selectedServiceId, setSelectedServiceId]);
+  }, [activeKey, services, selectedServiceId, setSelectedServiceId, initialStateLoaded]);
 
   const navItems: { name: TabView; icon: React.FC<any> }[] = [
     { name: 'chat', icon: CommandLineIcon },

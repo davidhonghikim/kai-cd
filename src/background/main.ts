@@ -1,5 +1,5 @@
-import { initializeInAppLogger } from "../utils/logger";
+import { overrideGlobalConsole } from "../utils/logger";
 
-initializeInAppLogger();
+overrideGlobalConsole();
 
 console.log('kai-cd background script loaded.'); 

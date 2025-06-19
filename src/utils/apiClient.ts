@@ -1,6 +1,7 @@
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { useServiceStore } from '../store/serviceStore';
 import type { AuthDefinition } from '../types';
+import { logger } from './logger';
 
 interface ApiClientOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -103,16 +104,27 @@ class ApiClient {
     signal?: AbortSignal
   ): AsyncGenerator<string> {
     const fullUrl = `${baseUrl.replace(/\/$/, '')}${path}`;
+    const headers = this.getHeaders(auth);
+    
+    logger.log('[apiClient.postStream] Attempting to stream from URL:', fullUrl);
+    logger.log('[apiClient.postStream] With headers:', headers);
+    logger.log('[apiClient.postStream] With body:', payload);
+
     try {
       const response = await fetch(fullUrl, {
         method: 'POST',
-        headers: this.getHeaders(auth),
+        headers: headers,
         body: JSON.stringify(payload),
         signal: signal,
       });
 
       if (!response.ok) {
         const errorText = await response.text();
+        logger.error('[apiClient.postStream] Network response was not ok.', {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText
+        });
         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
       
@@ -128,11 +140,8 @@ class ApiClient {
         yield decoder.decode(value);
       }
     } catch (error) {
-      if ((error as Error).name === 'AbortError') {
-        console.log('Stream fetch aborted');
-        toast.success('Request stopped.');
-      } else {
-        console.error('Streaming failed:', error);
+      if ((error as Error).name !== 'AbortError') {
+        logger.error('Streaming failed:', error);
         toast.error(`Streaming failed: ${(error as Error).message}`);
       }
       throw error;
