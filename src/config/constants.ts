@@ -8,7 +8,7 @@ export const SERVICE_CATEGORIES = {
   SYSTEM: 'System',
 };
 
-export const KAI_VERSION = '0.1.0';
+export const KAI_VERSION = '0.2.0';
 
 export const VIEW_STATES = {
   CHAT: 'Chat',

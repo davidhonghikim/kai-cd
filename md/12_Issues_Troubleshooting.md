@@ -163,3 +163,17 @@ Chrome loads these assets **relative to the extension root** at runtime, so they
 3. **MV3 service-worker file name** – background script must be named exactly as referenced in the manifest; our config emits `background.js` via the output hook.
 
 Keeping these five elements aligned prevents the "Side panel file path must exist" / "Could not load manifest" errors that plagued earlier builds. 
+
+## Current Known Issues (v0.2.0)
+
+While the recent refactor stabilized the UI and core functionality, several areas require attention:
+
+-   **Popup UI/UX:** The popup window (`popup.html`) has some minor layout issues (e.g., scrollbars appearing unnecessarily) and the UX for button interactions could be improved.
+-   **Side Panel Behavior:** The side panel does not currently persist its state effectively. Switching between services or views can sometimes close it unexpectedly. The goal is for the panel to be a persistent, stateful workspace.
+-   **Documentation Viewer:** While the main viewer loads, internal navigation links within the markdown files do not work as expected. The viewer needs a more robust solution for handling relative links between documents.
+-   **UI Control Redundancy:** A review of the main tab and popup UIs is needed to identify and streamline any redundant or confusing buttons and links. The goal is to simplify the user flow.
+-   **Dark Theme Application:** The dark theme is not always applied consistently or automatically based on system settings, particularly in the side panel and popup.
+
+## Common Problems
+
+### Service Connection Errors

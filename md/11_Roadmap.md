@@ -116,4 +116,29 @@ Description: Implement the testing strategy outlined in `04_DevelopmentTesting.m
 - [ ] Comprehensive Testing & Bug Fixing
 - [ ] Performance Optimization
 - [ ] Documentation & Onboarding Guides
-- [ ] Chrome Web Store Submission 
+- [ ] Chrome Web Store Submission
+
+## Version 0.2.x - The Manager Update
+
+With the core UI architecture stabilized in v0.2.0, the next cycle will focus on building out the management interfaces introduced in the "Services" tab.
+
+-   **Implement Prompt Manager:**
+    -   Design and build a UI for creating, editing, and organizing prompts.
+    -   Allow prompts to be tagged and categorized.
+    -   Connect the Prompt Manager to the `LlmChatView` so users can easily select and use saved prompts.
+
+-   **Implement Artifacts Manager:**
+    -   Design and build a UI for viewing and managing generated content (e.g., images from `a1111`/`ComfyUI`, chat logs).
+    -   Allow artifacts to be saved, downloaded, and deleted.
+    -   Provide filtering and searching capabilities.
+
+-   **Address Known Issues:**
+    -   Work through the list of known UI/UX issues documented in `12_Issues_Troubleshooting.md` to improve the overall polish and usability of the extension.
+
+## Future Ideas (Post 0.2.x)
+
+-   **Advanced Automation Workflows:** Move beyond simple n8n/Huginn integration to a more visual workflow builder directly within the extension.
+-   **Collaborative Features:** Introduce a way to share service configurations, prompts, and workflows with team members.
+-   **Model Fine-Tuning Interface:** Provide a UI for initiating and monitoring model fine-tuning jobs through services like `LLM Studio`.
+-   **Usage Analytics:** Add a dashboard to track token usage, generation times, and other metrics across different services.
+-   **Expanded Service Support:** Continue to add definitions for new and popular self-hosted services. 
