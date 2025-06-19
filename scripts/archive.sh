@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script creates a compressed archive of the project.
+# This script creates a compressed archive of the project and maintains an index.
 # It excludes common development directories and accepts notes as an argument.
 
 # --- Configuration ---
@@ -10,6 +10,7 @@ ARCHIVE_DIR="archives"
 
 # Temporary file for archive notes
 NOTES_FILE="archive_notes.md"
+INDEX_FILE="$ARCHIVE_DIR/INDEX.md"
 
 # --- Argument Check ---
 if [ -z "$1" ]; then
@@ -62,7 +63,31 @@ tar --exclude=".git" \
 # Clean up the temporary notes file
 rm "$NOTES_FILE"
 
-echo "Archive created successfully!"
+# --- Indexing ---
+echo "Updating archive index: $INDEX_FILE"
+
+# Create the index file with a header if it doesn't exist
+if [ ! -f "$INDEX_FILE" ]; then
+  echo "# Project Archives" > "$INDEX_FILE"
+  echo "" >> "$INDEX_FILE"
+fi
+
+# Append the new archive's information to the index
+{
+  echo "---"
+  echo ""
+  echo "## Archive: \`$ARCHIVE_FILENAME\`"
+  echo ""
+  echo "**Created:** $(date)"
+  echo ""
+  echo "### Notes:"
+  echo '```'
+  echo "$NOTES_CONTENT"
+  echo '```'
+  echo ""
+} >> "$INDEX_FILE"
+
+echo "Archive created and indexed successfully!"
 echo "Path: $ARCHIVE_PATH"
 
 exit 0 
