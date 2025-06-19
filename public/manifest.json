@@ -1,0 +1,1 @@
+{\n  "manifest_version": 3,\n  "name": "Kai-CD",\n  "version": "0.1.0",\n  "description": "AI service bridge & chat extension",\n  "action": { "default_popup": "index.html" },\n  "background": { "service_worker": "src/background/index.ts", "type": "module" },\n  "permissions": ["storage"],\n  "host_permissions": ["http://*/*", "https://*/*" ]\n}
