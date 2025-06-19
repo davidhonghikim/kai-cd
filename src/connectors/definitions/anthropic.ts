@@ -1,5 +1,21 @@
-import type { ServiceDefinition, LlmChatCapability, ParameterDefinition } from '../../types';
+import type {
+	ServiceDefinition,
+	LlmChatCapability,
+	ModelManagementCapability,
+	ParameterDefinition
+} from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+
+const models: ModelManagementCapability = {
+	capability: 'model_management',
+	endpoints: {
+		list: {
+			path: '/v1/models',
+			method: 'GET'
+		}
+	},
+	parameters: {}
+};
 
 const chatParameters: ParameterDefinition[] = [
 	{
@@ -7,54 +23,61 @@ const chatParameters: ParameterDefinition[] = [
 		label: 'Model',
 		type: 'select',
 		defaultValue: 'claude-3-haiku-20240307',
-		description: 'The model to use for the chat.',
-		optionsEndpoint: 'getModels',
+		description: 'The model that will complete your prompt.',
+		optionsEndpoint: 'list',
 		optionsPath: 'data',
 		optionsValueKey: 'id',
 		optionsLabelKey: 'id'
 	},
 	{
-		key: 'system',
-		label: 'System Prompt',
-		type: 'string',
-		defaultValue: '',
-		description:
-			'A system prompt is a way of providing context and instructions to Claude, such as specifying a particular goal or role.'
+		key: 'max_tokens',
+		label: 'Max Tokens',
+		type: 'number',
+		defaultValue: 1024,
+		description: 'The maximum number of tokens to generate before stopping.',
+		range: [1, 4096],
+		step: 1
 	},
 	{
 		key: 'temperature',
 		label: 'Temperature',
 		type: 'number',
-		defaultValue: 1,
-		range: [0, 1],
-		step: 0.1,
-		description: 'Amount of randomness injected into the response. Defaults to 1.0.'
+		defaultValue: 1.0,
+		description: 'Amount of randomness injected into the response.',
+		range: [0.0, 1.0],
+		step: 0.01
 	},
 	{
-		key: 'max_tokens',
-		label: 'Max Tokens',
+		key: 'top_p',
+		label: 'Top P',
 		type: 'number',
-		defaultValue: 4096,
-		range: [1, 4096],
-		step: 8,
-		description: 'The maximum number of tokens to generate.'
+		defaultValue: 1.0,
+		description:
+			'Use nucleus sampling. In nucleus sampling, we compute the cumulative distribution over all the options for each subsequent token in decreasing probability order and cut it off once it reaches a particular probability specified by top_p.',
+		range: [0.0, 1.0],
+		step: 0.01
+	},
+	{
+		key: 'top_k',
+		label: 'Top K',
+		type: 'number',
+		defaultValue: 5,
+		description: 'Only sample from the top K options for each subsequent token.',
+		range: [0, 100],
+		step: 1
 	},
 	{
 		key: 'stream',
 		label: 'Stream',
 		type: 'boolean',
 		defaultValue: true,
-		description: 'Whether to stream back partial progress.'
+		description: 'Whether to incrementally stream the response using server-sent events.'
 	}
 ];
 
-const llmChatCapability: LlmChatCapability = {
+const LlmChat: LlmChatCapability = {
 	capability: 'llm_chat',
 	endpoints: {
-		getModels: {
-			path: '/v1/models',
-			method: 'GET'
-		},
 		chat: {
 			path: '/v1/messages',
 			method: 'POST'
@@ -73,18 +96,13 @@ export const anthropicDefinition: ServiceDefinition = {
 	docs: {
 		api: 'https://docs.anthropic.com/en/api/messages'
 	},
-	authentication: {
-		type: 'api_key',
-		keyName: 'x-api-key',
-		help: 'You can find your Anthropic API key on your API keys page.'
-	},
 	headers: {
 		'anthropic-version': '2023-06-01'
 	},
-	capabilities: [llmChatCapability],
-	configuration: {
-		help: {
-			instructions: 'Simply add your API key to connect to the Anthropic API.'
-		}
-	}
+	authentication: {
+		type: 'api_key',
+		keyName: 'x-api-key',
+		help: 'Get your API key from the Anthropic Console.'
+	},
+	capabilities: [LlmChat, models]
 }; 

@@ -2,62 +2,71 @@ import type {
 	ServiceDefinition,
 	LlmChatCapability,
 	ImageGenerationCapability,
-	ParameterDefinition
+	ParameterDefinition,
+	ModelManagementCapability
 } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+
+// Note: Hugging Face uses different domains for its Hub API and Inference API.
+// - huggingface.co for model listing and management
+// - api-inference.huggingface.co for running inference
+// The client implementation will need to handle this.
+// For the Inference API, the model ID is part of the URL path, not the request body.
 
 const llmChatParameters: ParameterDefinition[] = [
 	{
 		key: 'model',
-		label: 'Model',
-		type: 'select',
+		label: 'Model ID',
+		type: 'string',
 		defaultValue: 'mistralai/Mistral-7B-Instruct-v0.2',
-		description: 'The ID of the model to use for chat.',
-		optionsEndpoint: 'getModels',
-		optionsPath: '', // The root is the array
-		optionsValueKey: 'id',
-		optionsLabelKey: 'id'
+		description: 'The ID of the model to use for inference (e.g., mistralai/Mistral-7B-v0.1). This will be part of the URL.',
 	},
 	{
 		key: 'temperature',
 		label: 'Temperature',
 		type: 'number',
 		defaultValue: 0.7,
-		range: [0, 2],
+		range: [0.1, 2.0],
 		step: 0.1,
-		description: 'Controls randomness.'
+		description: 'Controls randomness. Lowering results in less random completions.',
+	},
+	{
+		key: 'top_k',
+		label: 'Top-K',
+		type: 'number',
+		defaultValue: null,
+		description: 'The number of highest probability vocabulary tokens to keep for top-k-filtering.',
 	},
 	{
 		key: 'top_p',
-		label: 'Top P',
+		label: 'Top-P',
 		type: 'number',
-		defaultValue: 0.95,
-		range: [0, 1],
-		step: 0.05,
-		description: 'The cumulative probability of tokens to consider for sampling.'
+		defaultValue: null,
+		description: 'If set to < 1, only the smallest set of most probable tokens with probabilities that add up to top_p or higher are kept for generation.',
 	},
 	{
 		key: 'max_new_tokens',
 		label: 'Max New Tokens',
 		type: 'number',
 		defaultValue: 256,
-		range: [1, 4096],
-		step: 8,
-		description: 'The maximum number of tokens to generate.'
-	}
+		description: 'The maximum number of tokens to generate.',
+	},
+	{
+		key: 'repetition_penalty',
+		label: 'Repetition Penalty',
+		type: 'number',
+		defaultValue: null,
+		description: 'The parameter for repetition penalty. 1.0 means no penalty.',
+	},
 ];
 
 const imageGenerationParameters: ParameterDefinition[] = [
 	{
 		key: 'model',
-		label: 'Model',
-		type: 'select',
-		defaultValue: 'stabilityai/stable-diffusion-xl-base-1.0',
+		label: 'Model ID',
+		type: 'string',
+		defaultValue: 'stabilityai/stable-diffusion-2-1',
 		description: 'The ID of the model to use for image generation.',
-		optionsEndpoint: 'getModels',
-		optionsPath: '', // The root is the array
-		optionsValueKey: 'id',
-		optionsLabelKey: 'id'
 	},
 	{
 		key: 'prompt',
@@ -72,19 +81,59 @@ const imageGenerationParameters: ParameterDefinition[] = [
 		type: 'string',
 		defaultValue: '',
 		description: 'The negative prompt, describing what to avoid in the image.'
+	},
+	{
+		key: 'height',
+		label: 'Height',
+		type: 'number',
+		defaultValue: 768,
+		description: 'The height in pixels of the output image.',
+	},
+	{
+		key: 'width',
+		label: 'Width',
+		type: 'number',
+		defaultValue: 768,
+		description: 'The width in pixels of the output image.',
+	},
+	{
+		key: 'num_inference_steps',
+		label: 'Inference Steps',
+		type: 'number',
+		defaultValue: 25,
+		description: 'The number of denoising steps.',
 	}
+];
+
+const modelManagementParameters: ParameterDefinition[] = [
+	{
+		key: 'search',
+		label: 'Search',
+		type: 'string',
+		defaultValue: '',
+		description: 'A string to search for in model names and descriptions.',
+	},
+	{
+		key: 'author',
+		label: 'Author',
+		type: 'string',
+		defaultValue: '',
+		description: 'Filter by a specific user or organization.',
+	},
+	{
+		key: 'filter',
+		label: 'Task Filter',
+		type: 'string',
+		defaultValue: 'text-generation',
+		description: 'Filter by a specific task, e.g., text-generation, text-classification.',
+	},
 ];
 
 const llmChatCapability: LlmChatCapability = {
 	capability: 'llm_chat',
 	endpoints: {
-		// Note: The host for these will be different (huggingface.co vs api-inference.huggingface.co)
-		// This will need to be handled by the service connection logic.
-		getModels: {
-			path: '/api/models?pipeline_tag=text-generation&sort=likes&direction=-1&limit=100',
-			method: 'GET'
-		},
-		chat: { path: '/v1/chat/completions', method: 'POST' } // This is an OpenAI compatible endpoint
+		// The model ID must be appended to this path by the client.
+		chat: { path: 'https://api-inference.huggingface.co/models/', method: 'POST' },
 	},
 	parameters: {
 		chat: llmChatParameters
@@ -94,35 +143,38 @@ const llmChatCapability: LlmChatCapability = {
 const imageGenerationCapability: ImageGenerationCapability = {
 	capability: 'image_generation',
 	endpoints: {
-		getModels: {
-			path: '/api/models?pipeline_tag=text-to-image&sort=likes&direction=-1&limit=100',
-			method: 'GET'
-		},
-		// The model ID will be part of the path, so we use a placeholder
-		generate: { path: '/models/{model}', method: 'POST' }
+		// The model ID must be appended to this path by the client.
+		generate: { path: 'https://api-inference.huggingface.co/models/', method: 'POST' }
 	},
 	parameters: {
-		img2img: [], // Not yet implemented
 		txt2img: imageGenerationParameters
 	}
 };
 
-export const huggingfaceDefinition: ServiceDefinition = {
+const modelManagementCapability: ModelManagementCapability = {
+	capability: 'model_management',
+	endpoints: {
+		list: { path: 'https://huggingface.co/api/models', method: 'GET' },
+	},
+	parameters: {
+		list: modelManagementParameters,
+	}
+};
+
+const HuggingFaceDefinition: ServiceDefinition = {
 	type: 'huggingface',
 	name: 'Hugging Face',
-	category: SERVICE_CATEGORIES.LLM,
-	defaultPort: 443,
+	category: SERVICE_CATEGORIES.MODEL_MANAGEMENT,
 	docs: {
-		api: 'https://huggingface.co/docs/api-inference/index'
+		hub: 'https://huggingface.co/docs/huggingface_hub/v0.8.0/en/package_reference/hf_api',
+		inference: 'https://huggingface.co/docs/api-inference/en/tasks/text-generation',
 	},
 	authentication: {
 		type: 'bearer_token',
-		help: 'You can get your Hugging Face API token from your settings page.'
+		help: 'Generate a User Access Token from your Hugging Face account settings.',
 	},
-	capabilities: [llmChatCapability, imageGenerationCapability],
-	configuration: {
-		help: {
-			instructions: 'Simply add your API token to connect to the Hugging Face Inference API.'
-		}
-	}
-}; 
+	capabilities: [llmChatCapability, imageGenerationCapability, modelManagementCapability],
+	defaultPort: 443,
+};
+
+export default HuggingFaceDefinition; 

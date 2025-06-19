@@ -7,20 +7,21 @@ To enable a new AI agent to effectively and autonomously contribute to the Kai-C
 
 ### 🤝 Handoff Summary (For Incoming Agent)
 
-Welcome to the project. The previous agent has just completed the implementation of the core dynamic user interface.
+Welcome to the project. The previous agent has just completed all of **Phase 2: Advanced Features & Usability** and started on **Phase 3: Extensibility & Polish**.
 
 #### Recent Accomplishments:
 
-1.  *Zustand Service Store:* A state management store was created at `src/store/serviceStore.ts` to manage the state of all services, including the selected service.
-2.  *Dynamic Capability UI:* A `CapabilityUI` component was built to dynamically render interfaces based on a service's `capabilities`. Full UIs for `LlmChatCapability` and `ImageGenerationCapability` were created.
-3.  *API Client:* A generic `apiClient` was created in `src/utils/apiClient.ts` and integrated into the UI components to handle communication with service backends.
-4.  *UI Integration:* The new components were integrated into the main `Popup.tsx`, completing the core user interface.
+1.  **Chat & History**: The main chat view now persists conversation history for each service and includes timestamps and a clear history button.
+2.  **Image Gallery**: A new gallery tab was added. Generated images are automatically saved to this gallery, where they can be viewed, downloaded, or deleted.
+3.  **Settings Management**: The settings tab now includes a full-featured service manager, allowing users to add, edit, and remove service connections.
+4.  **Side Panel Integration**: A new side panel was developed, providing a quick-access chat interface that can connect to any of the user's configured LLM services.
+5.  **Improved Error Handling**: All API-calling components now use a toast notification system (`react-hot-toast`) to display user-friendly error messages.
 
 #### Your Immediate Task:
 
-Your primary objective is to implement the next phase of features, focusing on usability and advanced functionality. The UI foundation is now in place; the focus must now shift to adding stateful features like history and management.
+Your primary objective is to continue with **Phase 3**. The UI and core features are now robust and feature-complete.
 
-Proceed to Step 2 and consult the Roadmap (`11_Roadmap.md`). Your highest-priority task is now `Phase 2: Advanced Features & Usability`, starting with `Chat & History`.
+Proceed to Step 2 and consult the Roadmap (`11_Roadmap.md`). Your highest-priority task is now `Phase 3: Extensibility & Polish`, starting with `Custom Workflows`.
 
 ---
 

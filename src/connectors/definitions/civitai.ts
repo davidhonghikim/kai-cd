@@ -1,72 +1,96 @@
 import type { ServiceDefinition, ModelManagementCapability, ParameterDefinition } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
 
-const searchParameters: ParameterDefinition[] = [
+const modelManagementParameters: ParameterDefinition[] = [
 	{
 		key: 'query',
-		label: 'Search',
+		label: 'Query',
 		type: 'string',
 		defaultValue: '',
-		description: 'Search for models by name.'
+		description: 'Search query to filter models by name.'
+	},
+	{
+		key: 'tag',
+		label: 'Tag',
+		type: 'string',
+		defaultValue: '',
+		description: 'Search query to filter models by tag.'
+	},
+	{
+		key: 'username',
+		label: 'Username',
+		type: 'string',
+		defaultValue: '',
+		description: 'Search query to filter models by user.'
 	},
 	{
 		key: 'types',
 		label: 'Model Types',
 		type: 'select',
-		defaultValue: 'Checkpoint',
-		description: 'Filter by model type.',
-		options: ['Checkpoint', 'TextualInversion', 'Hypernetwork', 'AestheticGradient', 'LORA', 'Controlnet', 'Poses']
+		multiple: true,
+		defaultValue: [],
+		description: 'The type of model you want to filter with.',
+		options: [
+			{ value: 'Checkpoint', label: 'Checkpoint' },
+			{ value: 'TextualInversion', label: 'Textual Inversion' },
+			{ value: 'Hypernetwork', label: 'Hypernetwork' },
+			{ value: 'AestheticGradient', label: 'Aesthetic Gradient' },
+			{ value: 'LORA', label: 'LORA' },
+			{ value: 'Controlnet', label: 'Controlnet' },
+			{ value: 'Poses', label: 'Poses' }
+		]
 	},
 	{
 		key: 'sort',
 		label: 'Sort By',
 		type: 'select',
-		defaultValue: 'Most Downloaded',
-		description: 'Sort the results.',
-		options: ['Highest Rated', 'Most Downloaded', 'Newest']
+		defaultValue: 'Highest Rated',
+		description: 'The order in which you wish to sort the results.',
+		options: [
+			{ value: 'Highest Rated', label: 'Highest Rated' },
+			{ value: 'Most Downloaded', label: 'Most Downloaded' },
+			{ value: 'Newest', label: 'Newest' }
+		]
 	},
 	{
 		key: 'period',
 		label: 'Period',
 		type: 'select',
 		defaultValue: 'AllTime',
-		description: 'The time period to sort by.',
-		options: ['AllTime', 'Year', 'Month', 'Week', 'Day']
+		description: 'The time frame in which the models will be sorted.',
+		options: [
+			{ value: 'AllTime', label: 'All Time' },
+			{ value: 'Year', label: 'Year' },
+			{ value: 'Month', label: 'Month' },
+			{ value: 'Week', label: 'Week' },
+			{ value: 'Day', label: 'Day' }
+		]
 	}
 ];
 
 const modelManagementCapability: ModelManagementCapability = {
 	capability: 'model_management',
 	endpoints: {
-		getModels: {
-			path: '/api/v1/models',
-			method: 'GET'
-		}
+		list: { path: '/api/v1/models', method: 'GET' }
 	},
 	parameters: {
-		search: searchParameters
+		list: modelManagementParameters
 	}
 };
 
-export const civitaiDefinition: ServiceDefinition = {
+const CivitaiDefinition: ServiceDefinition = {
 	type: 'civitai',
 	name: 'Civitai',
 	category: SERVICE_CATEGORIES.MODEL_MANAGEMENT,
-	defaultPort: 443,
 	docs: {
 		api: 'https://github.com/civitai/civitai/wiki/REST-API-Reference'
 	},
 	authentication: {
-		type: 'api_key',
-		keyName: 'Authorization',
-		keyLocation: 'header',
-		help: 'You can get your Civitai API Key from your User Account Settings.'
+		type: 'bearer_token',
+		help: 'Generate an API Key from your User Account Settings.'
 	},
 	capabilities: [modelManagementCapability],
-	configuration: {
-		help: {
-			instructions:
-				'Provide your Civitai API Key to browse and download models. An API key is not required for public models, but is recommended.'
-		}
-	}
-}; 
+	defaultPort: 443
+};
+
+export default CivitaiDefinition; 

@@ -17,7 +17,7 @@ export type ServiceType =
   | 'ollama'
   | 'open-webui'
   | 'a1111'
-  | 'comfy-ui'
+  | 'comfyui'
   | 'llama-cpp'
   | 'vllm'
   | 'llm-studio'
@@ -39,13 +39,19 @@ export type ServiceType =
 
 // --- Parameter & Capability Definitions ---
 
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
 export interface ParameterDefinition {
   key: string;
   label: string;
   type: 'string' | 'number' | 'boolean' | 'select' | 'file';
+  multiple?: boolean;
   defaultValue: any;
   description: string;
-  options?: string[];
+  options?: (string | SelectOption)[];
   range?: [number, number];
   step?: number;
   optionsEndpoint?: string;
@@ -112,10 +118,32 @@ export interface StorageCapability {
 export interface VectorDatabaseCapability {
   capability: 'vector_database';
   endpoints: {
-    [endpointKey: string]: Endpoint; // e.g., upsert, query, delete
+    listCollections: Endpoint;
+    query: Endpoint;
+    upsert: Endpoint;
+    delete: Endpoint;
   };
   parameters: {
-    [parameterKey: string]: ParameterDefinition[]; // e.g., query
+    query: ParameterDefinition[];
+    upsert: ParameterDefinition[];
+  };
+}
+
+export interface GraphExecutionCapability {
+  capability: 'graph_execution';
+  baseWorkflow: ComfyWorkflow;
+  endpoints: {
+    prompt: Endpoint;
+    view: Endpoint;
+    history: Endpoint;
+    websocket: Endpoint;
+  };
+  parameterMapping: {
+    [paramKey: string]: {
+      nodeId: string;
+      inputKey: string;
+      parameterDefinition: ParameterDefinition;
+    };
   };
 }
 
@@ -126,7 +154,8 @@ export type ServiceCapability =
   | AutomationCapability
   | LangChainCapability
   | StorageCapability
-  | VectorDatabaseCapability;
+  | VectorDatabaseCapability
+  | GraphExecutionCapability;
 
 // --- Authentication & Configuration ---
 
@@ -186,4 +215,29 @@ export interface Service {
   isConnected: boolean;
   authentication: AuthDefinition;
   capabilities: ServiceCapability[];
+}
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: number;
+}
+
+export interface GeneratedImage {
+  id: string;
+  serviceId: string;
+  imageData: string; // base64 encoded
+  prompt: string;
+  timestamp: number;
+}
+
+// --- Graph Execution (ComfyUI) Types ---
+export interface ComfyNode {
+  inputs: { [key: string]: any };
+  class_type: string;
+}
+
+export interface ComfyWorkflow {
+  [nodeId: string]: ComfyNode;
 }

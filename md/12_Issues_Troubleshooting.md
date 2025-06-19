@@ -25,7 +25,7 @@ This section outlines foreseeable challenges that will require careful thought a
 
 #### 4. API Response Variation
 - Challenge: The exact structure of API responses differs between services (e.g., A1111's image array vs. OpenAI's chat choices).
-- Implication: UI components must be written defensively to handle different response schemas.
+- Implication: UI components must be written defensively to handle different response schemas. The application now uses toast notifications to show users what went wrong.
 
 #### 5. Build Tooling and Linter Configuration
 - Challenge: The project's linter requires `type`-only imports for TypeScript types (`import type { ... } from '...'`).
@@ -35,7 +35,7 @@ This section outlines foreseeable challenges that will require careful thought a
 
 ### "Failed to fetch" or "CORS" Error in Browser Console
 
-- Symptom: You try to interact with a service and see a network error in the developer console related to CORS.
+- Symptom: You try to interact with a service and see a network error in the developer console related to CORS. A toast notification will also appear, displaying the "Failed to fetch" message.
 - Cause: The target AI service (e.g., A1111, Ollama) was not started with the necessary flags to allow requests from other origins.
 - Fix:
     1.  Stop the AI service.
