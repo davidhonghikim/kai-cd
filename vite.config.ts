@@ -2,6 +2,10 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+import fs from 'fs'
+
+const packageJson = fs.readFileSync(resolve(__dirname, 'package.json'), 'utf-8')
+const { version } = JSON.parse(packageJson)
 
 export default defineConfig({
   plugins: [
@@ -16,6 +20,9 @@ export default defineConfig({
     }),
   ],
   assetsInclude: ['**/*.md'],
+  define: {
+    'process.env.PACKAGE_VERSION': JSON.stringify(version),
+  },
   build: {
     outDir: resolve(__dirname, 'dist'),
     emptyOutDir: true,

@@ -173,6 +173,30 @@ While the recent refactor stabilized the UI and core functionality, several area
 -   **Documentation Viewer:** While the main viewer loads, internal navigation links within the markdown files do not work as expected. The viewer needs a more robust solution for handling relative links between documents.
 -   **UI Control Redundancy:** A review of the main tab and popup UIs is needed to identify and streamline any redundant or confusing buttons and links. The goal is to simplify the user flow.
 -   **Dark Theme Application:** The dark theme is not always applied consistently or automatically based on system settings, particularly in the side panel and popup.
+-   **Dependency Conflict with React 19:** The project uses `react-beautiful-dnd`, which has a peer dependency on React versions `^16.8.5 || ^17.0.0 || ^18.0.0`. The project is currently on React `19.1.0`. This conflict prevents the installation of new packages (e.g., `lucide-react`) that are compatible with React 19. This will need to be resolved to keep the project's dependencies up to date. The library `react-beautiful-dnd` seems to be unmaintained.
+
+## 3. Runtime Errors from User Session (2025-06-19)
+
+The following errors were reported from a recent user session and require investigation.
+
+### API Response Parsing Errors
+
+-   **Symptom:** The application shows errors like `SyntaxError: Unexpected token 'O', "Ollama is running" is not valid JSON` or `SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON`.
+-   **Affected Services:** Ollama, A1111, ComfyUI.
+-   **Probable Cause:** The status check endpoints for these services are returning plain text (e.g., "Ollama is running") or an HTML document (like a login page or a 404 page) instead of a valid JSON response. The `apiClient` expects JSON and fails when trying to parse the unexpected format. This could be due to misconfigured service URLs (e.g., pointing to a UI instead of an API endpoint) or changes in the services' API contracts.
+
+### Network and API Fetch Errors
+
+-   **Symptom:** The application shows generic `TypeError: Failed to fetch`.
+-   **Affected Services:** ComfyUI (Local), Open WebUI (Local/Remote), A1111 (Local/Remote), OpenAI API.
+-   **Probable Cause:** This is a general network failure. The most likely causes are:
+    1.  The AI service is not running or is unreachable at the configured address/port.
+    2.  A Cross-Origin Resource Sharing (CORS) issue is preventing the extension from accessing the service. The service needs to be started with the correct CORS headers allowing the `chrome-extension://` origin.
+    3.  A firewall or network configuration is blocking the connection.
+
+### Side Panel Error
+- **Symptom:** An error `Uncaught (in promise) Error: No active side panel for tabId: ...` was reported.
+- **Probable Cause:** This suggests a potential race condition or a logic error in how the extension manages the side panel's state, particularly when switching between tabs or services.
 
 ## Common Problems
 

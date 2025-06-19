@@ -29,5 +29,8 @@ This documentation provides a comprehensive overview of the Kai-CD project. It i
 - [16: UI Architecture](./16_UI_Architecture.md) - An overview of the modular UI architecture.
 - [17: UI Redesign Plan](./17_UI_RedesignPlan.md) - Comprehensive plan and wireframes for sitewide UI overhaul inspired by OpenWebUI.
 
+### V. System Design
+- [18: Import/Export Schema](./18_ImportExportSchema.md) - The JSON schema for backing up and restoring user data.
+
 ---
 *This index is the primary entry point. Please keep it updated as new documents are added.* 

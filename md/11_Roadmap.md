@@ -33,7 +33,7 @@ Status: ✅ Complete
 Description: A flexible CSS-variable theme engine has been implemented (`src/styles/themes.ts`) with light | dark | system modes persisted via zustand (`useThemeStore`). Next step is to apply visual design tokens across all components.
 
 ### Priority 2: Refactor for Modular Views
-Status: ⚪ Not Started
+Status: ✅ Complete
 Description: Rework the core UI logic to use a "View Registry" pattern for maximum modularity and extensibility.
 Next Steps:
 - Create a `capability -> Component` map in `src/components/capabilities/registry.ts`.
@@ -41,16 +41,12 @@ Next Steps:
 - Document this new architecture in `16_UI_Architecture.md`.
 
 ### Priority 3: Redesign Popup View
-Status: 🔜 In Progress
-Notes: Popup currently functional but visually bare. Needs wider layout, modern styling, and top-bar buttons for Service Manager & Settings.
+Status: ✅ Complete
+Notes: The popup has been redesigned with a wider layout (640px), a two-column card-based design for services, and updated to use the central theme system for modern styling.
 
 ### Priority 4: Design Import/Export System
-Status: ⚪ Not Started
-Description: Architect a unified system for importing and exporting user data.
-Next Steps:
-- Design a versioned JSON schema for backups.
-- Create a `backupManager.ts` utility to handle the core logic.
-- Implement a reusable `<ImportExportButtons />` component.
+Status: ✅ Complete
+Description: Architected a unified system for importing and exporting user data. This includes a versioned JSON schema, a `backupManager.ts` utility, and a reusable UI component integrated into the settings page.
 
 ## Phase 3: Advanced Features & Usability (Next Up)
 
