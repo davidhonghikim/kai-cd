@@ -1,44 +1,40 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
-import path from 'path'
-import { fileURLToPath } from 'url'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-// https://vite.dev/config/
 export default defineConfig({
-  root: 'src',
   plugins: [
     react(),
     viteStaticCopy({
       targets: [
         {
-          src: path.resolve(__dirname, '../public'),
-          dest: '../'
-        }
-      ]
-    })
+          src: 'public/*',
+          dest: '.',
+        },
+      ],
+    }),
   ],
   build: {
-    outDir: '../dist',
+    outDir: resolve(__dirname, 'dist'),
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        popup: path.resolve(__dirname, 'src/popup/popup.html'),
-        sidepanel: path.resolve(__dirname, 'src/sidepanel/sidepanel.html'),
-        tab: path.resolve(__dirname, 'src/tab/tab.html'),
-        background: path.resolve(__dirname, 'src/background/main.ts')
+        popup: resolve(__dirname, 'popup.html'),
+        sidepanel: resolve(__dirname, 'sidepanel.html'),
+        tab: resolve(__dirname, 'tab.html'),
+        background: resolve(__dirname, 'src/background/main.ts'),
       },
       output: {
-        entryFileNames: chunk => {
-          if (chunk.name === 'background') {
-            return 'background.js'
+        entryFileNames: (chunkInfo) => {
+          if (chunkInfo.name === 'background') {
+            return 'background.js';
           }
-          return 'assets/[name]-[hash].js'
-        }
-      }
-    }
-  }
-})
+          return `assets/[name]-[hash].js`;
+        },
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash][extname]',
+      },
+    },
+  },
+}) 

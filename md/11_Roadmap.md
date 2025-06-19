@@ -24,7 +24,35 @@ Key Implementations:
 - `ParameterControl` component created to render form elements dynamically.
 - `apiClient` implemented for frontend to backend communication.
 
-## Phase 2: Advanced Features & Usability (🎯 Current Focus)
+## Phase 2: UI/UX Modernization (🎯 Current Focus)
+
+The next major focus is a comprehensive overhaul of the UI foundation to create a sleek, modern, and themeable user experience inspired by best-in-class applications like Open WebUI.
+
+### Priority 1: Implement Theme System
+Status: ✅ Complete
+Description: A flexible CSS-variable theme engine has been implemented (`src/styles/themes.ts`) with light | dark | system modes persisted via zustand (`useThemeStore`). Next step is to apply visual design tokens across all components.
+
+### Priority 2: Refactor for Modular Views
+Status: ⚪ Not Started
+Description: Rework the core UI logic to use a "View Registry" pattern for maximum modularity and extensibility.
+Next Steps:
+- Create a `capability -> Component` map in `src/components/capabilities/registry.ts`.
+- Refactor `CapabilityUI.tsx` to use this registry instead of a switch/if statement.
+- Document this new architecture in `16_UI_Architecture.md`.
+
+### Priority 3: Redesign Popup View
+Status: 🔜 In Progress
+Notes: Popup currently functional but visually bare. Needs wider layout, modern styling, and top-bar buttons for Service Manager & Settings.
+
+### Priority 4: Design Import/Export System
+Status: ⚪ Not Started
+Description: Architect a unified system for importing and exporting user data.
+Next Steps:
+- Design a versioned JSON schema for backups.
+- Create a `backupManager.ts` utility to handle the core logic.
+- Implement a reusable `<ImportExportButtons />` component.
+
+## Phase 3: Advanced Features & Usability (Next Up)
 
 ### Priority 1: Chat & History
 Status: ✅ Complete
@@ -54,7 +82,7 @@ Next Steps:
 Status: ✅ Complete
 Description: Develop a useful side-panel experience, perhaps for quick access to a specific service while browsing.
 
-## Phase 3: Extensibility & Polish
+## Phase 4: Extensibility & Polish
 
 ### Priority 1: Improved Error Handling
 Status: ✅ Complete
@@ -66,4 +94,26 @@ Description: Explore ways to chain different services together (e.g., use an LLM
 
 ### Priority 3: Full Test Coverage
 Status: ⚪ Not Started
-Description: Implement the testing strategy outlined in `04_DevelopmentTesting.md`. 
+Description: Implement the testing strategy outlined in `04_DevelopmentTesting.md`.
+
+## Phase 2: UI Overhaul & User Experience
+
+- [ ] UI Overhaul & Theming Foundation (Build Unblocked ✅)
+- [ ] Service Management UI (Add, Edit, Remove)
+- [ ] User-friendly Settings & Configuration
+- [ ] Import/Export User Data (Services, Settings)
+
+## Phase 3: Advanced Features & Extensibility
+
+- [ ] Custom Workflows & Agentic Behavior
+- [ ] Vector Search & RAG Capability
+- [ ] Multi-modal Support (Image inputs, etc.)
+- [ ] Plugin System for New Capabilities
+- [ ] Advanced Parameter Control UI
+
+## Phase 4: Polish & Release
+
+- [ ] Comprehensive Testing & Bug Fixing
+- [ ] Performance Optimization
+- [ ] Documentation & Onboarding Guides
+- [ ] Chrome Web Store Submission 
