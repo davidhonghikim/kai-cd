@@ -147,6 +147,25 @@ export interface GraphExecutionCapability {
   };
 }
 
+export interface HealthCapability {
+  capability: 'health';
+  endpoints: {
+    health: Endpoint;
+  };
+}
+
+export type CapabilityType = 'llm_chat' | 'image_generation' | 'model_management' | 'automation' | 'langchain' | 'storage' | 'vector_database' | 'graph_execution' | 'health';
+
+export interface Capability {
+  capability: CapabilityType;
+  endpoints: {
+    [endpointKey: string]: Endpoint;
+  };
+  parameters: {
+    [parameterKey: string]: ParameterDefinition[];
+  };
+}
+
 export type ServiceCapability =
   | LlmChatCapability
   | ImageGenerationCapability
@@ -155,7 +174,8 @@ export type ServiceCapability =
   | LangChainCapability
   | StorageCapability
   | VectorDatabaseCapability
-  | GraphExecutionCapability;
+  | GraphExecutionCapability
+  | HealthCapability;
 
 // --- Authentication & Configuration ---
 
@@ -166,6 +186,7 @@ export type AuthDefinition =
       type: 'api_key';
       keyName?: string;
       help?: string;
+      credentials?: { apiKey: string };
     }
   | {
       type: 'bearer_token';
@@ -191,6 +212,7 @@ export interface ServiceDefinition {
   name: string;
   category: string;
   defaultPort: number;
+  hasExternalUi?: boolean;
   docs?: { [key: string]: string };
   authentication: AuthDefinition;
   headers?: { [key: string]: string };
@@ -201,13 +223,13 @@ export interface ServiceDefinition {
   };
 }
 
-export interface Service {
+export interface Service extends ServiceDefinition {
   id: string;
   name: string;
-  type: ServiceType;
   url: string;
   enabled: boolean;
-  status: 'unknown' | 'online' | 'offline';
+  status?: 'online' | 'offline' | 'checking';
+  hasExternalUi?: boolean;
   category: string;
   createdAt: number;
   updatedAt: number;
@@ -215,6 +237,7 @@ export interface Service {
   isConnected: boolean;
   authentication: AuthDefinition;
   capabilities: ServiceCapability[];
+  lastUsedModel?: string;
 }
 
 export interface ChatMessage {
@@ -222,6 +245,7 @@ export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   timestamp: number;
+  isStreaming?: boolean;
 }
 
 export interface GeneratedImage {
@@ -240,4 +264,8 @@ export interface ComfyNode {
 
 export interface ComfyWorkflow {
   [nodeId: string]: ComfyNode;
+}
+
+export interface LlmManagedService {
+  // ... existing code ...
 }

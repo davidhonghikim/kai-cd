@@ -1,4 +1,4 @@
-import { ServiceEndpoints } from '../types';
+import type { ServiceEndpoints } from '../types';
 
 export const SERVICE_ENDPOINTS: ServiceEndpoints = {
   'ollama': {

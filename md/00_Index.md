@@ -26,6 +26,8 @@ This documentation provides a comprehensive overview of the Kai-CD project. It i
 - [13: Agent Onboarding Protocol](./13_AgentOnboarding.md) - A guide specifically for AI agents to quickly understand the project, their role, and the rules of engagement.
 - [14: Agent Bootstrap Prompt](./14_AgentBootstrapPrompt.md) - The master prompt to initialize an AI agent for working on this project.
 - [15: Shortcuts & Commands](./15_Shortcuts.md) - A list of useful commands and scripts.
+- [16: UI Architecture](./16_UI_Architecture.md) - An overview of the modular UI architecture.
+- [17: UI Redesign Plan](./17_UI_RedesignPlan.md) - Comprehensive plan and wireframes for sitewide UI overhaul inspired by OpenWebUI.
 
 ---
 *This index is the primary entry point. Please keep it updated as new documents are added.* 

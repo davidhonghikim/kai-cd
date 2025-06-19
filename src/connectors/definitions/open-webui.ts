@@ -69,6 +69,7 @@ const OpenWebUIDefinition: ServiceDefinition = {
   type: 'open-webui',
   name: 'Open WebUI',
   category: SERVICE_CATEGORIES.LLM,
+  hasExternalUi: true,
   docs: {
     api: 'https://docs.openwebui.com/getting-started/api-endpoints/',
   },

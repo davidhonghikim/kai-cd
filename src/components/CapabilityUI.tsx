@@ -1,28 +1,27 @@
 import React from 'react';
-import { useServiceStore } from '../store/serviceStore';
-import LlmChatView from './capabilities/LlmChatView';
-import ImageGenerationView from './capabilities/ImageGenerationView';
+import type { Service } from '../types';
+import { getCapabilityView } from './capabilities/registry';
 
-const CapabilityUI: React.FC = () => {
-  const { selectedService } = useServiceStore();
+interface CapabilityUIProps {
+  service: Service;
+}
 
-  if (!selectedService) {
-    return <div className="p-4 text-gray-400">Select a service to see its capabilities.</div>;
-  }
-
+const CapabilityUI: React.FC<CapabilityUIProps> = ({ service }) => {
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">{selectedService.name}</h2>
-      {selectedService.capabilities.map((capability, index) => {
-        switch (capability.capability) {
-          case 'llm_chat':
-            return <LlmChatView key={index} capability={capability} />;
-          case 'image_generation':
-            return <ImageGenerationView key={index} capability={capability} />;
-          // Add cases for other capabilities here
-          default:
-            return <div key={index}>Unsupported capability: {(capability as any).capability}</div>;
+    <div>
+      {service.capabilities.map(cap => {
+        const ViewComponent = getCapabilityView(cap.capability);
+        if (ViewComponent) {
+          // The key should ideally be more unique if capabilities can be duplicated
+          return <ViewComponent key={cap.capability} service={service} capability={cap} />;
         }
+        return (
+          <div key={cap.capability}>
+            <p>
+              Warning: No UI registered for capability: <strong>{cap.capability}</strong>
+            </p>
+          </div>
+        );
       })}
     </div>
   );

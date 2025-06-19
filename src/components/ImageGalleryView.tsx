@@ -1,6 +1,6 @@
 import React from 'react';
 import { useServiceStore } from '../store/serviceStore';
-import { TrashIcon, DownloadIcon } from '@heroicons/react/24/solid';
+import { TrashIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 
 const ImageGalleryView: React.FC = () => {
   const { imageGallery, removeImageFromGallery, getServiceById } = useServiceStore();
@@ -44,7 +44,7 @@ const ImageGalleryView: React.FC = () => {
                       className="p-2 bg-blue-600 rounded-full hover:bg-blue-700"
                       title="Download"
                     >
-                      <DownloadIcon className="h-5 w-5 text-white" />
+                      <ArrowDownTrayIcon className="h-5 w-5 text-white" />
                     </button>
                     <button
                       onClick={() => removeImageFromGallery(image.id)}

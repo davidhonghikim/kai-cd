@@ -42,6 +42,7 @@ export const comfyuiDefinition: ServiceDefinition = {
 	name: 'ComfyUI',
 	category: SERVICE_CATEGORIES.IMAGE_GENERATION,
 	defaultPort: 8188,
+	hasExternalUi: true,
 	docs: {
 		api: 'https://github.com/comfyanonymous/ComfyUI_API_Examples'
 	},

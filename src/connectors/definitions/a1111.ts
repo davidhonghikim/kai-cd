@@ -176,6 +176,7 @@ export const a1111Definition: ServiceDefinition = {
 	name: 'A1111 WebUI',
 	category: SERVICE_CATEGORIES.IMAGE_GENERATION,
 	defaultPort: 7860,
+	hasExternalUi: true,
 	docs: {
 		api: 'https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/API'
 	},

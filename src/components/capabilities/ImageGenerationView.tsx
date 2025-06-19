@@ -1,121 +1,72 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import type { ImageGenerationCapability, ParameterDefinition } from '../../types';
-import ParameterControl from './ParameterControl';
-import { useServiceStore } from '../../store/serviceStore';
+import type { CapabilityViewProps } from '../../types';
 import { apiClient } from '../../utils/apiClient';
+import ParameterControl from './ParameterControl';
 
-interface ImageGenerationViewProps {
-  capability: ImageGenerationCapability;
-}
-
-const ImageGenerationView: React.FC<ImageGenerationViewProps> = ({ capability }) => {
-  const [formState, setFormState] = useState<Record<string, any>>({});
-  const [activeTab, setActiveTab] = useState<string>(Object.keys(capability.parameters)[0]);
+const ImageGenerationView: React.FC<CapabilityViewProps<'image_generation'>> = ({ service, capability }) => {
+  const [params, setParams] = useState<Record<string, any>>({
+    prompt: 'A beautiful landscape',
+    n_iter: 1,
+    steps: 20,
+    width: 512,
+    height: 512,
+  });
+  const [images, setImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const { selectedService, addImageToGallery } = useServiceStore();
 
-  useEffect(() => {
-    // Initialize form state with default values when the capability or tab changes
-    const initialFormState: Record<string, any> = {};
-    const params = capability.parameters[activeTab];
-    if (params) {
-      params.forEach((param) => {
-        initialFormState[param.key] = param.defaultValue;
-      });
-    }
-    setFormState(initialFormState);
-  }, [capability, activeTab]);
-
-  const handleParameterChange = (key: string, value: any) => {
-    setFormState((prevState) => ({ ...prevState, [key]: value }));
+  const handleParamChange = (key: string, value: any) => {
+    setParams(prev => ({ ...prev, [key]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setImageUrl(null);
-    setError(null);
-
+    setImages([]);
     try {
-      if (!selectedService) throw new Error('No service selected');
-
-      const endpoint = capability.endpoints[activeTab];
-      if (!endpoint) throw new Error(`Endpoint for ${activeTab} not found.`);
-
-      const response = await apiClient.post(selectedService.url, endpoint.path, formState);
-
-      // NOTE: Response structure varies. A1111 returns images in an `images` array.
-      if (response.images && response.images.length > 0) {
-        const imageB64 = response.images[0];
-        const newImageUrl = `data:image/png;base64,${imageB64}`;
-        setImageUrl(newImageUrl);
-
-        // Save to gallery
-        addImageToGallery({
-          serviceId: selectedService.id,
-          imageData: imageB64,
-          prompt: formState.prompt || 'No prompt provided',
-        });
+      const endpoint = capability.endpoints.text_to_image;
+      if (!endpoint) throw new Error('Text-to-image endpoint not defined');
+      
+      const response = await apiClient.post(service.url, endpoint.path, params);
+      
+      // Assuming the API returns images as an array of base64 strings
+      // This will need to be adapted based on the actual API response format
+      if (response.images && Array.isArray(response.images)) {
+        setImages(response.images.map((img: string) => `data:image/png;base64,${img}`));
       } else {
-        throw new Error('No image found in the response.');
+        toast.error('Received an unexpected image format.');
       }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'An unknown error occurred';
-      setError(message);
-      toast.error(`Error: ${message}`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      toast.error(`Error: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const renderParameters = (parameters: ParameterDefinition[]) => {
-    return parameters.map((param) => (
-      <ParameterControl
-        key={param.key}
-        definition={param}
-        value={formState[param.key]}
-        onChange={(value) => handleParameterChange(param.key, value)}
-      />
-    ));
-  };
-
   return (
-    <div className="p-4 border rounded-lg bg-gray-800 text-white">
-      <h3 className="text-lg font-semibold mb-2">Image Generation</h3>
-      <div className="border-b border-gray-600 mb-4">
-        <nav className="-mb-px flex space-x-4" aria-label="Tabs">
-          {Object.keys(capability.parameters).map((tabName) => (
-            <button
-              key={tabName}
-              onClick={() => setActiveTab(tabName)}
-              className={`${
-                activeTab === tabName
-                  ? 'border-blue-500 text-blue-400'
-                  : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'
-              } whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm`}
-            >
-              {tabName}
-            </button>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          {capability.parameters.text_to_image.map(param => (
+            <ParameterControl 
+              key={param.key}
+              param={param}
+              value={params[param.key]}
+              onChange={handleParamChange}
+            />
           ))}
-        </nav>
-      </div>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {capability.parameters[activeTab] && renderParameters(capability.parameters[activeTab])}
-        <button type="submit" className="px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled={isLoading}>
-          {isLoading ? 'Generating...' : 'Generate'}
+        </div>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Generating...' : 'Generate Images'}
         </button>
       </form>
-      {isLoading && <div className="mt-4">Loading...</div>}
-      {error && <div className="mt-4 p-2 bg-red-800 text-white rounded-md">{error}</div>}
-      {imageUrl && (
-        <div className="mt-4">
-          <h4 className="font-semibold mb-2">Result</h4>
-          <img src={imageUrl} alt="Generated" className="max-w-full h-auto rounded-lg" />
-        </div>
-      )}
+      <div>
+        {isLoading && <p>Loading...</p>}
+        {images.map((imgSrc, index) => (
+          <img key={index} src={imgSrc} alt={`Generated image ${index + 1}`} style={{ maxWidth: '100%', marginTop: '10px' }} />
+        ))}
+      </div>
     </div>
   );
 };

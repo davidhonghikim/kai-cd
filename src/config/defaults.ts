@@ -89,7 +89,7 @@ export const DEFAULT_SERVICES: Service[] = [
 		id: uuidv4(),
 		name: 'Open WebUI (Remote)',
 		type: 'open-webui',
-		url: `http://${config.networking.remoteIp}:8080`,
+		url: `http://${config.networking.remoteIp}:3000`,
 		enabled: true,
 		status: 'unknown',
 		category: OpenWebUIDefinition.category,

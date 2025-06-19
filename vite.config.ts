@@ -15,6 +15,7 @@ export default defineConfig({
       ],
     }),
   ],
+  assetsInclude: ['**/*.md'],
   build: {
     outDir: resolve(__dirname, 'dist'),
     emptyOutDir: true,
@@ -24,6 +25,7 @@ export default defineConfig({
         sidepanel: resolve(__dirname, 'sidepanel.html'),
         tab: resolve(__dirname, 'tab.html'),
         background: resolve(__dirname, 'src/background/main.ts'),
+        docs: resolve(__dirname, 'docs.html'),
       },
       output: {
         entryFileNames: (chunkInfo) => {
