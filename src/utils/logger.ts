@@ -47,13 +47,14 @@ export function overrideGlobalConsole() {
   console.info = logger.info;
   console.debug = logger.debug;
 
-  // Handle uncaught exceptions
-  window.addEventListener('error', (event) => {
-    logger.error('Uncaught error:', event.error);
-  });
+  // Handle uncaught exceptions and unhandled promise rejections in a window context
+  if (typeof window !== 'undefined') {
+    window.addEventListener('error', (event) => {
+      logger.error('Uncaught error:', event.error);
+    });
 
-  // Handle unhandled promise rejections
-  window.addEventListener('unhandledrejection', (event) => {
-    logger.error('Unhandled promise rejection:', event.reason);
-  });
+    window.addEventListener('unhandledrejection', (event) => {
+      logger.error('Unhandled promise rejection:', event.reason);
+    });
+  }
 } 
