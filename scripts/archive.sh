@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script creates a compressed archive of the project.
-# It excludes common development directories and allows for adding custom notes.
+# It excludes common development directories and accepts notes as an argument.
 
 # --- Configuration ---
 
@@ -11,32 +11,24 @@ ARCHIVE_DIR="archives"
 # Temporary file for archive notes
 NOTES_FILE="archive_notes.md"
 
+# --- Argument Check ---
+if [ -z "$1" ]; then
+  echo "Error: Archive notes must be provided as the first argument."
+  echo "Usage: $0 \"Your multi-line notes here\""
+  exit 1
+fi
+
+NOTES_CONTENT="$1"
+
 # --- Pre-archive steps ---
 
 # Create archive directory if it doesn't exist
 mkdir -p "$ARCHIVE_DIR"
 
-# Create a default notes file and prompt user to edit
-cat > "$NOTES_FILE" << EOL
-# Archive Notes
+# Write the notes from the argument to the temporary file
+echo -e "$NOTES_CONTENT" > "$NOTES_FILE"
 
-## Date
-$(date)
-
-## Completed Tasks
-- 
-
-## Current State
-- 
-
-## Notes
-- 
-
-EOL
-
-echo "Please edit the archive notes file: $NOTES_FILE"
-echo "Press Enter when you are ready to continue..."
-read -r
+echo "Notes prepared for archive."
 
 # --- Archiving ---
 
