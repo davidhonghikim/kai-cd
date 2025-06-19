@@ -8,8 +8,8 @@ export const config = {
 	// --- Networking ---
 	// IP addresses for local and remote services.
 	networking: {
-		localIp: '192.168.1.159', // Your local machine's IP
-		remoteIp: '192.168.1.180', // A remote server's IP
+		localIp: 'localhost', // Use localhost for local services
+		remoteIp: '', // A remote server's IP - should be configured by the user
 		defaultTimeoutMs: 15000 // API request timeout
 	},
 

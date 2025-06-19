@@ -61,7 +61,7 @@ const storageCapability: StorageCapability = {
   },
 };
 
-const DropboxDefinition: ServiceDefinition = {
+const dropboxDefinition: ServiceDefinition = {
   type: 'dropbox',
   name: 'Dropbox',
   category: SERVICE_CATEGORIES.STORAGE,
@@ -73,7 +73,7 @@ const DropboxDefinition: ServiceDefinition = {
     help: 'Generate an access token from the App Console in your Dropbox Developer account.',
   },
   capabilities: [storageCapability],
-  defaultPort: 443, // Dropbox API uses standard HTTPS port
+  defaultPort: 0, // Dropbox is a cloud service
 };
 
-export default DropboxDefinition; 
+export { dropboxDefinition }; 

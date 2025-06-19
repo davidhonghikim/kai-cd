@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     './index.html',
@@ -5,6 +6,7 @@ export default {
     './sidepanel.html',
     './tab.html',
     './src/**/*.{js,ts,jsx,tsx}',
+    './docs.html'
   ],
   theme: {
     extend: {
@@ -25,5 +27,7 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }; 

@@ -83,4 +83,4 @@ const OpenWebUIDefinition: ServiceDefinition = {
   defaultPort: 8080,
 };
 
-export default OpenWebUIDefinition; 
+export { OpenWebUIDefinition as openWebUIDefinition }; 

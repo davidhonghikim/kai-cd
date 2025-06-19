@@ -10,9 +10,13 @@ export const SERVICE_CATEGORIES = {
 
 export const KAI_VERSION = '0.2.0';
 
+export const INITIAL_TAB_VIEW_KEY = 'kai-initial-tab-view';
+export const SELECTED_SERVICE_ID_KEY = 'kai-selected-service-id';
+
 export const VIEW_STATES = {
   CHAT: 'Chat',
   SERVICES: 'Services',
   DOCS: 'Documentation',
   SETTINGS: 'Settings',
+  CONSOLE: 'Console',
 }; 

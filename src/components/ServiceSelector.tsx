@@ -1,27 +1,30 @@
 import React from 'react';
-import { useServiceStore } from '../store/serviceStore';
+import type { Service } from '../store/serviceStore';
 
-const ServiceSelector: React.FC = () => {
-  const { services, selectedServiceId, setSelectedServiceId } = useServiceStore();
+interface ServiceSelectorProps {
+  services: Service[];
+  selectedServiceId: string | null;
+  onSelectService: (serviceId: string | null) => void;
+}
 
+const ServiceSelector: React.FC<ServiceSelectorProps> = ({ 
+  services, 
+  selectedServiceId, 
+  onSelectService 
+}) => {
   return (
-    <nav>
-      <ul>
-        {services.map((service) => (
-          <li key={service.id} className="mb-1">
-            <button
-              className={`w-full p-2 text-left rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                selectedServiceId === service.id ? 'bg-blue-600' : 'bg-gray-700'
-              }`}
-              onClick={() => setSelectedServiceId(service.id)}
-            >
-              <span className="font-semibold">{service.name}</span>
-              <span className="block text-xs text-gray-400">{service.category}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <select
+      value={selectedServiceId || ''}
+      onChange={(e) => onSelectService(e.target.value)}
+      className="bg-slate-700 text-white rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
+    >
+      <option value="" disabled>Select a service...</option>
+      {services.map((service) => (
+        <option key={service.id} value={service.id}>
+          {service.name}
+        </option>
+      ))}
+    </select>
   );
 };
 

@@ -5,7 +5,8 @@ import { CubeTransparentIcon, ArrowTopRightOnSquareIcon, XMarkIcon } from '@hero
 import { switchToTab } from '../store/viewStateStore';
 
 const Sidepanel: React.FC = () => {
-  const { selectedService } = useServiceStore();
+  const { services, selectedServiceId } = useServiceStore();
+  const selectedService = services.find(s => s.id === selectedServiceId);
 
   return (
     <div className="h-screen w-full flex flex-col bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100">

@@ -42,7 +42,7 @@ export const useServiceStore = create<ServiceState>()(
           ...serviceData,
           id: uuidv4(),
           enabled: true,
-          status: undefined, // Let status be checked on load
+          status: 'unknown',
           createdAt: Date.now(),
           updatedAt: Date.now(),
           isActive: false,
@@ -97,26 +97,16 @@ export const useServiceStore = create<ServiceState>()(
       onRehydrateStorage: () => (state) => {
         if (state) {
           if (state.services.length === 0) {
-            const defaultServices: Service[] = DEFAULT_SERVICES.map((s) => {
-              const definition = allServiceDefinitions.find((def) => def.type === s.type);
-              if (!definition) throw new Error(`Definition not found for ${s.type}`);
-
-              let ip = s.name.includes('(Local)') ? config.networking.localIp : config.networking.remoteIp;
-              const port = definition?.defaultPort;
-              const url = `http://${ip}:${port}`;
-              
-              return {
-                ...definition,
-                id: uuidv4(),
-                name: s.name,
-                url: url,
-                enabled: s.enabled,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-                isActive: false,
-                isConnected: false,
-              };
-            });
+            const defaultServices: Service[] = DEFAULT_SERVICES.map((s) => ({
+              ...s,
+              id: uuidv4(),
+              enabled: true,
+              status: 'unknown',
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+              isActive: false,
+              isConnected: false,
+            }));
             state.services = defaultServices;
             state.selectedServiceId = defaultServices[0]?.id || null;
           }

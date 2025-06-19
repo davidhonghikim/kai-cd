@@ -53,18 +53,21 @@ const llmChatCapability: LlmChatCapability = {
   }
 };
 
-const LlmStudioDefinition: ServiceDefinition = {
+export const llmStudioDefinition: ServiceDefinition = {
   type: 'llm-studio',
   name: 'LM Studio',
   category: SERVICE_CATEGORIES.LLM,
+  defaultPort: 1234,
   docs: {
-    api: 'https://lmstudio.ai/docs/local-server'
+    api: 'https://lmstudio.ai/docs/local-server',
   },
   authentication: {
-    type: 'none'
+    type: 'none',
+  },
+  configuration: {
+    help: {
+      instructions: 'Start the server from the LM Studio UI (Local Server tab).',
+    },
   },
   capabilities: [llmChatCapability],
-  defaultPort: 1234
-};
-
-export default LlmStudioDefinition; 
+}; 

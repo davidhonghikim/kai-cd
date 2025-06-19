@@ -11,13 +11,12 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@types/react-beautiful-dnd": "^13.1.8",
+    "@tailwindcss/typography": "^0.5.16",
     "react": "^19.1.0",
-    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",
     "react-markdown": "^9.0.3",
-    "remark-gfm": "^3.0.1",
+    "remark-gfm": "^4.0.0",
     "uuid": "^11.1.0",
     "zustand": "^5.0.5"
   },

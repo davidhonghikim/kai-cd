@@ -161,7 +161,7 @@ const modelManagementCapability: ModelManagementCapability = {
 	}
 };
 
-const HuggingFaceDefinition: ServiceDefinition = {
+const huggingFaceDefinition: ServiceDefinition = {
 	type: 'huggingface',
 	name: 'Hugging Face',
 	category: SERVICE_CATEGORIES.MODEL_MANAGEMENT,
@@ -173,8 +173,8 @@ const HuggingFaceDefinition: ServiceDefinition = {
 		type: 'bearer_token',
 		help: 'Generate a User Access Token from your Hugging Face account settings.',
 	},
-	capabilities: [llmChatCapability, imageGenerationCapability, modelManagementCapability],
-	defaultPort: 443,
+	capabilities: [modelManagementCapability],
+	defaultPort: 0, // It's a web service
 };
 
-export default HuggingFaceDefinition; 
+export { huggingFaceDefinition }; 

@@ -6,58 +6,61 @@ const llmChatParameters: ParameterDefinition[] = [
     key: 'model',
     label: 'Model',
     type: 'string',
-    defaultValue: 'unspecified',
-    description: 'The model to use. For vLLM, this is typically set at server startup.'
+    defaultValue: 'mistralai/Mistral-7B-Instruct-v0.1',
+    description: 'The model to use for the chat. This is often specified when launching the vLLM server.',
   },
   {
     key: 'temperature',
     label: 'Temperature',
     type: 'number',
-    defaultValue: 0.7,
+    defaultValue: 0.8,
     range: [0, 2],
     step: 0.1,
-    description: 'Controls randomness. Higher values make the output more random.'
+    description: 'Controls randomness: lowering results in less random completions.',
   },
   {
     key: 'top_p',
     label: 'Top P',
     type: 'number',
-    defaultValue: 1.0,
+    defaultValue: 0.9,
     range: [0, 1],
     step: 0.05,
-    description: 'Nucleus sampling. The model considers the results of the tokens with top_p probability mass.'
+    description: 'The cumulative probability of tokens to consider for sampling.',
   },
-  {
-    key: 'max_tokens',
-    label: 'Max Tokens',
-    type: 'number',
-    defaultValue: 1024,
-    description: 'The maximum number of tokens to generate in the completion.'
-  }
 ];
 
 const llmChatCapability: LlmChatCapability = {
   capability: 'llm_chat',
   endpoints: {
-    chat: { path: '/v1/chat/completions', method: 'POST' }
+    chat: { path: '/v1/chat/completions', method: 'POST' },
   },
   parameters: {
-    chat: llmChatParameters
-  }
+    chat: llmChatParameters,
+  },
 };
 
-const VllmDefinition: ServiceDefinition = {
+export const vllmDefinition: ServiceDefinition = {
   type: 'vllm',
   name: 'vLLM',
   category: SERVICE_CATEGORIES.LLM,
+  defaultPort: 8000,
   docs: {
-    api: 'https://docs.vllm.ai/en/latest/openai_compat.html'
+    api: 'https://docs.vllm.ai/en/latest/getting_started/quickstart.html#openai-compatible-server',
   },
   authentication: {
-    type: 'none'
+    type: 'none',
+  },
+  configuration: {
+    arguments: {
+      host: {
+        flag: '--host 0.0.0.0',
+        description: 'Binds the server to all available network interfaces.',
+        required: true,
+      },
+    },
+    help: {
+      instructions: 'Start the vLLM server with the specified model and arguments.',
+    },
   },
   capabilities: [llmChatCapability],
-  defaultPort: 8000
-};
-
-export default VllmDefinition; 
+}; 

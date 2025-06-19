@@ -1,26 +1,31 @@
 import { create } from 'zustand';
 import { useServiceStore, type Service } from './serviceStore';
+import { VIEW_STATES, SELECTED_SERVICE_ID_KEY } from '../config/constants';
 
+export type MainView = typeof VIEW_STATES[keyof typeof VIEW_STATES];
 export type ViewLocation = 'tab' | 'panel';
+export type TabView = 'chat' | 'services' | 'console' | 'docs' | 'settings';
 
 interface ViewState {
   activeServiceId: string | null;
-  activeLocation: ViewLocation | null;
-  setActiveView: (serviceId: string, location: ViewLocation) => void;
-  closeView: (location: ViewLocation) => void;
+  setActiveServiceId: (id: string | null) => void;
+  views: Record<string, any>;
+  updateViewState: (viewId: string, state: any) => void;
+  getActiveService: () => Service | null;
 }
 
-export const useViewStateStore = create<ViewState>((set) => ({
+export const useViewStateStore = create<ViewState>((set, get) => ({
   activeServiceId: null,
-  activeLocation: null,
-  setActiveView: (serviceId, location) => set({ activeServiceId: serviceId, activeLocation: location }),
-  closeView: (location) => {
-    set((state) => {
-      if (state.activeLocation === location) {
-        return { activeServiceId: null, activeLocation: null };
-      }
-      return {};
-    });
+  setActiveServiceId: (id: string | null) => {
+    console.log(`setActiveServiceId: ${id}`);
+    set({ activeServiceId: id });
+  },
+  views: {},
+  updateViewState: (viewId: string, state: any) =>
+    set((state) => ({ views: { ...state.views, [viewId]: state } })),
+  getActiveService: () => {
+    const { activeServiceId } = get();
+    return activeServiceId ? useServiceStore.getState().getServiceById(activeServiceId) : null;
   },
 }));
 
@@ -29,10 +34,20 @@ export const useViewStateStore = create<ViewState>((set) => ({
 export async function switchToTab(service: Service) {
   // Set the service and view state *before* the tab is created to avoid race conditions.
   useServiceStore.getState().setSelectedServiceId(service.id);
-  useViewStateStore.getState().setActiveView(service.id, 'tab');
+  useViewStateStore.getState().setActiveServiceId(service.id);
+  await chrome.storage.local.set({ [SELECTED_SERVICE_ID_KEY]: service.id });
 
   // Logic to open the service in a new tab
-  await chrome.tabs.create({ url: 'tab.html' });
+  // Check if a tab for this service is already open
+  const tabs = await chrome.tabs.query({ url: chrome.runtime.getURL('tab.html') });
+  let serviceTab = tabs[0];
+
+  if (serviceTab) {
+    await chrome.tabs.update(serviceTab.id!, { active: true });
+    await chrome.windows.update(serviceTab.windowId, { focused: true });
+  } else {
+    await chrome.tabs.create({ url: 'tab.html' });
+  }
 
   // Find the current window's side panel and close it if it's open.
   try {
@@ -48,7 +63,7 @@ export async function switchToTab(service: Service) {
 export async function switchToPanel(service: Service) {
   // Set the service and view state *before* opening the panel to avoid race conditions.
   useServiceStore.getState().setSelectedServiceId(service.id);
-  useViewStateStore.getState().setActiveView(service.id, 'panel');
+  useViewStateStore.getState().setActiveServiceId(service.id);
 
   const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (currentTab?.id) {

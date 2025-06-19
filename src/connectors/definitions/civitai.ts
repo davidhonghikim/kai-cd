@@ -78,7 +78,7 @@ const modelManagementCapability: ModelManagementCapability = {
 	}
 };
 
-const CivitaiDefinition: ServiceDefinition = {
+const civitaiDefinition: ServiceDefinition = {
 	type: 'civitai',
 	name: 'Civitai',
 	category: SERVICE_CATEGORIES.MODEL_MANAGEMENT,
@@ -90,7 +90,7 @@ const CivitaiDefinition: ServiceDefinition = {
 		help: 'Generate an API Key from your User Account Settings.'
 	},
 	capabilities: [modelManagementCapability],
-	defaultPort: 443
+	defaultPort: 0
 };
 
-export default CivitaiDefinition; 
+export { civitaiDefinition }; 

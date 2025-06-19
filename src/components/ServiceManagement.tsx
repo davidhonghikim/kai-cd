@@ -14,7 +14,6 @@ import AddServiceForm from './AddServiceForm';
 import type { Service, LlmChatCapability, HealthCapability } from '../types';
 import { apiClient } from '../utils/apiClient';
 import toast from 'react-hot-toast';
-import { DragDropContext, Droppable, Draggable, type DropResult } from 'react-beautiful-dnd';
 
 // --- Placeholder Components ---
 const PlaceholderManager: React.FC<{ title: string }> = ({ title }) => (
@@ -130,16 +129,9 @@ const ServiceManagerCore: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [services]); 
 
-  const onDragEnd = (result: DropResult) => {
-    const { destination, source } = result;
-    if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) return;
-
-    const newServices = Array.from(services);
-    const [reorderedItem] = newServices.splice(source.index, 1);
-    newServices.splice(destination.index, 0, reorderedItem);
-
-    setServices(newServices);
-    toast.success('Service order updated!');
+  const onDragEnd = (result: any) => {
+    // This functionality is temporarily disabled until a React 19 compatible library is found.
+    toast.error('Reordering is currently disabled.');
   };
   
   const toggleDetails = (serviceId: string) => {
@@ -218,40 +210,29 @@ const ServiceManagerCore: React.FC = () => {
             )}
 
             <div className="flex-grow overflow-y-auto pr-2 max-w-4xl w-full mx-auto">
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="services">
-                        {(provided) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
-                            {services.map((service, index) => (
-                            <Draggable key={service.id} draggableId={service.id} index={index}>
-                                {(provided) => (
-                                <div ref={provided.innerRef} {...provided.draggableProps} className="bg-slate-800 rounded-lg shadow-md transition-all hover:shadow-lg">
-                                    <div className="flex items-center p-4">
-                                        <div {...provided.dragHandleProps} className="flex-none text-slate-500 hover:text-slate-200 cursor-grab pr-4" title="Drag to reorder"><ArrowsUpDownIcon className="h-5 w-5" /></div>
-                                        <div className="flex-grow">
-                                            <div className="flex items-center space-x-3">
-                                                {renderStatusIndicator(service.id)}
-                                                <p className="font-bold text-lg text-slate-100">{service.name}</p>
-                                            </div>
-                                            <p className="text-sm text-slate-400 break-all">{service.url}</p>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <button onClick={() => handleCheckStatus(service)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title="Check Status"><WifiIcon className="w-5 h-5" /></button>
-                                            <button onClick={() => handleEditClick(service)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title="Edit Service"><PencilIcon className="w-5 h-5" /></button>
-                                            <button onClick={() => toggleDetails(service.id)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title={expandedServiceId === service.id ? 'Hide Details' : 'Show Details'}><ChevronDownIcon className={`h-5 w-5 transition-transform ${expandedServiceId === service.id ? 'rotate-180' : ''}`} /></button>
-                                            <button onClick={() => { if (window.confirm(`Are you sure you want to delete ${service.name}?`)) { removeService(service.id); } }} className="p-2 text-red-500 rounded-md hover:bg-red-700 hover:text-white" title="Delete Service"><TrashIcon className="w-5 h-5" /></button>
-                                        </div>
-                                    </div>
-                                    {expandedServiceId === service.id && <ServiceDetails service={service} />}
+                <div className="space-y-4">
+                    {services.map((service, index) => (
+                    <div key={service.id} className="bg-slate-800 rounded-lg shadow-md transition-all hover:shadow-lg">
+                        <div className="flex items-center p-4">
+                            <div className="flex-none text-slate-500 pr-4" title="Drag to reorder"><ArrowsUpDownIcon className="h-5 w-5" /></div>
+                            <div className="flex-grow">
+                                <div className="flex items-center space-x-3">
+                                    {renderStatusIndicator(service.id)}
+                                    <p className="font-bold text-lg text-slate-100">{service.name}</p>
                                 </div>
-                                )}
-                            </Draggable>
-                            ))}
-                            {provided.placeholder}
+                                <p className="text-sm text-slate-400 break-all">{service.url}</p>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <button onClick={() => handleCheckStatus(service)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title="Check Status"><WifiIcon className="w-5 h-5" /></button>
+                                <button onClick={() => handleEditClick(service)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title="Edit Service"><PencilIcon className="w-5 h-5" /></button>
+                                <button onClick={() => toggleDetails(service.id)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title={expandedServiceId === service.id ? 'Hide Details' : 'Show Details'}><ChevronDownIcon className={`h-5 w-5 transition-transform ${expandedServiceId === service.id ? 'rotate-180' : ''}`} /></button>
+                                <button onClick={() => { if (window.confirm(`Are you sure you want to delete ${service.name}?`)) { removeService(service.id); } }} className="p-2 text-red-500 rounded-md hover:bg-red-700 hover:text-white" title="Delete Service"><TrashIcon className="w-5 h-5" /></button>
+                            </div>
                         </div>
-                        )}
-                    </Droppable>
-                </DragDropContext>
+                        {expandedServiceId === service.id && <ServiceDetails service={service} />}
+                    </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

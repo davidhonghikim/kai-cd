@@ -2,54 +2,51 @@ import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DocsIndex from './DocsIndex';
-
-// Import all markdown files at build-time as raw strings
-// The resulting object shape: { '/src/md/00_Index.md': string, ... }
-const docModules = import.meta.glob('/md/*.md', { query: '?raw', eager: true });
+import { docModules, getDocKey } from './doc-loader';
 
 const DocsViewer: React.FC = () => {
   const [docParam, setDocParam] = useState('00_Index');
   const [content, setContent] = useState('');
 
   useEffect(() => {
-    const handleLocationChange = () => {
-        const searchParams = new URLSearchParams(window.location.search);
-        const doc = searchParams.get('doc') || '00_Index';
-        setDocParam(doc);
-    }
-    
-    // Listen for manual history navigation (back/forward buttons)
-    window.addEventListener('popstate', handleLocationChange);
-    
-    // Initial load
-    handleLocationChange();
-
-    return () => {
-        window.removeEventListener('popstate', handleLocationChange);
-    }
-  }, []);
+    // One-time log to inspect the structure of the imported modules.
+    console.log('[DocsViewer] Inspecting docModules:', docModules);
+  }, []); // Runs only once on component mount
 
   useEffect(() => {
-    const key = `/md/${docParam}.md`;
-    const newContent = (docModules as Record<string, string>)[key] ?? '# 404\nDocument not found.';
-    setContent(newContent);
+    console.log(`[DocsViewer] useEffect triggered for docParam: "${docParam}"`);
+    const key = getDocKey(docParam);
+    console.log(`[DocsViewer] Looking for document with key: "${key}"`);
     
-    const url = new URL(window.location.href);
-    if (url.searchParams.get('doc') !== docParam) {
-        url.searchParams.set('doc', docParam);
-        window.history.pushState({ doc: docParam }, '', url);
+    const module = (docModules as Record<string, { default: string }>)[key];
+    console.log(`[DocsViewer] Found module:`, module);
+    
+    if (module && typeof module.default === 'string') {
+        const newContent = module.default;
+        console.log(`[DocsViewer] Found content of length: ${newContent.length}`);
+        setContent(newContent);
+    } else {
+        console.error(`[DocsViewer] Document module not found or malformed for key: "${key}"`);
+        console.log('[DocsViewer] Available keys:', Object.keys(docModules));
+        setContent('# 404\nDocument not found. Please check the console for a list of available documents.');
     }
   }, [docParam]);
   
   const handleSelect = (docName: string) => {
+    console.log(`Selected doc: ${docName}`);
     setDocParam(docName);
   };
 
   const LinkRenderer = ({ href, children }: { href?: string; children: React.ReactNode }) => {
     if (href && href.startsWith('./') && href.endsWith('.md')) {
       const targetDoc = href.replace('./', '').replace('.md', '');
+      const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+        console.log(`[LinkRenderer] Intercepted click for doc: ${targetDoc}`);
+        handleSelect(targetDoc);
+      };
       return (
-        <a href="#" onClick={(e) => { e.preventDefault(); handleSelect(targetDoc); }}>
+        <a href="#" onClick={handleClick}>
           {children}
         </a>
       );
@@ -60,8 +57,8 @@ const DocsViewer: React.FC = () => {
   return (
     <div className="flex bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
       <DocsIndex onSelect={handleSelect} activeDoc={docParam} />
-      <main className="flex-1 p-8 overflow-y-auto h-screen">
-        <article className="prose dark:prose-invert max-w-none">
+      <main className="flex-1 overflow-y-auto h-screen p-4 md:p-8">
+        <article className="prose dark:prose-invert max-w-4xl mx-auto">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{

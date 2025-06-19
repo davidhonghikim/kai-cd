@@ -32,5 +32,10 @@ This documentation provides a comprehensive overview of the Kai-CD project. It i
 ### V. System Design
 - [18: Import/Export Schema](./18_ImportExportSchema.md) - The JSON schema for backing up and restoring user data.
 
+### VI. Agent Logs & Knowledge Base
+- [19: Agent Task List](./agent/19_Agent_Task_List.md) - The current to-do list for the active AI agent.
+- [20: Changelog](./agent/20_Changelog.md) - A log of major changes and bug fixes.
+- [21: Knowledge Base](./agent/21_KnowledgeBase.md) - A repository of solved issues and technical solutions.
+
 ---
 *This index is the primary entry point. Please keep it updated as new documents are added.* 

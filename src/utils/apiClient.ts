@@ -26,11 +26,24 @@ class ApiClient {
 
     try {
       const response = await fetch(url, config);
+      const responseText = await response.text();
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: response.statusText }));
+        let errorData;
+        try {
+            errorData = JSON.parse(responseText);
+        } catch (e) {
+            errorData = { message: responseText || response.statusText };
+        }
         throw new Error(errorData.message || 'An unknown error occurred');
       }
-      return await response.json();
+
+      try {
+        // Try to parse as JSON, but fall back to raw text if it fails
+        return JSON.parse(responseText);
+      } catch (e) {
+        return responseText;
+      }
     } catch (error) {
       console.error('API Client Error:', error);
       throw error;

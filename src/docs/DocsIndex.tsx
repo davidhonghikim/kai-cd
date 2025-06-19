@@ -1,4 +1,5 @@
 import React from 'react';
+import { docList } from './doc-loader';
 
 // The import.meta.glob result is an object where keys are file paths
 // e.g., { '../../md/00_Index.md': () => import(...) }
@@ -19,25 +20,31 @@ interface DocsIndexProps {
 }
 
 const DocsIndex: React.FC<DocsIndexProps> = ({ onSelect, activeDoc }) => {
+  const getDocTitle = (docPath: string) => {
+    // Take the last part of the path for the title
+    const title = docPath.split('/').pop() || '';
+    return title.replace(/_/g, ' ').replace(/^\d+\s*/, '');
+  };
+
   return (
     <nav className="p-4 border-r border-slate-200 dark:border-slate-700 w-64 h-screen overflow-y-auto">
       <h2 className="text-lg font-semibold mb-4 text-slate-900 dark:text-slate-100">Documents</h2>
       <ul className="space-y-1">
-        {docFiles.map(docName => (
-          <li key={docName}>
+        {docList.map(docPath => (
+          <li key={docPath}>
             <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                onSelect(docName as string);
+                onSelect(docPath);
               }}
               className={`block px-3 py-2 text-sm rounded-md transition-colors ${
-                activeDoc === docName
+                activeDoc === docPath
                   ? 'bg-cyan-100 dark:bg-cyan-900 text-cyan-700 dark:text-cyan-200'
                   : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
-              {docName?.replace(/_/g, ' ').replace(/^\d+\s*/, '')}
+              {getDocTitle(docPath)}
             </a>
           </li>
         ))}

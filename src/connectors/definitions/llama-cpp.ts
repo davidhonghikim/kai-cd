@@ -76,4 +76,16 @@ const LlamaCppDefinition: ServiceDefinition = {
   defaultPort: 8000
 };
 
-export default LlamaCppDefinition; 
+export const llamaCppDefinition: ServiceDefinition = {
+  type: 'llama-cpp',
+  name: 'Llama.cpp',
+  category: SERVICE_CATEGORIES.LLM,
+  docs: {
+    api: 'https://github.com/abetlen/llama-cpp-python#openai-compatible-web-server'
+  },
+  authentication: {
+    type: 'none'
+  },
+  capabilities: [llmChatCapability],
+  defaultPort: 8000
+}; 

@@ -1,29 +1,33 @@
 import React from 'react';
 import type { Service } from '../types';
-import { getCapabilityView } from './capabilities/registry';
+import { getCapabilityView, UnknownCapabilityView } from './capabilities/registry';
 
 interface CapabilityUIProps {
   service: Service;
 }
 
 const CapabilityUI: React.FC<CapabilityUIProps> = ({ service }) => {
-  return (
-    <div>
-      {service.capabilities.map(cap => {
-        const ViewComponent = getCapabilityView(cap.capability);
-        if (ViewComponent) {
-          // The key should ideally be more unique if capabilities can be duplicated
-          return <ViewComponent key={cap.capability} service={service} capability={cap} />;
-        }
-        return (
-          <div key={cap.capability}>
-            <p>
-              Warning: No UI registered for capability: <strong>{cap.capability}</strong>
-            </p>
-          </div>
-        );
-      })}
-    </div>
+  // For now, we will render the UI for the FIRST compatible capability.
+  // This avoids cluttering the UI with multiple views (e.g., chat and model management).
+  // A future enhancement could be to add tabs to switch between capabilities.
+  const primaryCapability = service.capabilities.find(cap => getCapabilityView(cap.capability));
+
+  if (!primaryCapability) {
+    // If no capabilities have a registered view, show a generic message
+    // or the first capability's "unknown" view.
+    const firstCapability = service.capabilities[0];
+    if (!firstCapability) {
+      return <div>No capabilities defined for this service.</div>;
+    }
+    return <UnknownCapabilityView capability={firstCapability} />;
+  }
+
+  const ViewComponent = getCapabilityView(primaryCapability.capability);
+
+  return ViewComponent ? (
+    <ViewComponent service={service} capability={primaryCapability} />
+  ) : (
+    <UnknownCapabilityView capability={primaryCapability} />
   );
 };
 

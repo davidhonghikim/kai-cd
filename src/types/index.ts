@@ -156,16 +156,6 @@ export interface HealthCapability {
 
 export type CapabilityType = 'llm_chat' | 'image_generation' | 'model_management' | 'automation' | 'langchain' | 'storage' | 'vector_database' | 'graph_execution' | 'health';
 
-export interface Capability {
-  capability: CapabilityType;
-  endpoints: {
-    [endpointKey: string]: Endpoint;
-  };
-  parameters: {
-    [parameterKey: string]: ParameterDefinition[];
-  };
-}
-
 export type ServiceCapability =
   | LlmChatCapability
   | ImageGenerationCapability
@@ -223,22 +213,17 @@ export interface ServiceDefinition {
   };
 }
 
-export interface Service extends ServiceDefinition {
+export type Service = ServiceDefinition & {
   id: string;
-  name: string;
   url: string;
   enabled: boolean;
-  status?: 'online' | 'offline' | 'checking';
-  hasExternalUi?: boolean;
-  category: string;
+  status: 'online' | 'offline' | 'checking' | 'unknown';
   createdAt: number;
   updatedAt: number;
   isActive: boolean;
   isConnected: boolean;
-  authentication: AuthDefinition;
-  capabilities: ServiceCapability[];
   lastUsedModel?: string;
-}
+};
 
 export interface ChatMessage {
   id: string;
@@ -267,5 +252,15 @@ export interface ComfyWorkflow {
 }
 
 export interface LlmManagedService {
+  // ... existing code ...
+}
+
+export interface CapabilityViewProps<T extends ServiceCapability> {
+  service: Service;
+  capability: T;
+}
+
+export interface ImageArtifact {
+  id: string;
   // ... existing code ...
 }

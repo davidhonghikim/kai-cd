@@ -10,8 +10,10 @@ import {
   ChevronRightIcon,
   ComputerDesktopIcon,
 } from '@heroicons/react/24/outline';
-import { switchToPanel, switchToTab } from '../store/viewStateStore';
+import { switchToPanel, switchToTab, useViewStateStore, type MainView } from '../store/viewStateStore';
 import { allServiceDefinitions } from '../connectors/definitions/all';
+import { INITIAL_TAB_VIEW_KEY } from '../config/constants';
+import type { TabView } from '../store/viewStateStore';
 
 const Popup: React.FC = () => {
   const { services, selectedServiceId, setSelectedServiceId } = useServiceStore();
@@ -56,9 +58,12 @@ const Popup: React.FC = () => {
      window.close(); // Close the popup
   };
 
-  const openViewInTab = (view: 'service-manager' | 'settings' | 'docs') => {
-    const url = view === 'docs' ? 'docs.html' : `tab.html?view=${view}`;
-    chrome.tabs.create({ url });
+  const openViewInNewTab = (view: TabView) => {
+    console.log(`Setting initial view for new tab: ${view}`);
+    chrome.storage.local.set({ [INITIAL_TAB_VIEW_KEY]: view }, () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('tab.html') });
+      window.close();
+    });
   };
 
   const togglePanel = async () => {
@@ -104,7 +109,7 @@ const Popup: React.FC = () => {
             )}
           </button>
           <button
-            onClick={() => openViewInTab('service-manager')}
+            onClick={() => openViewInNewTab('services')}
             className="flex items-center gap-1 px-2 py-1 hover:bg-background-tertiary rounded"
             aria-label="Service Manager"
             title="Service Manager"
@@ -112,7 +117,7 @@ const Popup: React.FC = () => {
             <WrenchScrewdriverIcon className="h-5 w-5" />
           </button>
           <button
-            onClick={() => openViewInTab('settings')}
+            onClick={() => openViewInNewTab('settings')}
             className="flex items-center gap-1 px-2 py-1 hover:bg-background-tertiary rounded"
             aria-label="Settings"
             title="Settings"
@@ -120,7 +125,7 @@ const Popup: React.FC = () => {
             <Cog6ToothIcon className="h-5 w-5" />
           </button>
           <button
-            onClick={() => openViewInTab('docs')}
+            onClick={() => openViewInNewTab('docs')}
             className="flex items-center gap-1 px-2 py-1 hover:bg-background-tertiary rounded"
             aria-label="Documentation"
             title="Documentation"
@@ -154,9 +159,10 @@ const Popup: React.FC = () => {
                   </div>
                   <div className="flex gap-2 shrink-0">
                     <button
-                      onClick={(e) => {
+                      onClick={async (e) => {
                         e.stopPropagation();
-                        switchToTab(service);
+                        console.log(`[Popup] "Tab" button clicked for service: ${service.name} (${service.id})`);
+                        await switchToTab(service);
                         window.close();
                       }}
                       className="px-3 py-1 text-xs rounded-md bg-accent-primary text-white hover:bg-accent-primary-state focus:outline-none focus:ring-2 focus:ring-accent-primary"
@@ -164,9 +170,10 @@ const Popup: React.FC = () => {
                       Tab
                     </button>
                     <button
-                      onClick={(e) => {
+                      onClick={async (e) => {
                         e.stopPropagation();
-                        switchToPanel(service);
+                        console.log(`[Popup] "Panel" button clicked for service: ${service.name} (${service.id})`);
+                        await switchToPanel(service);
                         window.close();
                       }}
                       className="px-3 py-1 text-xs rounded-md bg-background-tertiary text-text-primary hover:bg-border-primary focus:outline-none focus:ring-2 focus:ring-border-primary"

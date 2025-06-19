@@ -2,6 +2,33 @@
 
 This document outlines the known issues and recent troubleshooting steps taken on the project. It is intended to provide context for the next developer or agent taking over.
 
+## Current State: STABLE BUT DEGRADED
+The build is stable and the application is functional, but several features are broken or need improvement. The critical, application-breaking `TypeError: this.getData is not a function` error has been resolved by fixing underlying dependency conflicts.
+
+## Current Known Issues (For Next Agent)
+
+1.  **Docs Viewer UI Needs Improvement:**
+    -   **Problem:** While the markdown content now loads correctly, the styling is basic. The text is readable, but it does not feel integrated with the application's theme.
+    -   **Task:** Improve the CSS for the `prose` class in the `DocsViewer` to better match the application's light and dark themes. This involves adjusting colors, font sizes, link styles, and code block appearance.
+
+2.  **Service Reordering is Disabled:**
+    -   **Problem:** The drag-and-drop functionality on the `ServiceManagement` page was removed because its underlying library, `react-beautiful-dnd`, is unmaintained and incompatible with React 19.
+    -   **Task:** Research and implement a modern, maintained drag-and-drop library (e.g., `dnd-kit`) to restore the service reordering functionality.
+
+3.  **Review `17_UI_RedesignPlan.md`:**
+    -   **Problem:** The UI redesign plan may contain references to components or libraries that are no longer in use.
+    -   **Task:** Review the redesign plan, including any Mermaid diagrams, and update it to reflect the current state of the codebase and the removal of `react-beautiful-dnd`.
+
+## Resolved Issues (June 2024)
+
+-   **`Uncaught TypeError: this.getData is not a function`:** Resolved by upgrading `remark-gfm` to v4.0.0 and removing `react-beautiful-dnd`.
+-   **Build Failure due to `react-beautiful-dnd`:** Resolved by removing the package and its usage in `ServiceManagement.tsx`.
+-   **Docs Viewer Not Loading:** Resolved by fixing the logic that accesses content from Vite's `glob` import.
+-   **Popup Buttons Not Working:** Resolved by making the `onClick` handlers `async` and awaiting the panel/tab switching functions.
+
+---
+*This document has been updated to reflect the current project state for handoff.*
+
 ## 1. Current State: BROKEN BUILD
 
 ### Status Update (2025-06-19)
