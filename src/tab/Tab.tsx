@@ -1,187 +1,134 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useStore } from 'zustand';
 import { useServiceStore } from '../store/serviceStore';
-import { switchToPanel } from '../store/viewStateStore';
+import { useViewStateStore } from '../store/viewStateStore';
 import CapabilityUI from '../components/CapabilityUI';
-import { Cog6ToothIcon, CloudIcon, DocumentTextIcon, CommandLineIcon, ArrowTopRightOnSquareIcon, ShieldExclamationIcon, PhotoIcon } from '@heroicons/react/24/outline';
-import ServiceManagement from '../components/ServiceManagement';
-import SettingsView from '../components/SettingsView';
-import DocsViewer from '../docs/DocsViewer';
+import StatusIndicator from '../components/StatusIndicator';
+import { ArrowTopRightOnSquareIcon, ArrowsPointingOutIcon, CloudIcon, DocumentTextIcon, Cog6ToothIcon, CommandLineIcon, ShieldExclamationIcon, PhotoIcon, WrenchScrewdriverIcon, LockClosedIcon, ShieldCheckIcon } from '@heroicons/react/24/solid';
+import ServiceSelector from '../components/ServiceSelector';
 import IFrameView from '../components/IFrameView';
 import type { Service } from '../types';
-import { VIEW_STATES, INITIAL_TAB_VIEW_KEY, SELECTED_SERVICE_ID_KEY } from '../config/constants';
-import ServiceSelector from '../components/ServiceSelector';
-import ConsoleLogView from '../components/ConsoleLogView';
 import type { TabView } from '../store/viewStateStore';
-
-const getPrimaryViewForService = (service: Service): TabView => {
-    const capabilities = service.capabilities.map(c => c.capability);
-    if (capabilities.includes('llm_chat')) {
-        return 'chat';
-    }
-    if (capabilities.includes('image_generation')) {
-        return 'image';
-    }
-    return 'chat'; 
-}
+import ServiceManagement from '../components/ServiceManagement';
+import DocsViewer from '../docs/DocsViewer';
+import SettingsView from '../components/SettingsView';
+import ConsoleLogView from '../components/ConsoleLogView';
+import ServiceStatusList from '../components/ServiceStatusList';
+import VaultManager from '../components/VaultManager';
+import CredentialManager from '../components/CredentialManager';
+import SecurityHub from '../components/SecurityHub';
+import useVaultStore from '../store/vaultStore';
 
 const Tab: React.FC = () => {
-  const { services, selectedServiceId, setSelectedServiceId, getServiceById } = useServiceStore();
-  const [activeKey, setActiveKey] = useState<TabView>('chat');
-  const [initialStateLoaded, setInitialStateLoaded] = useState(false);
+  const serviceStoreHasHydrated = useStore(useServiceStore, (s) => s._hasHydrated);
+  const viewStateStoreHasHydrated = useStore(useViewStateStore, (s) => s._hasHydrated);
 
+  const { services } = useServiceStore();
+  const { activeServiceId, setActiveServiceId } = useViewStateStore();
+  const { status: vaultStatus } = useVaultStore();
+  const [activeView, setActiveView] = useState<TabView>('services');
+  const [showIframeView, setShowIframeView] = useState(false);
+
+  // Always execute hooks; render loading placeholder conditionally later.
+  const isLoading = !serviceStoreHasHydrated || !viewStateStoreHasHydrated;
+
+  const activeService = services.find((s) => s.id === activeServiceId);
+
+  // Effect for handling incoming messages from the background script
   useEffect(() => {
-    const getInitialState = async () => {
-      try {
-        // First, try to get the service ID from the URL query parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const serviceIdFromUrl = urlParams.get('serviceId');
-        
-        let serviceIdToSelect: string | null = null;
-        let viewToSelect: TabView | null = null;
-
-        if (serviceIdFromUrl) {
-          console.log(`[Tab] Found serviceId in URL: ${serviceIdFromUrl}`);
-          const service = getServiceById(serviceIdFromUrl);
-          if (service) {
-            serviceIdToSelect = service.id;
-            viewToSelect = getPrimaryViewForService(service);
-          }
-        } else {
-          // Fallback to chrome.storage.local if no URL param
-          const result = await chrome.storage.local.get([INITIAL_TAB_VIEW_KEY, SELECTED_SERVICE_ID_KEY]);
-          
-          viewToSelect = result[INITIAL_TAB_VIEW_KEY];
-          serviceIdToSelect = result[SELECTED_SERVICE_ID_KEY];
-          
-          // Clean up storage keys after reading them
-          await chrome.storage.local.remove([INITIAL_TAB_VIEW_KEY, SELECTED_SERVICE_ID_KEY]);
+    const messageListener = (message: any) => {
+      if (message.action === 'setState') {
+        const { serviceId, view } = message.payload;
+        console.log(`[Tab] Received setState message. ServiceID: ${serviceId}, View: ${view}`);
+        if (view) {
+          setActiveView(view);
         }
-        
-        if (serviceIdToSelect) {
-            console.log(`[Tab] Setting selected service ID to: ${serviceIdToSelect}`);
-            setSelectedServiceId(serviceIdToSelect);
+        // IMPORTANT: Only set active service if one was provided.
+        // Don't nullify it if the message was just for a view change (e.g., 'settings').
+        if (serviceId) {
+          setActiveServiceId(serviceId);
         }
-
-        if (viewToSelect && ['chat', 'image', 'services', 'docs', 'settings', 'console'].includes(viewToSelect)) {
-          console.log(`[Tab] Setting initial view to: ${viewToSelect}`);
-          setActiveKey(viewToSelect as TabView);
-        }
-
-      } catch (error) {
-        console.error('[Tab] Failed to get initial state:', error);
-      } finally {
-        setInitialStateLoaded(true);
-        // Let the background script know the tab has loaded its state and can close the side panel
-        chrome.runtime.sendMessage({ action: 'closeSidePanel' });
       }
     };
-
-    getInitialState();
-
-    const messageListener = (message: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) => {
-        if (message.type === 'SWITCH_SERVICE') {
-            console.log(`[Tab] Received SWITCH_SERVICE message:`, message);
-            if(message.serviceId) {
-                setSelectedServiceId(message.serviceId);
-            }
-            if(message.view) {
-                setActiveKey(message.view);
-            }
-        }
-    };
-
     chrome.runtime.onMessage.addListener(messageListener);
+    return () => chrome.runtime.onMessage.removeListener(messageListener);
+  }, [setActiveServiceId]); // Dependency on the setter function
 
-    return () => {
-        chrome.runtime.onMessage.removeListener(messageListener);
-    };
-  }, [setSelectedServiceId, getServiceById]);
+  // Effect for initializing state from URL or setting a default service
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceIdFromUrl = urlParams.get('serviceId');
+    const viewFromUrl = urlParams.get('view') as TabView | null;
 
-  const activeService = useMemo(() => {
-    return services.find(s => s.id === selectedServiceId);
-  }, [services, selectedServiceId]);
+    // Prioritize URL parameters
+    if (viewFromUrl) {
+      setActiveView(viewFromUrl);
+    }
+    if (serviceIdFromUrl) {
+      setActiveServiceId(serviceIdFromUrl);
+    } else if (!activeServiceId && services && services.length > 0) {
+      // If no service is active (from URL or message) AND services are loaded,
+      // set a default service and view.
+      setActiveServiceId(services[0].id);
+      setActiveView('chat');
+    }
+
+    // Let the background script know the tab is ready
+    chrome.runtime.sendMessage({ action: 'closeSidePanel' });
+    
+  }, [services, activeServiceId, setActiveServiceId]); // Re-run when services or activeId changes
 
   useEffect(() => {
-    // When the view changes, if there's no active service that matches the view,
-    // find and select the first available one.
-    if (!initialStateLoaded) return;
-
-    const suitableServiceExists = activeService && 
-        ((activeKey === 'chat' && activeService.capabilities.some(c => c.capability === 'llm_chat')) ||
-         (activeKey === 'image' && activeService.capabilities.some(c => c.capability === 'image_generation')));
-
-    if (suitableServiceExists) {
-        return; // Already have a good service selected
-    }
-
-    if (activeKey === 'chat') {
-        const firstChatService = services.find(s => s.enabled && !s.archived && s.capabilities.some(c => c.capability === 'llm_chat'));
-        if (firstChatService) {
-            setSelectedServiceId(firstChatService.id);
-        }
-    } else if (activeKey === 'image') {
-        const firstImageService = services.find(s => s.enabled && !s.archived && s.capabilities.some(c => c.capability === 'image_generation'));
-        if (firstImageService) {
-            setSelectedServiceId(firstImageService.id);
+    // If the active service changes, always reset to the capability view
+    setShowIframeView(false);
+  }, [activeServiceId]);
+  
+  // Auto-switch view if the current service doesn't support the active view
+  useEffect(() => {
+    if (activeService) {
+        const capabilities = activeService.capabilities.map(c => c.capability);
+        if (activeView === 'chat' && !capabilities.includes('llm_chat')) {
+            setActiveView('services');
+        } else if (activeView === 'image' && !capabilities.includes('image_generation')) {
+            setActiveView('services');
         }
     }
-  }, [activeKey, services, activeService, setSelectedServiceId, initialStateLoaded]);
-
-  const navItems: { name: TabView; icon: React.FC<any> }[] = [
-    { name: 'chat', icon: CommandLineIcon },
-    { name: 'image', icon: PhotoIcon },
-    { name: 'services', icon: CloudIcon },
-    { name: 'docs', icon: DocumentTextIcon },
-    { name: 'settings', icon: Cog6ToothIcon },
-    { name: 'console', icon: ShieldExclamationIcon },
-  ];
+  }, [activeService, activeView]);
 
   const getServiceHost = (service?: Service) => {
     if (!service || !service.url) return '';
     try {
       const url = new URL(service.url);
       return url.host;
-    } catch (error) {
+    } catch (_error) {
       return '';
     }
   };
 
-  const renderContent = () => {
-    if (!initialStateLoaded) {
-        return (
-            <div className="flex flex-col items-center justify-center h-full text-slate-500">
-                <CloudIcon className="w-16 h-16 animate-pulse" />
-                <h2 className="text-xl font-semibold mt-4">Loading...</h2>
-            </div>
-        );
+  const renderMainContent = () => {
+    if (showIframeView && activeService) {
+      return <IFrameView src={activeService.url} title={activeService.name} />;
     }
     
-    if (!activeService && (activeKey === 'chat' || activeKey === 'image')) {
-        const message = activeKey === 'chat' ? 'No Chat Service' : 'No Image Service';
-        const capabilityMessage = activeKey === 'chat' ? 'chat' : 'image generation';
-        const Icon = activeKey === 'chat' ? CommandLineIcon : PhotoIcon;
-        return (
-          <div className="flex flex-col items-center justify-center h-full text-slate-500">
-            <Icon className="w-16 h-16 mb-4" />
-            <h2 className="text-xl font-semibold">{message}</h2>
-            <p>Go to "Services" to add and enable a service with {capabilityMessage} capabilities.</p>
-          </div>
-        );
-    }
-
-    switch (activeKey) {
+    switch (activeView) {
       case 'chat':
-        if (activeService && activeService.capabilities.some(c => c.capability === 'llm_chat')) {
-          return <CapabilityUI service={activeService} />;
-        }
-        break; // Fall through to default message if service doesn't have the capability
       case 'image':
-        if (activeService && activeService.capabilities.some(c => c.capability === 'image_generation')) {
-          return <CapabilityUI service={activeService} />;
-        }
-        break; // Fall through to default message if service doesn't have the capability
+        return activeService ? <CapabilityUI service={activeService} /> : <NoServiceSelectedView />;
       case 'services':
         return <ServiceManagement />;
+      case 'vault':
+        return (
+          <div className="p-6">
+            <VaultManager />
+            {vaultStatus === 'UNLOCKED' && (
+              <div className="mt-8">
+                <CredentialManager />
+              </div>
+            )}
+          </div>
+        );
+      case 'security':
+        return <SecurityHub />;
       case 'docs':
         return <DocsViewer />;
       case 'settings':
@@ -189,120 +136,87 @@ const Tab: React.FC = () => {
       case 'console':
         return <ConsoleLogView />;
       default:
-        return (
-            <div className="flex flex-col items-center justify-center h-full text-slate-500">
-                <CloudIcon className="w-16 h-16 mb-4" />
-                <h2 className="text-xl font-semibold">No Active Services</h2>
-                <p>Go to the "Services" tab to add and enable a service.</p>
-            </div>
-        );
+        return <NoServiceSelectedView />;
     }
-    // Default case for when a service is selected but doesn't have the right capability for the view
-    return (
-        <div className="flex flex-col items-center justify-center h-full text-slate-500">
-            <ShieldExclamationIcon className="w-16 h-16 mb-4" />
-            <h2 className="text-xl font-semibold">Capability Mismatch</h2>
-            <p><span className="font-bold">{activeService?.name}</span> does not have <span className="font-bold">{activeKey}</span> capabilities.</p>
-        </div>
-    );
   };
 
-  const getHeaderInfo = () => {
-    const selectedService = services.find(s => s.id === selectedServiceId);
-
-    switch (activeKey) {
-      case 'chat':
-        const chatService = selectedService || services.find(s => s.enabled && !s.archived && s.capabilities.some(c => c.capability === 'llm_chat'));
-        return { title: 'Chat', host: getServiceHost(chatService), service: chatService };
-      case 'image':
-        const imageService = selectedService || services.find(s => s.enabled && !s.archived && s.capabilities.some(c => c.capability === 'image_generation'));
-        return { title: 'Image Generation', host: getServiceHost(imageService), service: imageService };
-      case 'services':
-        return { title: 'Service Manager', host: '', service: null };
-      case 'docs':
-        return { title: 'Documentation', host: '', service: null };
-      case 'settings':
-        return { title: 'Settings', host: '', service: null };
-      case 'console':
-        return { title: 'Console Logs', host: '', service: null };
-      default:
-        const activeService = services.find(s => s.id === selectedServiceId) || services.find(s => s.enabled && !s.archived);
-        return { title: activeService?.name || 'Kai', host: getServiceHost(activeService), service: activeService };
-    }
-  }
-
-  const { title, host, service: currentService } = getHeaderInfo();
-  
-  const chatServices = services.filter(s => s.enabled && !s.archived && s.capabilities.some(c => c.capability === 'llm_chat'));
-  const imageServices = services.filter(s => s.enabled && !s.archived && s.capabilities.some(c => c.capability === 'image_generation'));
-  
-  const getSelectorServices = () => {
-    switch(activeKey) {
-        case 'chat': return chatServices;
-        case 'image': return imageServices;
-        default: return [];
-    }
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-slate-950 text-white">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="flex h-screen bg-slate-900 text-white">
+    <div className="flex h-screen bg-slate-950 text-white">
       {/* Sidebar */}
-      <div className="w-16 bg-slate-950 flex flex-col items-center py-4 space-y-4">
-        {navItems.map(item => (
-          <button
-            key={item.name}
-            onClick={() => {
-              console.log(`[Tab] Setting activeKey to: ${item.name}`);
-              setActiveKey(item.name);
-            }}
-            className={`p-2 rounded-lg ${activeKey === item.name ? 'bg-cyan-600' : 'hover:bg-slate-700'}`}
-            title={item.name}
-          >
-            <item.icon className="w-6 h-6" />
-          </button>
-        ))}
-      </div>
-
-      {/* Main Content */}
+      <nav className="w-16 bg-slate-900 flex flex-col items-center py-4 space-y-4">
+        {/* Main Navigation Icons */}
+        <NavItem icon={CommandLineIcon} view="chat" activeView={activeView} setView={setActiveView} title="LLM Chat - AI conversation interface" />
+        <NavItem icon={PhotoIcon} view="image" activeView={activeView} setView={setActiveView} title="Image Generation - AI image creation tools" />
+        <div className="flex-grow"></div>
+        {/* Settings/Management Icons */}
+        <NavItem icon={WrenchScrewdriverIcon} view="services" activeView={activeView} setView={setActiveView} title="Service Management - Configure AI services" />
+        <NavItem icon={LockClosedIcon} view="vault" activeView={activeView} setView={setActiveView} title="Secure Vault - Encrypted credential storage" />
+        <NavItem icon={ShieldCheckIcon} view="security" activeView={activeView} setView={setActiveView} title="Security Toolkit - Cryptographic and security tools" />
+        <NavItem icon={DocumentTextIcon} view="docs" activeView={activeView} setView={setActiveView} title="Documentation - User guides and help" />
+        <NavItem icon={Cog6ToothIcon} view="settings" activeView={activeView} setView={setActiveView} title="Application Settings - Themes and preferences" />
+        <NavItem icon={ShieldExclamationIcon} view="console" activeView={activeView} setView={setActiveView} title="Debug Console - Application logs and diagnostics" />
+      </nav>
+      
+      {/* Main Panel */}
       <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <div className="flex justify-between items-center p-3 bg-slate-800 border-b border-slate-700">
-          <div>
-            <h1 className="text-lg font-semibold">{title}</h1>
-            {host && <p className="text-xs text-slate-400">{host}</p>}
-          </div>
-          <div className="flex items-center gap-4">
-            {(activeKey === 'chat' || activeKey === 'image') && (
-              <ServiceSelector 
-                services={getSelectorServices()}
-                selectedServiceId={selectedServiceId}
-                onSelectService={setSelectedServiceId}
-              />
-            )}
-            {currentService && (
-              <button
-                onClick={() => switchToPanel(currentService)}
-                className="p-1 text-slate-400 hover:text-slate-200"
-                title="Open in side panel"
-              >
-                <ArrowTopRightOnSquareIcon className="w-5 h-5" />
-              </button>
+        <header className="flex items-center justify-between p-3 border-b border-slate-800 shrink-0">
+          <div className="flex-1 min-w-0 flex items-center">
+            <h1 className="text-xl font-bold text-slate-200 truncate" title={activeService?.name}>
+              {activeService ? activeService.name : 'Manage Services'}
+            </h1>
+            {activeService && (
+              <>
+                <span className="mx-2 text-slate-600">|</span>
+                <StatusIndicator status={activeService.status} />
+                <span className="ml-2 text-sm text-slate-400">{getServiceHost(activeService)}</span>
+                {activeService.hasExternalUi && (
+                  <button onClick={() => setShowIframeView(!showIframeView)} className="ml-3 p-1 text-slate-400 hover:text-white" title={showIframeView ? 'Show Capability View' : 'Show Service Web UI'}>
+                    {showIframeView ? <ArrowsPointingOutIcon className="h-5 w-5" /> : <ArrowTopRightOnSquareIcon className="h-5 w-5" />}
+                  </button>
+                )}
+              </>
             )}
           </div>
-        </div>
-
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto bg-slate-950">
-          {initialStateLoaded ? renderContent() : (
-             <div className="flex flex-col items-center justify-center h-full text-slate-500">
-                <CloudIcon className="w-16 h-16 animate-pulse" />
-                <h2 className="text-xl font-semibold mt-4">Loading...</h2>
-            </div>
-          )}
-        </div>
+          <div className="flex items-center space-x-2">
+            <ServiceStatusList />
+            <ServiceSelector
+              services={services}
+              selectedServiceId={activeServiceId}
+              onSelectService={setActiveServiceId}
+            />
+          </div>
+        </header>
+        <main className="flex-1 bg-slate-950 overflow-y-auto">
+          {renderMainContent()}
+        </main>
       </div>
     </div>
   );
 };
+
+const NavItem: React.FC<{icon: React.FC<any>, view: TabView, activeView: TabView, setView: (v: TabView) => void, title?: string}> = 
+({icon: Icon, view, activeView, setView, title}) => (
+    <button onClick={() => setView(view)} className={`p-2 rounded-md ${activeView === view ? 'bg-cyan-600' : 'hover:bg-slate-800'}`} title={title || view.charAt(0).toUpperCase() + view.slice(1)}>
+        <Icon className="h-6 w-6" />
+    </button>
+);
+
+const NoServiceSelectedView: React.FC = () => (
+    <div className="flex items-center justify-center h-full">
+        <div className="text-center text-slate-400">
+            <CloudIcon className="mx-auto h-12 w-12" />
+            <h2 className="mt-4 text-xl font-semibold">No Active Service</h2>
+            <p className="mt-2">Please select a service from the dropdown above.</p>
+        </div>
+    </div>
+);
 
 export default Tab; 

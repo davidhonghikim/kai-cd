@@ -1,123 +1,350 @@
 # 1. Architecture Overview
 
-Kai-CD is architected as a modular, data-driven, single-page application packaged as a Chrome Extension. Its design prioritizes extensibility and a clean separation of concerns, allowing new features and services to be added with minimal changes to the core application logic.
+## 🏗️ **System Architecture**
 
-The architecture is built on three fundamental principles:
+Kai-CD follows a **feature-based modular architecture** designed for scalability, maintainability, and developer productivity. The system is organized around discrete features with shared infrastructure and clear separation of concerns.
 
-1.  **Everything is a Service:** Every external tool (Ollama, ComfyUI, etc.) is treated as a "Service." All information required to interact with that service is encapsulated in a single, self-contained definition object.
-2.  **The UI is a Function of State and Data:** The user interface is not static. It dynamically renders itself based on the capabilities and parameter schemas defined in a service's data. This eliminates the need for hardcoded UIs for each service.
-3.  **Centralized State Management:** All application state is managed in a central location (Zustand stores), providing a single source of truth and predictable data flow.
+## 📂 **Directory Structure**
 
-## High-Level Diagram
+```
+src/
+├── core/                          # Core application infrastructure
+│   ├── config/                    # Centralized configuration management
+│   │   ├── index.ts              # ConfigManager singleton with full API
+│   │   ├── system.ts             # System default configuration
+│   │   ├── types.ts              # Configuration type definitions
+│   │   └── user.ts               # User override handling
+│   ├── constants/                 # Application-wide constants
+│   ├── types/                     # Core type definitions
+│   └── utils/                     # Core utilities and helpers
+├── features/                      # Feature-based organization
+│   ├── ai-services/              # AI service management
+│   │   ├── components/           # Service-specific UI components
+│   │   ├── hooks/                # Service management hooks
+│   │   ├── store/                # Service state management
+│   │   ├── types/                # Service type definitions
+│   │   └── utils/                # Service utilities
+│   ├── security/                 # Security & cryptography
+│   │   ├── components/           # Security UI components
+│   │   ├── crypto/               # Cryptographic utilities
+│   │   ├── vault/                # Vault management logic
+│   │   └── utils/                # Security utilities
+│   ├── themes/                   # Theme management system
+│   │   ├── components/           # Theme UI components
+│   │   │   ├── ThemeCustomizer.tsx
+│   │   │   ├── ThemeCard.tsx
+│   │   │   └── ThemeCreationForm.tsx
+│   │   ├── manager/              # Theme business logic
+│   │   │   └── themeManager.ts
+│   │   ├── presets/              # Theme collections
+│   │   │   ├── lightThemes.ts
+│   │   │   ├── darkThemes.ts
+│   │   │   └── developerThemes.ts
+│   │   └── types/                # Theme type definitions
+│   └── ui-shell/                 # Main UI framework
+│       ├── layout/               # Layout components
+│       ├── navigation/           # Navigation components
+│       └── views/                # Main view components
+├── shared/                       # Shared/reusable code
+│   ├── components/               # Reusable UI component library
+│   │   ├── forms/                # Form components (Input, Button)
+│   │   ├── layout/               # Layout components
+│   │   ├── feedback/             # Notifications, alerts
+│   │   └── data-display/         # Tables, cards, lists
+│   ├── hooks/                    # Reusable React hooks
+│   ├── utils/                    # Shared utility functions
+│   └── constants/                # Shared constants
+├── platforms/                    # Platform-specific code
+│   ├── chrome-extension/         # Chrome extension implementation
+│   │   ├── background/           # Background service scripts
+│   │   ├── popup/                # Browser action popup
+│   │   ├── sidepanel/            # Chrome side panel
+│   │   └── tab/                  # Main tab interface
+│   └── web/                      # Future web platform support
+└── assets/                       # Static assets
+    ├── styles/                   # Global CSS and themes
+    ├── icons/                    # Icon assets
+    └── docs/                     # Documentation assets
+```
 
-This diagram illustrates the flow of data and control between the major components of the application.
+---
+
+## 🎯 **Architectural Principles**
+
+### **1. Feature-First Organization**
+Each major feature is self-contained with its own:
+- UI components
+- Business logic
+- Type definitions  
+- State management
+- Utilities
+
+**Benefits:**
+- **Team scalability** - Multiple developers can work on different features
+- **Code isolation** - Changes in one feature don't affect others
+- **Clear ownership** - Each feature has defined boundaries
+
+### **2. Shared Infrastructure**
+Common functionality is centralized in `shared/` and `core/`:
+- **Reusable UI components** prevent duplication
+- **Core utilities** provide consistent behavior
+- **Configuration management** centralizes settings
+
+### **3. Platform Abstraction**
+Platform-specific code is isolated in `platforms/`:
+- **Chrome extension** implementation
+- **Future web platform** support
+- **Clean separation** between platform and business logic
+
+---
+
+## ⚙️ **Core Infrastructure**
+
+### **Configuration Management**
+**Location:** `src/core/config/`
+
+The centralized configuration system provides:
+
+```typescript
+interface ConfigManager {
+  // Initialize configuration system
+  initialize(): Promise<void>;
+  
+  // Get complete configuration
+  getConfig(): AppConfig;
+  
+  // Get specific value by path
+  get<T>(path: string): T;
+  
+  // Set configuration value
+  set(path: string, value: any): Promise<void>;
+  
+  // Update multiple values
+  update(updates: DeepPartial<AppConfig>): Promise<void>;
+  
+  // Subscribe to changes
+  subscribe(listener: (event: ConfigUpdateEvent) => void): () => void;
+  
+  // Import/export for backup
+  export(): ConfigWithMetadata;
+  import(config: Partial<AppConfig>): Promise<void>;
+}
+```
+
+**Features:**
+- **Hierarchical loading** (system defaults → user overrides → merged config)
+- **Type-safe access** with full TypeScript support
+- **Validation** with error and warning reporting
+- **Change notifications** for reactive updates
+- **Persistent storage** with Chrome storage API
+
+### **State Management**
+**Pattern:** Zustand with persistent middleware
+
+**Core Stores:**
+- `serviceStore` - AI service management and health monitoring
+- `viewStateStore` - UI state and active selections
+- `settingsStore` - User preferences and configuration
+- `vaultStore` - Secure credential storage
+- `logStore` - Application logging and diagnostics
+
+**Storage Strategy:**
+- **Chrome Storage API** for extension persistence
+- **Automatic rehydration** with loading states
+- **Optimistic updates** for responsive UI
+
+---
+
+## 🧩 **Component Architecture**
+
+### **Component Hierarchy**
 
 ```mermaid
 graph TD
-    subgraph Browser
-        direction LR
-        PopupUI[Popup UI<br/>(Popup.tsx)]
-        SidePanelUI[Side Panel UI<br/>(Sidepanel.tsx)]
-        TabUI[Main Tab UI<br/>(Tab.tsx)]
-    end
-
-    subgraph "Chrome Extension Backend"
-        direction TB
-        BackgroundScript[Background Script<br/>(main.ts)]
-        subgraph "State Stores (Zustand)"
-            ServiceStore[Service Store<br/>(serviceStore.ts)]
-            ViewStateStore[View State Store<br/>(viewStateStore.ts)]
-            SettingsStore[Settings Store<br/>(settingsStore.ts)]
-        end
-        ChromeStorage[chrome.storage.local]
-    end
-
-    subgraph "External World"
-        direction TB
-        Service1[Ollama API]
-        Service2[A1111 API]
-        Service3[...]
-    end
-
-    subgraph "Application Core"
-        direction TB
-        ApiClient[Universal API Client<br/>(apiClient.ts)]
-        ServiceDefs[Service Definitions<br/>(connectors/definitions/*)]
-        CapabilityUI[CapabilityUI Router<br/>(CapabilityUI.tsx)]
-    end
-
-    PopupUI -- "Open Service" --> BackgroundScript
-    SidePanelUI -- "Renders Active Service" --> CapabilityUI
-    TabUI -- "Renders Active Service" --> CapabilityUI
-
-    BackgroundScript -- "Creates/Focuses Tab" --> TabUI
-    BackgroundScript -- "Updates State" --> ServiceStore
-
-    ServiceStore -- "Persists Data" --> ChromeStorage
-    SettingsStore -- "Persists Data" --> ChromeStorage
-    ServiceStore -- "Notifies" --> TabUI
-    ViewStateStore -- "Notifies" --> TabUI
-
-    CapabilityUI -- "Reads" --> ServiceDefs
-    CapabilityUI -- "Uses" --> ApiClient
-
-    ApiClient -- "Reads" --> ServiceDefs
-    ApiClient -- "HTTP(S) Request" --> Service1
-    ApiClient -- "HTTP(S) Request" --> Service2
-    ApiClient -- "HTTP(S) Request" --> Service3
+    A[App Root] --> B[ThemeProvider]
+    B --> C[Main Navigation]
+    B --> D[Feature Views]
+    
+    C --> E[Sidebar Navigation]
+    C --> F[Service Selector]
+    C --> G[Status Indicators]
+    
+    D --> H[AI Chat Interface]
+    D --> I[Service Management]
+    D --> J[Security Hub]
+    D --> K[Settings Panel]
+    
+    H --> L[Chat Components]
+    I --> M[Service Components]
+    J --> N[Security Components]
+    K --> O[Theme Components]
 ```
 
-## Core Components
+### **Shared Component Library**
+**Location:** `src/shared/components/`
 
-### 1. UI Entry Points (`popup`, `sidepanel`, `tab`)
+**Form Components:**
+```typescript
+// Reusable input with validation
+<Input
+  label="API Key"
+  type="password"
+  error={validationError}
+  hint="Enter your service API key"
+  leftIcon={<KeyIcon />}
+/>
 
--   **Purpose:** These are the three surfaces where a user can interact with the extension.
--   **`Popup.tsx`:** Acts as a quick-launch menu. It reads the list of configured services and provides buttons to open them in the main Tab or the Side Panel.
--   **`Sidepanel.tsx`:** A lightweight host for a single service's UI, intended for quick, context-specific tasks alongside a webpage.
--   **`Tab.tsx`:** The main, feature-rich application workspace. It contains the service management UI, settings, logs, and the primary capability views.
+// Multi-variant button
+<Button
+  variant="primary"
+  size="lg"
+  loading={isSubmitting}
+  leftIcon={<SaveIcon />}
+>
+  Save Configuration
+</Button>
+```
 
-### 2. Background Script (`background/main.ts`)
+**Feedback Components:**
+```typescript
+// Notification system
+<Alert
+  type="success"
+  title="Configuration Saved"
+  message="Your settings have been updated successfully"
+  dismissible
+  onDismiss={() => setShowAlert(false)}
+/>
+```
 
--   **Purpose:** The central nervous system of the extension. It's a non-UI service worker that runs as long as the browser is open.
--   **Responsibilities:**
-    -   **Routing:** Listens for messages from the Popup and orchestrates the opening and focusing of the main `tab.html`.
-    -   **Initial State:** Passes initial state to newly created tabs to ensure they open to the correct view.
+---
 
-### 3. State Management (Zustand Stores)
+## 🔄 **Data Flow Architecture**
 
--   **Purpose:** To provide a single, reliable source of truth for all application data.
--   **`serviceStore.ts`:** The most critical store. It holds the array of all user-configured services, including their definitions, credentials, and history. It handles the logic for adding, updating, and removing services, and persists this data to `chrome.storage.local`.
--   **`viewStateStore.ts`:** Manages the ephemeral UI state, such as which service or model is currently selected. This data is not persisted.
--   **`settingsStore.ts`:** Manages user preferences like theme and log level, persisting them to storage.
--   **`logStore.ts`:** Captures all logs generated by the application for display in the Console view.
+### **Configuration Flow**
+```mermaid
+sequenceDiagram
+    participant UI as UI Component
+    participant CM as ConfigManager
+    participant S as Storage
+    participant L as Listeners
+    
+    UI->>CM: get('theme.defaultScheme')
+    CM->>CM: Resolve from merged config
+    CM-->>UI: Return value
+    
+    UI->>CM: set('theme.defaultScheme', 'dark')
+    CM->>CM: Update user config
+    CM->>S: Persist to storage
+    CM->>L: Notify subscribers
+    L-->>UI: React to change
+```
 
-### 4. Backend Connectors (`connectors/`)
+### **Service Management Flow**
+```mermaid
+sequenceDiagram
+    participant UI as Service UI
+    participant SS as ServiceStore
+    participant API as Service API
+    participant HS as Health Check
+    
+    UI->>SS: Add new service
+    SS->>SS: Validate configuration
+    SS->>API: Test connection
+    API-->>SS: Connection result
+    SS->>HS: Start health monitoring
+    SS-->>UI: Update service list
+```
 
--   **Purpose:** This is the heart of the application's extensibility.
--   **`definitions/`:** Contains the "Rich Service Definitions." Each file (e.g., `ollama.ts`) exports a JavaScript object that completely describes a service: its name, available capabilities (`llm_chat`, `image_generation`), API endpoints, and the schema for all its parameters.
--   **`apiClient.ts`:** A universal, singleton client that performs all `fetch` requests. It reads the endpoint information from a service definition to construct the correct URL, headers, and body for any given request. It also includes robust, centralized error handling and support for streaming responses.
+---
 
-### 5. Dynamic UI (`components/`)
+## 🚀 **Performance Architecture**
 
--   **Purpose:** To render the correct user interface for any given service without hardcoding.
--   **`CapabilityUI.tsx`:** The "router" for the UI. It inspects the `capabilities` array of the currently active service.
--   **`registry.tsx`:** It looks up the primary capability in a registry that maps capability names (e.g., `'llm_chat'`) to React components (`LlmChatView`).
--   **Capability Views (`LlmChatView.tsx`, `ImageGenerationView.tsx`):** These components are responsible for rendering the full UI for a specific task. They use the `ParameterControl` component to dynamically generate the forms for adjusting API parameters.
--   **`ParameterControl.tsx`:** A generic component that renders the correct input (slider, toggle, dropdown, etc.) for a parameter based on its schema in the service definition.
--   **Dynamic Capabilities**: The `CapabilityUI.tsx` component dynamically renders the appropriate user interface based on the `capabilities` array of the active service.
+### **Code Splitting Strategy**
+- **Feature-based chunks** for lazy loading
+- **Shared vendor bundles** for common dependencies
+- **Dynamic imports** for heavy features
 
-### 6. State Management (Zustand)
+### **Bundle Optimization**
+```typescript
+// Lazy loading example
+const SecurityHub = lazy(() => import('@features/security/components/SecurityHub'));
+const ThemeCustomizer = lazy(() => import('@features/themes/components/ThemeCustomizer'));
+```
 
-State is managed via several Zustand stores, which are persisted to `chrome.storage.local`.
+### **Caching Strategy**
+- **Configuration caching** in memory with persistence
+- **Service status caching** with TTL
+- **Theme asset caching** for fast switching
 
--   **`serviceStore`**: Manages all service configurations and statuses.
--   **`viewStateStore`**: Manages the UI state, like the active service and view.
--   **`settingsStore`**: Manages user settings like the theme.
+---
 
-For more details, see [03: State Management](./03_State_Management.md).
+## 🔒 **Security Architecture**
 
-### 7. Credential & Vault Management
+### **Data Protection**
+- **AES-256 encryption** for sensitive data
+- **Secure storage** using Chrome storage API
+- **Key derivation** with PBKDF2 and high iteration counts
 
-All sensitive credentials, such as API keys and bearer tokens, are managed through a centralized, zero-knowledge encrypted vault. This system is designed to be highly secure and user-friendly, inspired by the architecture of Bitwarden. All encryption and decryption happens client-side, and the storage backend never has access to unencrypted secrets.
+### **API Security**
+- **Credential isolation** in secure vault
+- **Request validation** and sanitization
+- **Error handling** without information leakage
 
-For a complete breakdown of the vault's architecture and implementation, see [08: Credential & Vault Management](./08_Credential_And_Vault_Management.md). 
+### **Privacy Protection**
+- **Local data storage** (no external servers)
+- **Encrypted backups** for data export
+- **Secure communication** with TLS verification
+
+---
+
+## 🛠️ **Development Architecture**
+
+### **Build System**
+- **Vite** for fast development and optimized builds
+- **TypeScript** for type safety and developer experience
+- **ESLint/Prettier** for code quality and consistency
+
+### **Testing Strategy**
+- **Unit tests** for utilities and business logic
+- **Component tests** for UI behavior
+- **Integration tests** for feature workflows
+
+### **Type Safety**
+- **Strict TypeScript** configuration
+- **Comprehensive type definitions** for all APIs
+- **Runtime validation** for external data
+
+---
+
+## 📊 **Metrics & Monitoring**
+
+### **Performance Metrics**
+- **Bundle size tracking** with build reports
+- **Component render performance** monitoring
+- **API response time** measurement
+
+### **Usage Analytics**
+- **Feature usage** tracking (privacy-preserving)
+- **Error reporting** with stack traces
+- **User journey** analysis for UX optimization
+
+---
+
+## 🔮 **Future Architecture**
+
+### **Planned Enhancements**
+- **Plugin system** for third-party extensions
+- **Multi-platform support** (web, desktop)
+- **Real-time collaboration** features
+- **Advanced AI integrations**
+
+### **Scalability Roadmap**
+- **Micro-frontend architecture** for large teams
+- **Event-driven communication** between features
+- **Service worker** optimization for offline support
+- **Progressive Web App** capabilities
+
+---
+
+This architecture provides a solid foundation for current needs while supporting future growth and complexity. 

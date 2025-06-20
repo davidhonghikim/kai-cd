@@ -1,5 +1,6 @@
-import type { ServiceDefinition, LlmChatCapability, ModelManagementCapability, HealthCapability } from '../../types';
+import type { ServiceDefinition, LlmChatCapability, ModelManagementCapability, HealthCapability, StorageCapability } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+import { config } from '../../config/env';
 
 const healthCapability: HealthCapability = {
   capability: 'health',
@@ -11,8 +12,7 @@ const healthCapability: HealthCapability = {
 const llmChatCapability: LlmChatCapability = {
   capability: 'llm_chat',
   endpoints: {
-    chat: { path: '/api/chat/completions', method: 'POST' },
-    getModels: { path: '/api/models', method: 'GET' },
+    chat: { path: '/v1/chat/completions', method: 'POST' },
   },
   parameters: {
     chat: [
@@ -20,12 +20,19 @@ const llmChatCapability: LlmChatCapability = {
         key: 'model',
         label: 'Model',
         type: 'string',
-        defaultValue: '',
+        defaultValue: config.services.defaultOpenWebUIModel,
         description: 'The ID of the model to use for this request.',
-        optionsEndpoint: '/api/models',
-        optionsPath: 'models',
-        optionsValueKey: 'name',
-        optionsLabelKey: 'name',
+        optionsEndpoint: 'getModels',
+        optionsPath: 'data',
+        optionsValueKey: 'id',
+        optionsLabelKey: 'id',
+      },
+      {
+        key: 'system_prompt',
+        label: 'System Prompt',
+        type: 'string',
+        defaultValue: 'You are a helpful assistant.',
+        description: 'The system prompt to guide the model\'s behavior.',
       },
       {
         key: 'temperature',
@@ -66,29 +73,33 @@ const llmChatCapability: LlmChatCapability = {
 const modelManagementCapability: ModelManagementCapability = {
   capability: 'model_management',
   endpoints: {
-    list: { path: '/api/models', method: 'GET' },
+    getModels: { path: '/v1/models', method: 'GET' },
   },
   parameters: {
-    list: [],
+    getModels: [],
   },
 };
 
-const OpenWebUIDefinition: ServiceDefinition = {
+// Placeholder for future RAG (Retrieval-Augmented Generation) capabilities
+const storageCapability: StorageCapability = {
+  capability: 'storage',
+  endpoints: {
+    uploadFile: { path: '/api/v1/files/', method: 'POST' }
+  },
+  parameters: {}
+};
+
+export const openWebUIDefinition: ServiceDefinition = {
   type: 'open-webui',
   name: 'Open WebUI',
-  category: SERVICE_CATEGORIES.LLM,
+  category: SERVICE_CATEGORIES.LLM_CHAT,
   hasExternalUi: true,
+  defaultPort: 3000,
   docs: {
-    api: 'https://docs.openwebui.com/getting-started/api-endpoints/',
-  },
-  authentication: {
-    type: 'none'
+    api: 'https://docs.openwebui.com/api/openai'
   },
   // Note: Open WebUI also has a RAG API for file uploads and knowledge bases
   // which could be mapped to a future 'RAGCapability'.
   // Endpoints: POST /api/v1/files/ for upload.
-  capabilities: [llmChatCapability, modelManagementCapability, healthCapability],
-  defaultPort: 8080,
-};
-
-export const openWebUIDefinition: ServiceDefinition = OpenWebUIDefinition; 
+  capabilities: [llmChatCapability, modelManagementCapability, storageCapability, healthCapability],
+}; 

@@ -3,30 +3,126 @@ import { persist, createJSONStorage, type StateStorage } from 'zustand/middlewar
 import { v4 as uuidv4 } from 'uuid';
 import { allServiceDefinitions } from '../connectors/definitions/all';
 import { config } from '../config/env';
-import { DEFAULT_SERVICES } from '../config/defaults';
-import type { Service, ServiceDefinition, AuthDefinition, ServiceType } from '../types';
+import type { Service, NewService } from '../types';
+import { apiClient } from '../utils/apiClient';
+import { ollamaDefinition } from '../connectors/definitions/ollama';
+import { openWebUIDefinition } from '../connectors/definitions/open-webui';
+import { a1111Definition } from '../connectors/definitions/a1111';
+import { comfyuiDefinition } from '../connectors/definitions/comfyui';
+import { openAICompatibleDefinition } from '../connectors/definitions/openai-compatible';
+import { ApiError } from '../utils/apiClient';
 
 export type { Service } from '../types';
 
-// This is a subset of the main Service type for creation purposes.
-type NewServiceData = Partial<Omit<Service, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'capabilities' | 'category' | 'enabled' | 'url' >> & {
-    type: ServiceType;
-    url: string;
-    authentication?: AuthDefinition;
+const buildServiceUrl = (data: { ipType: 'local' | 'remote' | 'cloud' | 'custom', customUrl?: string, port: number }): string => {
+  if (data.ipType === 'custom' || data.ipType === 'cloud') {
+    return data.customUrl || '';
+  }
+  const ip = data.ipType === 'local' ? config.networking.localIp : config.networking.remoteIp;
+  if (!ip) return '';
+  return `http://${ip}:${data.port}`;
+};
+
+const createService = (serviceData: NewService): Service => {
+  const definition = allServiceDefinitions.find(def => def.type === serviceData.serviceDefinitionId);
+  if (!definition) throw new Error(`Service definition not found for type: ${serviceData.serviceDefinitionId}`);
+  const url = buildServiceUrl({ ...serviceData, port: definition.defaultPort });
+  return {
+    ...definition,
+    ...serviceData,
+    id: uuidv4(),
+    name: serviceData.name,
+    url,
+    enabled: true,
+    status: 'unknown',
+    lastChecked: 0,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    history: [],
+  };
+};
+
+/**
+ * Creates the initial list of default services in a direct, explicit manner.
+ * No more complex templates or mappings.
+ */
+export const getInitialDefaultServices = (): Service[] => {
+  const services: Service[] = [];
+  const { localIp, remoteIp } = config.networking;
+
+  const boilerplate = {
+    id: uuidv4(),
+    enabled: true,
+    status: 'unknown' as const,
+    lastChecked: 0,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    history: [],
+  };
+
+  const defaultLocalDefs = [ollamaDefinition, openWebUIDefinition, a1111Definition, comfyuiDefinition];
+  const defaultRemoteDefs = [ollamaDefinition, openWebUIDefinition, a1111Definition, comfyuiDefinition];
+
+  if (localIp) {
+    defaultLocalDefs.forEach(def => {
+      services.push({
+        ...boilerplate,
+        ...def,
+        id: uuidv4(),
+        serviceDefinitionId: def.type,
+        name: `${def.name} (${localIp})`,
+        ipType: 'local',
+        url: `http://${localIp}:${def.defaultPort}`,
+      });
+    });
+  }
+
+  if (remoteIp) {
+    defaultRemoteDefs.forEach(def => {
+      services.push({
+        ...boilerplate,
+        ...def,
+        id: uuidv4(),
+        serviceDefinitionId: def.type,
+        name: `${def.name} (${remoteIp})`,
+        ipType: 'remote',
+        url: `http://${remoteIp}:${def.defaultPort}`,
+      });
+    });
+  }
+  
+  // Add cloud services
+  services.push({
+    ...boilerplate,
+    ...openAICompatibleDefinition,
+    id: uuidv4(),
+    serviceDefinitionId: 'openai-compatible',
+    name: 'OpenAI API',
+    ipType: 'cloud',
+    url: 'https://api.openai.com/v1',
+    customUrl: 'https://api.openai.com/v1',
+  });
+
+  return services;
 };
 
 export interface ServiceState {
   services: Service[];
   selectedServiceId: string | null;
-  addService: (serviceData: NewServiceData) => void;
-  updateService: (service: Service) => void;
+  customUrls: string[];
+  addService: (serviceData: NewService) => void;
+  updateService: (service: Partial<Service> & { id: string }) => void;
   removeService: (serviceId: string) => void;
   setSelectedServiceId: (serviceId: string | null) => void;
   setServices: (services: Service[]) => void;
-  getServiceById: (serviceId: string) => Service | undefined;
+  getServiceById: (serviceId:string) => Service | undefined; // No longer needs to calculate URL
+  addCustomUrl: (url: string) => void;
+  updateCustomUrl: (oldUrl: string, newUrl: string) => void;
+  removeCustomUrl: (url: string) => void;
   addMessageToHistory: (serviceId: string, message: { role: 'user' | 'assistant' | 'system'; content: string }) => void;
   _hasHydrated: boolean;
   updateServiceLastUsedModel: (serviceId: string, modelId: string) => void;
+  checkServiceStatus: (service: Service) => Promise<void>;
 }
 
 const chromeStorage: StateStorage = {
@@ -47,35 +143,48 @@ export const useServiceStore = create<ServiceState>()(
     (set, get) => ({
       services: [],
       selectedServiceId: null,
+      customUrls: [],
       _hasHydrated: false,
 
-      getServiceById: (serviceId) => get().services.find((s) => s.id === serviceId),
+      getServiceById: (serviceId) => {
+        return get().services.find((s) => s.id === serviceId);
+      },
 
       addService: (serviceData) => {
-        const definition = allServiceDefinitions.find((def) => def.type === serviceData.type);
-        if (!definition) return;
-
-        const newService: Service = {
-          ...definition,
-          ...serviceData,
-          id: uuidv4(),
-          enabled: true,
-          status: 'unknown',
-          lastChecked: 0,
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-          authentication: serviceData.authentication || definition.authentication,
-          history: [],
-        };
-        set((state) => ({ services: [...state.services, newService] }));
+        try {
+          const newService = createService(serviceData);
+          set((state) => ({ services: [...state.services, newService] }));
+          if (newService.ipType === 'custom' && newService.url) {
+            get().addCustomUrl(newService.url);
+          }
+        } catch (error) {
+          console.error("Failed to add service:", error);
+        }
       },
 
       updateService: (updatedService) => {
-        set((state) => ({
-          services: state.services.map((service) =>
-            service.id === updatedService.id ? { ...service, ...updatedService, updatedAt: Date.now() } : service
-          ),
-        }));
+        set((state) => {
+          const services = state.services.map((service) => {
+            if (service.id === updatedService.id) {
+              const mergedServiceData = { ...service, ...updatedService };
+
+              // Re-fetch definition to get the correct port if type changed
+              const definition = allServiceDefinitions.find(d => d.type === mergedServiceData.type);
+              const port = definition?.defaultPort || service.defaultPort;
+
+              // Re-build the URL based on the updated data
+              const url = buildServiceUrl({ ...mergedServiceData, port });
+
+              if (updatedService.ipType === 'custom' && url) {
+                get().addCustomUrl(url);
+              }
+
+              return { ...mergedServiceData, url, updatedAt: Date.now() };
+            }
+            return service;
+          });
+          return { services };
+        });
       },
       
       addMessageToHistory: (serviceId, message) => {
@@ -87,6 +196,35 @@ export const useServiceStore = create<ServiceState>()(
             }
             return service;
           }),
+        }));
+      },
+      
+      addCustomUrl: (url: string) => {
+        set(state => {
+          if (state.customUrls.includes(url)) {
+            return state;
+          }
+          return { customUrls: [...state.customUrls, url] };
+        });
+      },
+
+      updateCustomUrl: (oldUrl, newUrl) => {
+        set(state => {
+          // Prevent adding a duplicate if the new URL already exists
+          if (state.customUrls.includes(newUrl)) {
+            // Just remove the old one
+            return { customUrls: state.customUrls.filter(u => u !== oldUrl) };
+          }
+          // Otherwise, replace the old with the new
+          return {
+            customUrls: state.customUrls.map(u => u === oldUrl ? newUrl : u)
+          };
+        });
+      },
+
+      removeCustomUrl: (urlToRemove) => {
+        set(state => ({
+          customUrls: state.customUrls.filter(u => u !== urlToRemove)
         }));
       },
 
@@ -111,44 +249,47 @@ export const useServiceStore = create<ServiceState>()(
             ),
         }));
       },
-    }),
-    {
-      name: 'kai-cd-service-storage-v6', // Incremented version for migration
-      storage: createJSONStorage(() => chromeStorage), // Use chrome.storage.local for extensions
-      version: 6,
-      migrate: (persistedState, version) => {
-        if (version < 6) {
-            // For older states, just clear them to avoid complex migrations for now.
-            // This will cause users to lose their services, but avoids crashes.
-            // A more graceful migration could be written here if needed.
-            return { services: [], selectedServiceId: null, _hasHydrated: false };
+
+      checkServiceStatus: async (serviceToCheck) => {
+        const { updateService } = get();
+        updateService({ id: serviceToCheck.id, status: 'checking', lastChecked: Date.now() });
+        
+        const healthCapability = serviceToCheck.capabilities.find(c => c.capability === 'health') as HealthCapability | undefined;
+        if (!healthCapability) {
+          updateService({ id: serviceToCheck.id, status: 'online', lastChecked: Date.now() });
+          return;
         }
-        return persistedState as ServiceState;
-      },
-      onRehydrateStorage: () => (state) => {
-        if (state) {
-          state._hasHydrated = true;
-          if (state.services.length === 0) {
-            console.log("No services found, loading default services.");
-            const defaultServices: Service[] = DEFAULT_SERVICES.map((s) => {
-              const definition = allServiceDefinitions.find(d => d.type === s.type);
-              return {
-                ...definition!,
-                ...s,
-                id: uuidv4(),
-                enabled: true,
-                status: 'unknown',
-                lastChecked: 0,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-                history: [],
-              };
-            });
-            state.services = defaultServices;
-            state.selectedServiceId = defaultServices[0]?.id || null;
+
+        try {
+          await apiClient.get(serviceToCheck.id, healthCapability.endpoints.health.path);
+          updateService({ id: serviceToCheck.id, status: 'online', lastChecked: Date.now() });
+        } catch (error) {
+          if (error instanceof ApiError) {
+            updateService({ id: serviceToCheck.id, status: 'offline', lastChecked: Date.now() });
+          } else {
+            updateService({ id: serviceToCheck.id, status: 'error', lastChecked: Date.now() });
           }
         }
       },
-    }
-  )
+    }),
+    {
+      name: 'service-storage',
+      storage: createJSONStorage(() => chromeStorage),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+            // For first-time users, if the services array is empty after hydration,
+            // populate it with the default services.
+            if (state.services.length === 0 && config.developer.loadDefaultServices) {
+                console.log("No services found in storage, populating with defaults.");
+                state.services = getInitialDefaultServices();
+            }
+        }
+        useServiceStore.setState({ _hasHydrated: true });
+      },
+      partialize: (state) => {
+        const { _hasHydrated, ...rest } = state;
+        return rest;
+      },
+    },
+  ),
 ); 

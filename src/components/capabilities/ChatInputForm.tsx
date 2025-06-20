@@ -1,16 +1,15 @@
 import React, { useRef } from 'react';
-import { PaperAirplaneIcon, StopIcon } from '@heroicons/react/24/solid';
+import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 
 interface ChatInputFormProps {
   input: string;
   setInput: React.Dispatch<React.SetStateAction<string>>;
   isLoading: boolean;
   handleSubmit: (e: React.FormEvent) => void;
-  stopRequest: () => void;
 }
 
-const ChatInputForm: React.FC<ChatInputFormProps> = ({ input, setInput, isLoading, handleSubmit, stopRequest }) => {
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+const ChatInputForm: React.FC<ChatInputFormProps> = ({ input, setInput, isLoading, handleSubmit }) => {
+  const _inputRef = useRef<HTMLTextAreaElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {

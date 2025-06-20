@@ -1,57 +1,74 @@
-import React, { useState } from 'react';
-import { CloudIcon, ClipboardDocumentListIcon, ArchiveBoxIcon, ArrowDownOnSquareStackIcon } from '@heroicons/react/24/outline';
-import ServiceManagement from './ServiceManagement';
+import React from 'react';
 import DataManagement from './DataManagement';
-
-// Placeholder for future components
-const PlaceholderManager: React.FC<{ title: string }> = ({ title }) => (
-    <div className="p-4 md:p-6 text-slate-400">
-        <h2 className="text-2xl font-bold text-slate-200 mb-2">{title}</h2>
-        <p>This feature is coming soon.</p>
-    </div>
-);
+import BugReportView from './BugReportView';
+import StorageManagement from './StorageManagement';
+import ThemeCustomizer from './ThemeCustomizer';
+import { useSettingsStore, type LogLevel } from '../store/settingsStore';
+import { type ThemePreference } from '../types/theme';
+import useVaultStore, { type AutoLockTimeout } from '../store/vaultStore';
 
 const SettingsView: React.FC = () => {
-    const [activeManager, setActiveManager] = useState('Services');
+    const { theme, setTheme, logLevel, setLogLevel } = useSettingsStore();
+    const { autoLockTimeout, setAutoLockTimeout } = useVaultStore();
 
-    const navItems = [
-        { name: 'Services', icon: CloudIcon, component: <ServiceManagement /> },
-        { name: 'Data', icon: ArrowDownOnSquareStackIcon, component: <DataManagement /> },
-        { name: 'Prompts', icon: ClipboardDocumentListIcon, component: <PlaceholderManager title="Prompt Manager" /> },
-        { name: 'Artifacts', icon: ArchiveBoxIcon, component: <PlaceholderManager title="Artifact Manager" /> },
-    ];
-
-    const renderContent = () => {
-        const activeItem = navItems.find(item => item.name === activeManager);
-        return activeItem ? activeItem.component : <div>Select a category</div>;
+    const handleThemeChange = (themeId: ThemePreference) => {
+        setTheme(themeId);
     };
 
     return (
-        <div className="flex h-full bg-slate-900 text-slate-200">
-            {/* Sidebar */}
-            <div className="w-64 bg-slate-950 flex flex-col p-4 border-r border-slate-800">
-                <h1 className="text-xl font-bold mb-6 px-2">Settings</h1>
-                <nav className="flex flex-col space-y-2">
-                    {navItems.map(item => (
-                        <button
-                            key={item.name}
-                            onClick={() => setActiveManager(item.name)}
-                            className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                                activeManager === item.name 
-                                ? 'bg-cyan-600 text-white' 
-                                : 'text-slate-300 hover:bg-slate-700 hover:text-white'
-                            }`}
-                        >
-                            <item.icon className="w-6 h-6" />
-                            <span>{item.name}</span>
-                        </button>
-                    ))}
-                </nav>
-            </div>
+        <div className="p-4 md:p-6 h-full overflow-y-auto">
+            <h1 className="text-2xl font-bold text-slate-100 mb-6">Settings</h1>
+            <div className="space-y-8 max-w-4xl mx-auto">
+                
+                {/* Theme Customization */}
+                <ThemeCustomizer onThemeChange={handleThemeChange} />
 
-            {/* Main Content */}
-            <div className="flex-1 overflow-y-auto">
-                {renderContent()}
+                <div className="p-4 md:p-6">
+                    <h3 className="text-xl font-semibold text-slate-100 mb-4">Application Settings</h3>
+                    <div className="bg-slate-800 p-6 rounded-lg max-w-2xl space-y-4">
+                        <div className="flex items-center justify-between">
+                            <label htmlFor="loglevel-selector" className="text-slate-300 text-sm">Log Level</label>
+                            <select
+                                id="loglevel-selector"
+                                value={logLevel}
+                                onChange={(e) => setLogLevel(e.target.value as LogLevel)}
+                                className="bg-slate-700 text-slate-100 rounded px-3 py-1 text-sm"
+                            >
+                                <option value="DEBUG">Debug</option>
+                                <option value="INFO">Info</option>
+                                <option value="WARN">Warn</option>
+                                <option value="ERROR">Error</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="p-4 md:p-6">
+                    <h3 className="text-xl font-semibold text-slate-100 mb-4">Vault Security</h3>
+                    <div className="bg-slate-800 p-6 rounded-lg max-w-2xl space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <label htmlFor="autolock-selector" className="text-slate-300 text-sm">Auto-Lock Timeout</label>
+                                <p className="text-xs text-slate-500 mt-1">Automatically lock the vault after period of inactivity</p>
+                            </div>
+                            <select
+                                id="autolock-selector"
+                                value={autoLockTimeout}
+                                onChange={(e) => setAutoLockTimeout(Number(e.target.value) as AutoLockTimeout)}
+                                className="bg-slate-700 text-slate-100 rounded px-3 py-1 text-sm"
+                            >
+                                <option value={0}>Disabled</option>
+                                <option value={5}>5 minutes</option>
+                                <option value={15}>15 minutes</option>
+                                <option value={30}>30 minutes</option>
+                                <option value={60}>1 hour</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <StorageManagement />
+                <DataManagement />
+                <BugReportView />
             </div>
         </div>
     );

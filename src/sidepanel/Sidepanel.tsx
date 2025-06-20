@@ -1,11 +1,22 @@
 import React from 'react';
-import { useServiceStore } from '../store/serviceStore';
+import { useServiceStore, type Service } from '../store/serviceStore';
+
 import CapabilityUI from '../components/CapabilityUI';
+import ServiceSelector from '../components/ServiceSelector';
 import { CubeTransparentIcon, ArrowTopRightOnSquareIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { switchToTab } from '../store/viewStateStore';
+import type { TabView } from '../store/viewStateStore';
+import type { ServiceCapability } from '../types';
+
+const getPrimaryCapability = (service: Service | undefined): TabView => {
+    if (!service) return 'chat';
+    if (service.capabilities.some((c: ServiceCapability) => c.capability === 'llm_chat')) return 'chat';
+    if (service.capabilities.some((c: ServiceCapability) => c.capability === 'image_generation')) return 'image';
+    return 'chat'; // Fallback
+}
 
 const Sidepanel: React.FC = () => {
-  const { services, selectedServiceId } = useServiceStore();
+  const { services, selectedServiceId, setSelectedServiceId } = useServiceStore();
   const selectedService = services.find(s => s.id === selectedServiceId);
 
   return (
@@ -41,6 +52,14 @@ const Sidepanel: React.FC = () => {
                 </button>
             </div>
           </header>
+          <div className="p-2 border-b border-slate-200 dark:border-slate-700">
+            <ServiceSelector
+                services={services}
+                selectedServiceId={selectedServiceId}
+                onSelectService={setSelectedServiceId}
+                activeView={getPrimaryCapability(selectedService)}
+            />
+          </div>
           <main className="flex-1 overflow-y-auto">
             <CapabilityUI service={selectedService} />
           </main>

@@ -8,4 +8,5 @@ This section contains the mandatory rules, protocols, and prompts for any AI age
 2.  [**Agent System Prompt**](./02_Agent_System_Prompt.md): The core system prompt that defines the agent's persona, directives, and operational constraints.
 3.  [**Execution Plan – Comprehensive Audit**](./03_Execution_Plan.md): The living, detailed plan for auditing the entire Kai-CD codebase.
 4.  [**Documentation Style Guide**](./04_Documentation_Conventions.md): Naming conventions and formatting standards for all project docs.
-5.  [**Changelog**](./05_Changelog.md): Historical record of significant changes and fixes. 
+5.  [**Changelog**](./05_Changelog.md): Historical record of significant changes and fixes.
+6.  [**Agent Handoff Note**](./06_Handoff_Note.md): Current status and next steps for the incoming agent. 

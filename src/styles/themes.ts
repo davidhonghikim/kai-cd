@@ -55,13 +55,19 @@ export const applyTheme = (preference: ThemePreference) => {
     theme = lightTheme;
   }
   if (preference === 'system') {
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // Safe window access for service worker compatibility
+    const systemPrefersDark = typeof window !== 'undefined' 
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches 
+      : false; // Default to light in non-window contexts
     theme = systemPrefersDark ? darkTheme : lightTheme;
   }
 
+  // Safe document access for service worker compatibility
+  if (typeof document !== 'undefined') {
   const root = document.documentElement;
   Object.entries(theme.colors).forEach(([key, value]) => {
     root.style.setProperty(key, value);
   });
   root.style.colorScheme = theme.name;
+  }
 }; 

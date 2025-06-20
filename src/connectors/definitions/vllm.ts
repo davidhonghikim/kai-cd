@@ -1,5 +1,6 @@
 import type { ServiceDefinition, LlmChatCapability, ParameterDefinition, HealthCapability } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+import { config } from '../../config/env';
 
 const healthCapability: HealthCapability = {
   capability: 'health',
@@ -12,9 +13,10 @@ const llmChatParameters: ParameterDefinition[] = [
   {
     key: 'model',
     label: 'Model',
-    type: 'string',
-    defaultValue: 'mistralai/Mistral-7B-Instruct-v0.1',
-    description: 'The model to use for the chat. This is often specified when launching the vLLM server.',
+    type: 'select',
+    defaultValue: config.services.defaultOpenAICompatibleModel,
+    description: 'The model to use for the chat.',
+    optionsEndpoint: 'getModels',
   },
   {
     key: 'temperature',
@@ -56,7 +58,8 @@ export const vllmDefinition: ServiceDefinition = {
     api: 'https://docs.vllm.ai/en/latest/getting_started/quickstart.html#openai-compatible-server',
   },
   authentication: {
-    type: 'none',
+    type: 'bearer_token',
+    defaultValue: config.services.defaultOpenAICompatibleKey
   },
   configuration: {
     arguments: {

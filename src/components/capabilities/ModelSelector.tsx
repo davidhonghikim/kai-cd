@@ -1,73 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { ChevronUpDownIcon } from '@heroicons/react/24/solid';
-import type { LlmChatCapability } from '../../types';
-import { apiClient } from '../../utils/apiClient';
-import toast from 'react-hot-toast';
-import type { Service } from '../../store/serviceStore';
+import { useViewStateStore } from '../../store/viewStateStore';
+import { useModelList } from '../../hooks/useModelList';
 
-interface ModelSelectorProps {
-  service: Service;
-  capability: LlmChatCapability;
-  selectedModel: string;
-  onModelChange: (modelId: string) => void;
-}
-
-const ModelSelector: React.FC<ModelSelectorProps> = ({
-  service,
-  capability,
-  selectedModel,
-  onModelChange,
-}) => {
-  const [models, setModels] = useState<{ id: string }[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+const ModelSelector: React.FC = () => {
+  const { activeServiceId, activeModel, setActiveModel } = useViewStateStore();
+  const { models, isLoading, error } = useModelList(activeServiceId, 'chat');
 
   useEffect(() => {
-    const fetchModels = async () => {
-      const modelsEndpoint = capability.endpoints.getModels;
-      if (!modelsEndpoint) return;
-
-      setIsLoading(true);
-      try {
-        const response = await apiClient.get(
-          service.url,
-          modelsEndpoint.path,
-          service.authentication
-        );
-        
-        // This logic needs to be flexible based on API response structure
-        const modelsData = response.data || response;
-        if (Array.isArray(modelsData)) {
-            setModels(modelsData.map(m => ({ id: m.id || m.name })));
-        }
-
-      } catch (error) {
-        toast.error(`Failed to fetch models: ${(error as Error).message}`);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchModels();
-  }, [service, capability]);
-
+    // When models load and there's no active model, or the active model is not in the list,
+    // default to the first model in the list.
+    if (models.length > 0 && (!activeModel || !models.some(m => m.value === activeModel))) {
+        setActiveModel(models[0].value);
+    }
+  }, [models, activeModel, setActiveModel]);
+  
   if (isLoading) {
     return <div className="text-sm text-slate-400">Loading models...</div>;
   }
   
+  if (error) {
+    return <div className="text-sm text-red-500" title={error}>Error</div>;
+  }
+
   if (models.length === 0) {
-    return <div className="text-sm font-semibold">{selectedModel || 'Default Model'}</div>;
+    return <div className="text-sm font-semibold">{activeModel || 'No models found'}</div>;
   }
 
   return (
     <div className="relative">
       <select
-        value={selectedModel}
-        onChange={(e) => onModelChange(e.target.value)}
+        value={activeModel || ''}
+        onChange={(e) => setActiveModel(e.target.value)}
         className="appearance-none w-full bg-transparent font-semibold text-lg pr-8 focus:outline-none"
+        disabled={models.length === 0}
       >
         {models.map(model => (
-          <option key={model.id} value={model.id}>
-            {model.id}
+          <option key={model.value} value={model.value}>
+            {model.label}
           </option>
         ))}
       </select>

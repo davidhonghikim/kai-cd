@@ -5,4 +5,5 @@ export * from './ollama';
 export * from './chroma';
 export * from './milvus';
 export * from './qdrant';
-export * from './openai-compatible'; 
+export * from './openai-compatible';
+export * from './reticulum'; 

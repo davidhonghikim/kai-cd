@@ -1,6 +1,14 @@
 import type { ServiceDefinition, AutomationCapability, ParameterDefinition } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
 
+const workflowIdParameter: ParameterDefinition = {
+	key: 'id',
+	label: 'Workflow ID',
+	type: 'string',
+	defaultValue: '',
+	description: 'The ID of the workflow.'
+};
+
 const executeParameters: ParameterDefinition[] = [
 	{
 		key: 'workflowId',
@@ -22,13 +30,43 @@ const automationCapability: AutomationCapability = {
 			path: '/api/v1/workflows',
 			method: 'GET'
 		},
+		getWorkflow: {
+			path: '/api/v1/workflows/{id}',
+			method: 'GET'
+		},
+		createWorkflow: {
+			path: '/api/v1/workflows',
+			method: 'POST'
+		},
+		updateWorkflow: {
+			path: '/api/v1/workflows/{id}',
+			method: 'PUT'
+		},
+		deleteWorkflow: {
+			path: '/api/v1/workflows/{id}',
+			method: 'DELETE'
+		},
+		activateWorkflow: {
+			path: '/api/v1/workflows/{id}/activate',
+			method: 'POST'
+		},
+		deactivateWorkflow: {
+			path: '/api/v1/workflows/{id}/deactivate',
+			method: 'POST'
+		},
 		executeWorkflow: {
 			path: '/api/v1/workflows/{workflowId}/executions',
 			method: 'POST'
 		}
 	},
 	parameters: {
-		execute: executeParameters
+		execute: executeParameters,
+		getWorkflow: [workflowIdParameter],
+		deleteWorkflow: [workflowIdParameter],
+		activateWorkflow: [workflowIdParameter],
+		deactivateWorkflow: [workflowIdParameter]
+		// NOTE: createWorkflow and updateWorkflow require a complex JSON body,
+		// which we will define more thoroughly when building the UI for them.
 	}
 };
 

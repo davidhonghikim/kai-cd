@@ -1,0 +1,160 @@
+import React, { useState, useEffect } from 'react';
+import type { Service, NewService, ServiceType, IpType } from '../types';
+import { useServiceStore } from '../store/serviceStore';
+import { allServiceDefinitions } from '../connectors/definitions/all';
+import toast from 'react-hot-toast';
+import { config } from '../config/env';
+
+interface ServiceFormProps {
+  service?: Service;
+  onClose: () => void;
+}
+
+// Consolidate the form state into a single type
+type FormData = Omit<NewService, 'serviceDefinitionId' | 'nameIsIp'> & {
+  id?: string;
+  serviceDefinitionId: ServiceType;
+  port: number;
+  enabled: boolean;
+};
+
+const ServiceForm: React.FC<ServiceFormProps> = ({ service, onClose }) => {
+  const { addService, updateService, customUrls } = useServiceStore();
+  const { localIp, remoteIp } = config.networking;
+
+  const getInitialState = (): FormData => {
+    const definition = allServiceDefinitions.find(d => d.type === service?.type) || allServiceDefinitions[0];
+    let ipType: IpType = 'local';
+    let customUrl = '';
+
+    if (service) {
+      ipType = service.ipType;
+      customUrl = service.customUrl || '';
+      // If the service URL is one of the standard ones, we derive ipType
+      const localUrl = `http://${localIp}:${service.defaultPort}`;
+      const remoteUrl = `http://${remoteIp}:${service.defaultPort}`;
+      if (service.url === localUrl) ipType = 'local';
+      else if (service.url === remoteUrl) ipType = 'remote';
+    }
+
+    return {
+      id: service?.id,
+      name: service?.name || definition.name,
+      serviceDefinitionId: service?.type || definition.type,
+      ipType,
+      customUrl,
+      port: service?.defaultPort || definition.defaultPort,
+      enabled: service?.enabled ?? true,
+    };
+  };
+
+  const [formData, setFormData] = useState<FormData>(getInitialState());
+
+  // Effect to update the derived URL when dependencies change
+  useEffect(() => {
+    const definition = allServiceDefinitions.find(d => d.type === formData.serviceDefinitionId);
+    if (!definition) return;
+
+    setFormData(prev => {
+      const port = definition.defaultPort;
+      let url = prev.customUrl || '';
+      if (prev.ipType === 'local') {
+        url = `http://${localIp}:${port}`;
+      } else if (prev.ipType === 'remote') {
+        url = `http://${remoteIp}:${port}`;
+      }
+      return { ...prev, port, customUrl: url };
+    });
+  }, [formData.ipType, formData.serviceDefinitionId, localIp, remoteIp]);
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
+  
+    setFormData(prev => ({
+      ...prev,
+      [name]: checked !== undefined ? checked : value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // The customUrl field now holds the canonical URL for all types
+    if (!formData.name || !formData.customUrl) {
+      toast.error('Service name and URL cannot be empty.');
+      return;
+    }
+
+    const servicePayload = {
+      name: formData.name,
+      ipType: formData.ipType,
+      customUrl: formData.customUrl,
+      enabled: formData.enabled,
+    };
+
+    if (service) {
+      // Pass a partial service object to updateService
+      updateService({ id: service.id, ...servicePayload, serviceDefinitionId: formData.serviceDefinitionId });
+      toast.success(`${formData.name} updated successfully!`);
+    } else {
+      // Pass a NewService object to addService
+      addService({
+        ...servicePayload,
+        serviceDefinitionId: formData.serviceDefinitionId,
+      });
+      toast.success(`${formData.name} created successfully!`);
+    }
+    onClose();
+  };
+  
+  const isUrlDisabled = formData.ipType === 'local' || formData.ipType === 'remote';
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 p-4 bg-slate-800 rounded-lg">
+      {!service && (
+        <div>
+          <label htmlFor='serviceDefinitionId' className='block text-sm font-medium text-slate-300'>Service Type</label>
+          <select id='serviceDefinitionId' name='serviceDefinitionId' value={formData.serviceDefinitionId} onChange={handleChange} className='mt-1 block w-full bg-slate-900 border-slate-700 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm text-white'>
+            {allServiceDefinitions.map(def => <option key={def.type} value={def.type}>{def.name}</option>)}
+          </select>
+        </div>
+      )}
+      <div>
+        <label htmlFor='name' className='block text-sm font-medium text-slate-300'>Service Name</label>
+        <input type='text' id='name' name='name' value={formData.name} onChange={handleChange} className='mt-1 block w-full bg-slate-900 border-slate-700 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm text-white' />
+      </div>
+      
+      <div>
+        <label htmlFor='customUrl' className='block text-sm font-medium text-slate-300'>Service URL</label>
+        <div className='mt-1 flex flex-col sm:flex-row gap-2'>
+            <select name='ipType' value={formData.ipType} onChange={handleChange} className='sm:flex-none block bg-slate-900 border-slate-700 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm text-white'>
+                {localIp && <option value='local'>Local</option>}
+                {remoteIp && <option value='remote'>Remote</option>}
+                <option value='cloud'>Cloud</option>
+                <option value='custom'>Custom</option>
+            </select>
+            <input type='text' id='customUrl' name='customUrl' value={formData.customUrl} onChange={handleChange} list="custom-urls-list" className='flex-grow block w-full bg-slate-900 border-slate-700 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm text-white' placeholder='http://...' disabled={isUrlDisabled} />
+            <datalist id="custom-urls-list">
+              {customUrls.map(url => <option key={url} value={url} />)}
+            </datalist>
+        </div>
+        <div className='mt-2 text-xs text-slate-400'>
+            Select Local/Remote to use configured IPs. Select Custom/Cloud to enter a full URL manually.
+        </div>
+      </div>
+      
+      <div className='flex items-center'>
+        <input id='enabled' name='enabled' type='checkbox' checked={formData.enabled} onChange={handleChange} className='h-4 w-4 rounded border-slate-700 bg-slate-800 text-cyan-600 focus:ring-cyan-500' />
+        <label htmlFor='enabled' className='ml-2 block text-sm text-slate-300'>Enabled</label>
+      </div>
+
+      <div className='flex justify-end space-x-2 pt-4'>
+        <button type='button' onClick={onClose} className='px-4 py-2 text-sm font-medium text-slate-300 bg-slate-700 rounded-md hover:bg-slate-600'>Cancel</button>
+        <button type='submit' className='px-4 py-2 text-sm font-medium text-white bg-cyan-600 rounded-md hover:bg-cyan-700'>{service ? 'Save Changes' : 'Create Service'}</button>
+      </div>
+    </form>
+  );
+};
+
+export default ServiceForm; 

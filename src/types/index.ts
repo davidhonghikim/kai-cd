@@ -13,30 +13,6 @@ export interface ServiceEndpoints {
   [serviceKey: string]: ServiceEndpointGroup;
 }
 
-export type ServiceType =
-  | 'ollama'
-  | 'open-webui'
-  | 'a1111'
-  | 'comfyui'
-  | 'llama-cpp'
-  | 'vllm'
-  | 'llm-studio'
-  | 'openai-compatible'
-  | 'n8n'
-  | 'milvus'
-  | 'qdrant'
-  | 'chroma'
-  | 'huggingface'
-  | 'civitai'
-  | 'openai'
-  | 'anthropic'
-  | 'weaviate'
-  | 'huginn'
-  | 'node-red'
-  | 'jellyfin'
-  | 'tailscale'
-  | 'dropbox';
-
 // --- Parameter & Capability Definitions ---
 
 export interface SelectOption {
@@ -60,16 +36,6 @@ export interface ParameterDefinition {
   optionsLabelKey?: string;
 }
 
-export interface ImageGenerationCapability {
-  capability: 'image_generation';
-  endpoints: {
-    [endpointKey: string]: Endpoint;
-  };
-  parameters: {
-    [parameterKey: string]: ParameterDefinition[];
-  };
-}
-
 export interface LlmChatCapability {
   capability: 'llm_chat';
   endpoints: {
@@ -82,13 +48,56 @@ export interface LlmChatCapability {
   models?: string[];
 }
 
-export interface ModelManagementCapability {
-  capability: 'model_management';
+export type ServiceType =
+  | 'ollama'
+  | 'open-webui'
+  | 'a1111'
+  | 'comfyui'
+  | 'llama-cpp'
+  | 'vllm'
+  | 'llm-studio'
+  | 'openai-compatible'
+  | 'n8n'
+  | 'milvus'
+  | 'qdrant'
+  | 'chroma'
+  | 'huggingface'
+  | 'civitai'
+  | 'openai'
+  | 'anthropic'
+  | 'weaviate'
+  | 'huginn'
+  | 'node-red'
+  | 'jellyfin'
+  | 'tailscale'
+  | 'dropbox'
+  | 'reticulum';
+
+export interface ImageGenerationCapability {
+  capability: 'image_generation';
   endpoints: {
     [endpointKey: string]: Endpoint;
   };
   parameters: {
     [parameterKey: string]: ParameterDefinition[];
+  };
+}
+
+export interface ModelManagementCapability {
+  capability: 'model_management';
+  endpoints: {
+    getModels?: Endpoint;
+    [key: string]: Endpoint | undefined;
+  };
+  parameters: {
+    [key: string]: ParameterDefinition[];
+  };
+  responseMapping?: {
+    [key: string]: {
+      path: string;
+      valueKey: string;
+      labelKey: string;
+    };
   };
 }
 
@@ -156,7 +165,31 @@ export interface HealthCapability {
   };
 }
 
-export type CapabilityType = 'llm_chat' | 'image_generation' | 'model_management' | 'automation' | 'langchain' | 'storage' | 'vector_database' | 'graph_execution' | 'health';
+export interface MeshNetworkingCapability {
+  capability: 'mesh_networking';
+  endpoints: {
+    getNodes: Endpoint;
+    sendMessage: Endpoint;
+    getMessages: Endpoint;
+    announce: Endpoint;
+    getDestinations: Endpoint;
+  };
+  parameters: {
+    network: ParameterDefinition[];
+  };
+}
+
+export type CapabilityType =
+  | 'llm_chat'
+  | 'image_generation'
+  | 'model_management'
+  | 'automation'
+  | 'langchain'
+  | 'storage'
+  | 'vector_database'
+  | 'graph_execution'
+  | 'mesh_networking'
+  | 'health';
 
 export type ServiceCapability =
   | LlmChatCapability
@@ -167,29 +200,25 @@ export type ServiceCapability =
   | StorageCapability
   | VectorDatabaseCapability
   | GraphExecutionCapability
+  | MeshNetworkingCapability
   | HealthCapability;
 
-// --- Authentication & Configuration ---
+// --- Authentication, Credentials & Configuration ---
 
 export type AuthType = 'none' | 'api_key' | 'bearer_token' | 'basic';
-export type AuthDefinition =
-  | { type: 'none' }
-  | {
-      type: 'api_key';
-      keyName?: string;
-      help?: string;
-      credentials?: { apiKey: string };
-    }
-  | {
-      type: 'bearer_token';
-      credentials?: { [key: string]: string };
-      help?: string;
-    }
-  | {
-      type: 'basic';
-      credentials?: { [key: string]: string };
-      help?: string;
-    };
+
+export interface Credential {
+  id: string;
+  name: string;
+  type: AuthType;
+  value: string; // This is the actual key/token, will be encrypted in the vault
+}
+
+export type AuthDefinition = {
+  type: AuthType;
+  help?: string;
+  keyName?: string; // For api_key type
+};
 
 export interface ServiceArgument {
   flag: string;
@@ -217,20 +246,36 @@ export interface ServiceDefinition {
 
 export type Service = ServiceDefinition & {
   id: string;
-  url: string;
+  serviceDefinitionId: ServiceType;
+  ipType: 'local' | 'remote' | 'cloud' | 'custom';
+  credentialId?: string;
+  customUrl?: string;
+  url: string; // This will be deprecated and removed
   enabled: boolean;
-  status: 'online' | 'offline' | 'checking' | 'unknown';
+  status: 'unknown' | 'online' | 'offline' | 'error' | 'checking';
+  lastChecked: number;
+  lastUsedModel?: string;
+  // For chat services, to store conversation history
+  history?: ChatMessage[];
   archived?: boolean;
   createdAt: number;
   updatedAt: number;
-  lastUsedModel?: string;
 };
 
+export type NewService = {
+  serviceDefinitionId: ServiceType;
+  name: string;
+  ipType: 'local' | 'remote' | 'cloud' | 'custom';
+  credentialId?: string;
+  customUrl?: string;
+};
+
+
 export interface ChatMessage {
-  id: string;
-  role: 'user' | 'assistant';
+  id?: string;
+  role: 'user' | 'assistant' | 'system';
   content: string;
-  timestamp: number;
+  timestamp?: number;
   isStreaming?: boolean;
 }
 
@@ -252,9 +297,8 @@ export interface ComfyWorkflow {
   [nodeId: string]: ComfyNode;
 }
 
-export interface LlmManagedService {
-  // ... existing code ...
-}
+// Placeholder type for future expansion; using generic record to satisfy eslint no-empty-interface rule.
+export type LlmManagedService = Record<string, unknown>;
 
 export interface CapabilityViewProps<T extends ServiceCapability> {
   service: Service;
@@ -264,4 +308,4 @@ export interface CapabilityViewProps<T extends ServiceCapability> {
 export interface ImageArtifact {
   id: string;
   // ... existing code ...
-}
+} 

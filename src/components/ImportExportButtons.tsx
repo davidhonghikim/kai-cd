@@ -1,13 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { exportData, importData } from '../utils/backupManager';
 import toast from 'react-hot-toast';
+import ExportModal, { type ExportOptions } from './ExportModal';
 
 const ImportExportButtons: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
-  const handleExport = () => {
+  const handleExport = async (options: ExportOptions) => {
     try {
-      exportData();
+      await exportData(options);
       toast.success('Data exported successfully!');
     } catch (error) {
       console.error('Export failed:', error);
@@ -46,27 +48,36 @@ const ImportExportButtons: React.FC = () => {
   };
 
   return (
-    <div className="flex gap-4">
-      <button
-        onClick={handleExport}
-        className="px-4 py-2 text-sm rounded-md bg-accent-primary text-white hover:bg-accent-primary-state focus:outline-none focus:ring-2 focus:ring-accent-primary"
-      >
-        Export Data
-      </button>
-      <button
-        onClick={handleImportClick}
-        className="px-4 py-2 text-sm rounded-md bg-background-tertiary text-text-primary hover:bg-border-primary focus:outline-none focus:ring-2 focus:ring-border-primary"
-      >
-        Import Data
-      </button>
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        className="hidden"
-        accept=".json"
+    <>
+      <div className="flex gap-4">
+        <button
+          onClick={() => setIsExportModalOpen(true)}
+          className="px-4 py-2 text-sm rounded-md bg-slate-600 text-slate-100 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
+          title="Export services and settings to a file"
+        >
+          Export
+        </button>
+        <button
+          onClick={handleImportClick}
+          className="px-4 py-2 text-sm rounded-md bg-slate-600 text-slate-100 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
+          title="Import services and settings from a file"
+        >
+          Import
+        </button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+          accept=".json"
+        />
+      </div>
+      <ExportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        onExport={handleExport}
       />
-    </div>
+    </>
   );
 };
 

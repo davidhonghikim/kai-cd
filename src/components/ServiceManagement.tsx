@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useServiceStore } from '../store/serviceStore';
 import {
   TrashIcon,
@@ -8,14 +8,14 @@ import {
   ArrowsUpDownIcon,
   CloudIcon,
   ClipboardDocumentListIcon,
-  ArchiveBoxIcon,
-  InboxArrowDownIcon
+  ArchiveBoxIcon
 } from '@heroicons/react/24/solid';
-import AddServiceForm from './AddServiceForm';
+import ServiceForm from './ServiceForm';
 import ServiceEditor from './ServiceEditor';
-import type { Service, LlmChatCapability, HealthCapability } from '../types';
+import type { Service, LlmChatCapability } from '../types';
 import { apiClient } from '../utils/apiClient';
 import toast from 'react-hot-toast';
+import StatusIndicator from './StatusIndicator';
 
 // --- Placeholder Components ---
 const PlaceholderManager: React.FC<{ title: string }> = ({ title }) => (
@@ -25,40 +25,62 @@ const PlaceholderManager: React.FC<{ title: string }> = ({ title }) => (
     </div>
 );
 
-// --- Service Details Sub-component ---
-const ServiceDetails: React.FC<{ service: Service }> = ({ service }) => {
+const LlmModelDetails: React.FC<{ capability: LlmChatCapability, service: Service }> = ({ capability, service }) => {
     const [models, setModels] = useState<string[]>([]);
     const [isLoadingModels, setIsLoadingModels] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const llmCapability = service.capabilities.find(c => c.capability === 'llm_chat') as LlmChatCapability | undefined;
-        if (llmCapability?.endpoints.getModels) {
-            const fetchModels = async () => {
-                setIsLoadingModels(true);
-                try {
-                    const getModelsEndpoint = llmCapability.endpoints.getModels;
-                    if (!getModelsEndpoint) {
-                        // This should not happen due to the check above, but satisfies TypeScript
-                        return;
-                    }
-                    const response = await apiClient.get(service.url, getModelsEndpoint.path, service.authentication);
-                    const modelsData = response.data || response;
-                    if (Array.isArray(modelsData)) {
-                        setModels(modelsData.map(m => m.id || m.name).filter(Boolean));
-                    } else if (modelsData && typeof modelsData === 'object') {
-                        const modelsList = (modelsData as any).models || [];
-                        setModels(modelsList.map((m: any) => m.id || m.name).filter(Boolean));
-                    }
-                } catch (error) {
-                    toast.error(`Failed to fetch models for ${service.name}.`);
-                } finally {
-                    setIsLoadingModels(false);
-                }
-            };
-            fetchModels();
+        const getModelsEndpoint = capability.endpoints.getModels;
+        if (!getModelsEndpoint) {
+            setError('Service does not support listing models.');
+            return;
         }
-    }, [service]);
 
+        const fetchModels = async () => {
+            setIsLoadingModels(true);
+            setError(null);
+            try {
+                const response = await apiClient.get(service.url, getModelsEndpoint.path, service.authentication);
+                const modelsData = response.data || response;
+                let parsedModels: string[] = [];
+                if (Array.isArray(modelsData)) {
+                    parsedModels = modelsData.map(m => m.id || m.name).filter(Boolean);
+                } else if (modelsData && typeof modelsData === 'object' && 'models' in modelsData && Array.isArray(modelsData.models)) {
+                    parsedModels = modelsData.models.map((m: any) => m.id || m.name).filter(Boolean);
+                }
+                setModels(parsedModels);
+            } catch (_err) {
+                setError('Failed to fetch models.');
+                toast.error(`Failed to fetch models for ${service.name}.`);
+            } finally {
+                setIsLoadingModels(false);
+            }
+        };
+        fetchModels();
+    }, [capability, service]);
+
+    return (
+        <div className="mt-2">
+            <h5 className="font-semibold text-slate-400">Models</h5>
+            {isLoadingModels && <p className="text-sm text-slate-500">Loading models...</p>}
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            {!isLoadingModels && !error && models.length > 0 && (
+                <ul className="list-disc list-inside max-h-40 overflow-y-auto text-sm text-slate-300">
+                    {models.map(m => <li key={m}>{m}</li>)}
+                </ul>
+            )}
+            {!isLoadingModels && !error && models.length === 0 && (
+                <p className="text-sm text-slate-500">No models found.</p>
+            )}
+        </div>
+    );
+};
+
+// --- Service Details Sub-component ---
+const ServiceDetails: React.FC<{ service: Service }> = ({ service }) => {
+    const llmCapability = service.capabilities.find(c => c.capability === 'llm_chat') as LlmChatCapability | undefined;
+    
     return (
         <div className="mt-4 p-4 bg-slate-900 rounded-lg">
             <h4 className="font-semibold mb-2 text-slate-200">Service Details</h4>
@@ -67,18 +89,7 @@ const ServiceDetails: React.FC<{ service: Service }> = ({ service }) => {
                 <div><span className="font-semibold text-slate-400">Enabled:</span> {service.enabled ? 'Yes' : 'No'}</div>
                 <div><span className="font-semibold text-slate-400">Type:</span> <span className="capitalize">{service.type.replace(/_/g, ' ')}</span></div>
             </div>
-            {service.capabilities.some(c => c.capability === 'llm_chat') && (
-                 <div className="mt-2">
-                    <h5 className="font-semibold text-slate-400">Models</h5>
-                    {isLoadingModels ? <p className="text-sm text-slate-500">Loading models...</p> : 
-                        models.length > 0 ? (
-                            <ul className="list-disc list-inside max-h-40 overflow-y-auto text-sm text-slate-300">
-                                {models.map(m => <li key={m}>{m}</li>)}
-                            </ul>
-                        ) : <p className="text-sm text-slate-500">No models found or unable to fetch.</p>
-                    }
-                </div>
-            )}
+            {llmCapability && <LlmModelDetails capability={llmCapability} service={service} />}
         </div>
     );
 };
@@ -86,11 +97,23 @@ const ServiceDetails: React.FC<{ service: Service }> = ({ service }) => {
 
 // --- Service Manager Core Component ---
 const ServiceManagerCore: React.FC = () => {
-  const { services, removeService, updateService, setServices } = useServiceStore();
+  const { services, removeService, updateService, checkServiceStatus, _hasHydrated } = useServiceStore();
   const [isAddingService, setIsAddingService] = useState(false);
   const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
-  const [status, setStatus] = useState<Record<string, 'online' | 'offline' | 'checking'>>({});
   const [expandedServiceId, setExpandedServiceId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (_hasHydrated) {
+      // Check the status of all active services once the store is hydrated
+      const activeServices = services.filter(s => !s.archived);
+      activeServices.forEach(service => {
+        // Only check status if it's unknown, to avoid spamming checks on re-renders
+        if (service.status === 'unknown') {
+            checkServiceStatus(service);
+        }
+      });
+    }
+  }, [_hasHydrated, services, checkServiceStatus]); // Re-run if hydration completes or services change
 
   const handleAddClick = () => {
     setIsAddingService(true);
@@ -122,47 +145,17 @@ const ServiceManagerCore: React.FC = () => {
       toast.success(`${serviceName} has been deleted.`);
     }
   };
-
-   const handleCheckStatus = async (service: Service) => {
-    setStatus(prev => ({ ...prev, [service.id]: 'checking' }));
+  
+  const handleCheckStatus = async (service: Service) => {
     toast.loading(`Checking status for ${service.name}...`, { id: `status-${service.id}` });
-    
-    let isOnline = false;
-    let checkMethod = '';
-
-    try {
-      const healthCap = service.capabilities.find(c => c.capability === 'health') as HealthCapability | undefined;
-      const llmCap = service.capabilities.find(c => c.capability === 'llm_chat') as LlmChatCapability | undefined;
-
-      if (healthCap && healthCap.endpoints.health) {
-        checkMethod = `using Health endpoint (${healthCap.endpoints.health.path})`;
-        await apiClient.get(service.url, healthCap.endpoints.health.path, service.authentication);
-        isOnline = true;
-      } else if (llmCap && llmCap.endpoints.getModels) {
-        checkMethod = `using getModels endpoint (${llmCap.endpoints.getModels.path})`;
-        await apiClient.get(service.url, llmCap.endpoints.getModels.path, service.authentication);
-        isOnline = true;
-      } else {
-        checkMethod = 'using HEAD request on base URL';
-        await apiClient.head(service.url, '/', service.authentication);
-        isOnline = true;
-      }
-
-      setStatus(prev => ({ ...prev, [service.id]: 'online' }));
-      updateService({ ...service, status: 'online' });
-      toast.success(`${service.name} is online. ${checkMethod}`, { id: `status-${service.id}` });
-
-    } catch (error) {
-      console.error(`Status check failed for ${service.name} (${checkMethod}):`, error);
-      setStatus(prev => ({ ...prev, [service.id]: 'offline' }));
-      updateService({ ...service, status: 'offline' });
-      toast.error(`${service.name} is offline.`, { id: `status-${service.id}` });
-    }
+    await checkServiceStatus(service);
+    toast.dismiss(`status-${service.id}`);
   };
 
-  const onDragEnd = (result: any) => {
-    toast.error('Reordering is currently disabled.');
-  };
+  const _onDragEnd = useCallback((_result: any) => {
+    // Drag and drop functionality is disabled for now
+    // TODO: Re-implement with a React 19 compatible library
+  }, []);
   
   const toggleDetails = (serviceId: string) => {
     setExpandedServiceId(prevId => (prevId === serviceId ? null : serviceId));
@@ -170,66 +163,15 @@ const ServiceManagerCore: React.FC = () => {
     setIsAddingService(false);
   };
     
-    const handleExportServices = () => {
-    const servicesJson = JSON.stringify(services, null, 2);
-    const blob = new Blob([servicesJson], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'kai-cd-services.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    toast.success('Services exported successfully!');
-  };
+  const activeServices = services.filter(s => !s.archived);
+  const _archivedServices = services.filter(s => s.archived);
 
-  const handleImportServices = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const importedServices = JSON.parse(e.target?.result as string);
-        if (Array.isArray(importedServices)) {
-          setServices(importedServices);
-          toast.success('Services imported successfully!');
-        } else {
-          toast.error('Invalid file format. Expected a JSON array of services.');
-        }
-      } catch (error) {
-        toast.error('Failed to parse or import the file.');
-      }
-    };
-    reader.readAsText(file);
-  };
-
-  const renderStatusIndicator = (serviceId: string) => {
-    const s = status[serviceId] || 'unknown';
-    let bgColor = 'bg-slate-500'; 
-    let title = 'Status Unknown';
-    if (s === 'checking') {
-        bgColor = 'bg-yellow-500 animate-pulse';
-        title = 'Checking...';
-    } else if (s === 'online') {
-        bgColor = 'bg-green-500';
-        title = 'Online';
-    } else if (s === 'offline') {
-        bgColor = 'bg-red-500';
-        title = 'Offline';
-    }
-    return <span title={title} className={`block w-3 h-3 rounded-full ${bgColor}`} />;
-  };
-
-    const activeServices = services.filter(s => !s.archived);
-    const archivedServices = services.filter(s => s.archived);
-
-    return (
+  return (
         <div className="p-4 md:p-6 h-full flex flex-col">
             {isAddingService && (
-                <div className="mb-4 bg-slate-800 rounded-lg shadow-2xl">
-                     <AddServiceForm onClose={handleCloseForms} />
+                <div className="mb-4 bg-slate-800 rounded-lg shadow-2xl p-4">
+                     <h3 className="text-xl font-semibold mb-4 text-slate-100">Add a New Service</h3>
+                     <ServiceForm onClose={handleCloseForms} />
                 </div>
             )}
             
@@ -239,20 +181,24 @@ const ServiceManagerCore: React.FC = () => {
                         <h2 className="text-2xl font-bold text-slate-100">Active Services</h2>
                         <button onClick={handleAddClick} className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700" title="Add a new service">Add New Service</button>
                     </div>
-                    {activeServices.map((service, index) => (
+                    {activeServices.map((service, _index) => (
                     <div key={service.id} className="bg-slate-800 rounded-lg shadow-md transition-all hover:shadow-lg">
                         <div className="flex items-center p-4">
                             <div className="flex-none text-slate-500 pr-4" title="Drag to reorder (disabled)"><ArrowsUpDownIcon className="h-5 w-5" /></div>
                             <div className="flex-grow">
                                 <div className="flex items-center space-x-3">
-                                    {renderStatusIndicator(service.id)}
+                                    <StatusIndicator status={service.status} />
                                     <p className="font-bold text-lg text-slate-100">{service.name}</p>
                                 </div>
-                                <p className="text-sm text-slate-400 break-all">{service.url}</p>
+                                <p className="text-sm text-slate-400">{service.url}</p>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <button onClick={() => handleCheckStatus(service)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title="Check Service Status"><WifiIcon className="w-5 h-5" /></button>
-                                <button onClick={() => handleEditClick(service)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title="Edit Service"><PencilIcon className="w-5 h-5" /></button>
+                                <button onClick={() => handleCheckStatus(service)} className="p-2 text-slate-400 hover:text-white" title="Check Service Status">
+                                    <WifiIcon className="h-5 w-5" />
+                                </button>
+                                <button onClick={() => handleEditClick(service)} className="p-2 text-slate-400 hover:text-white" title="Edit Service">
+                                    <PencilIcon className="h-5 w-5" />
+                                </button>
                                 <button onClick={() => toggleDetails(service.id)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title={expandedServiceId === service.id ? 'Hide Details' : 'Show Details'}><ChevronDownIcon className={`h-5 w-5 transition-transform ${expandedServiceId === service.id ? 'rotate-180' : ''}`} /></button>
                                 <button onClick={() => handleArchiveService(service)} className="p-2 text-amber-500 rounded-md hover:bg-amber-700 hover:text-white" title="Archive Service"><ArchiveBoxIcon className="w-5 h-5" /></button>
                                 <button onClick={() => handleDeleteService(service.id, service.name)} className="p-2 text-red-500 rounded-md hover:bg-red-700 hover:text-white" title="Delete Service"><TrashIcon className="w-5 h-5" /></button>

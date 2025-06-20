@@ -11,6 +11,11 @@ const ParameterControl: React.FC<ParameterControlProps> = ({ param, value, onCha
   const { key, type, label, description, range, step } = param;
   const id = `param-${key}`;
 
+  const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const num = parseFloat(e.target.value);
+    onChange(key, isNaN(num) ? 0 : num);
+  };
+
   const renderControl = () => {
     switch (type) {
       case 'number':
@@ -22,7 +27,7 @@ const ParameterControl: React.FC<ParameterControlProps> = ({ param, value, onCha
               id={id}
               value={value ?? ''}
               step={step}
-              onChange={(e) => onChange(key, parseFloat(e.target.value))}
+              onChange={handleNumericChange}
               className="w-full px-2 py-1 bg-slate-200 dark:bg-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
           );
@@ -36,7 +41,7 @@ const ParameterControl: React.FC<ParameterControlProps> = ({ param, value, onCha
               max={range[1]}
               step={step || 0.1}
               value={value ?? 0}
-              onChange={(e) => onChange(key, parseFloat(e.target.value))}
+              onChange={handleNumericChange}
               className="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer"
             />
             <span className="text-sm font-mono bg-slate-200 dark:bg-slate-700 rounded-md px-2 py-1 w-16 text-center">
@@ -70,7 +75,7 @@ const ParameterControl: React.FC<ParameterControlProps> = ({ param, value, onCha
       case 'select':
         return (
           <select id={id} value={value} onChange={(e) => onChange(key, e.target.value)} className="w-full px-2 py-1 bg-slate-200 dark:bg-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500">
-            {options?.map(option => (
+            {param.options?.map(option => (
               <option key={option.value} value={option.value}>{option.label}</option>
             ))}
           </select>

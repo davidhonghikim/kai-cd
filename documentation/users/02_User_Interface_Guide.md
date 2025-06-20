@@ -1,55 +1,233 @@
 # 2. User Interface Guide
 
-This guide provides a tour of the Kai-CD user interface. The extension has three main "surfaces": the Popup, the Side Panel, and the Main Tab.
+## Overview
 
-### 1. The Popup
+Kai-CD provides an intuitive, modular interface designed for seamless AI service management and interaction. The interface is organized around core capabilities with easy access to advanced features.
 
-Clicking the Kai-CD icon in your browser toolbar opens the Popup.
+## 🎯 **Main Navigation**
 
--   **Purpose:** The Popup is a quick launcher. It shows a list of all the services you have configured.
--   **Actions:**
-    -   **Tab Button:** Opens the selected service in the full-featured Main Tab view. If a tab is already open, it will be focused and switched to that service.
-    -   **Panel Button:** Opens the selected service in the Side Panel for quick access alongside your current webpage.
-    -   **Manage Services:** The gear icon at the bottom takes you to the service management screen in the Main Tab.
+The application uses a sidebar-based navigation system with icon-driven access to major features:
 
-*(Screenshot of the Popup UI to be added here)*
+### **Primary Capabilities**
+- **💬 LLM Chat** - AI conversation interface with multiple models
+- **🖼️ Image Generation** - AI image creation and parameter control
 
-### 2. The Side Panel
+### **Management & Configuration**  
+- **🔧 Service Management** - Add, configure, and monitor AI services
+- **🔒 Secure Vault** - Encrypted credential and API key storage
+- **🛡️ Security Hub** - Cryptographic tools and security utilities
 
-The Side Panel allows you to use an AI service without leaving your current page.
+### **System & Settings**
+- **📚 Documentation** - Built-in user guides and help system
+- **⚙️ Settings** - Application preferences and customization
+- **🐛 Console** - Debug logs and system diagnostics
 
--   **Purpose:** Ideal for quick lookups, summarizing content, or other context-specific tasks.
--   **Functionality:** It provides the core UI for a single service. For example, if you open a chat service, you will see the full chat interface.
+---
 
-*(Screenshot of the Side Panel UI to be added here)*
+## 🎨 **Theme Customization**
 
-### 3. The Main Tab
+### **Accessing Theme Settings**
+1. Click the **Settings (⚙️)** icon in the main sidebar
+2. Navigate to the **Theme Customization** section
 
-The Main Tab is the primary workspace where all the application's features are available. It has a main navigation rail on the left side to switch between different views.
+### **Available Themes**
 
-*(Screenshot of the Main Tab UI to be added here)*
+#### **🌅 Light Themes**
+- **Pastel Palette** - Soft tones with elegant pearl and mauve accents
+- **Earth Tones** - Natural forest greens with warm saffron highlights  
+- **Global Fusion** - Professional blues with wisteria accents
+- **Whimsical Wonderland** - Playful reds and royal blues
+- **Material Design** - Clean material principles with warm undertones
+- **Electric Energy** - High-energy vibrant electric blues
 
-#### Main Navigation Views:
+#### **🌙 Dark Themes**  
+- **Dark Mode Elite** - Professional slate with cyan accents (default)
+- **Neon Brights** - Vibrant neon colors on dark backgrounds
+- **Gradient Spectrum** - Deep purples with gradient effects
+- **Tech Inspired** - Modern tech aesthetics with teal highlights
+- **Pastel Pop** - Dark base with soft pastel accents
+- **Glowing Ember** - Warm ember tones with orange highlights
 
--   **Capability View (Chat/Image Icon):**
-    -   This is the default view and where you'll spend most of your time. It shows the UI for the currently active service (e.g., a chat interface or an image generation interface).
-    -   The header at the top allows you to switch between your configured services using a dropdown menu.
+#### **🔧 Developer Themes**
+- **Hacker Terminal** - Classic green-on-black terminal aesthetic
+- **Code Editor** - Editor-inspired with syntax highlighting colors
+- **Neon Cyberpunk** - Futuristic neon with cyberpunk vibes
 
--   **Service Management (Plug Icon):**
-    -   This is where you add, edit, delete, and test your service connections. See the [Managing Services](./03_Managing_Services.md) guide for more details.
+### **Theme Management Features**
 
--   **Settings (Gear Icon):**
-    -   This view allows you to configure global settings for the application.
-        -   **Theme:** Change the color scheme (Light, Dark, or System default).
-        -   **Log Level:** Adjust the verbosity of logs shown in the Console Log view.
+#### **📋 Template-Based Creation**
+1. Click **"Create Theme"** button
+2. Choose from 31 professional templates
+3. Customize name and description
+4. Apply instantly to see changes
 
--   **Data Management (Database Icon):**
-    -   This view provides tools for managing your application data.
-        -   **Import/Export:** You can download a full backup of all your settings and service configurations to a `.json` file. You can later upload this file to restore your state.
-        -   **Bug Report:** This tool generates a sanitized `.zip` file containing logs and system information that you can attach to a bug report.
+#### **🔄 Import/Export**
+- **Export** custom themes as JSON files
+- **Import** theme collections from backups
+- **Share** themes with other users
 
--   **Console Log (Terminal Icon):**
-    -   Displays a live feed of application logs. This is useful for troubleshooting issues.
+#### **🎯 Theme Customization**
+- **Real-time preview** with color swatches
+- **Professional color schemes** based on 2025 design trends
+- **Accessibility compliance** with WCAG 2.1 standards
+- **Color psychology** principles for optimal user experience
 
--   **Documentation (Book Icon):**
-    -   Shows this documentation, allowing you to read the guides directly within the application. 
+---
+
+## 🤖 **AI Service Management**
+
+### **Adding Services**
+1. Navigate to **Service Management (🔧)**
+2. Click **"Add New Service"**
+3. Select service type (Ollama, OpenAI, ComfyUI, etc.)
+4. Configure connection details
+5. Test connection and save
+
+### **Service Categories**
+- **LLM Services** - Text generation and chat models
+- **Image Generation** - AI image creation services
+- **Vector Databases** - Embedding and similarity search
+- **Automation** - Workflow and task automation
+- **Storage** - File and data management
+
+### **Service Configuration**
+- **Local Services** - Self-hosted on localhost
+- **Remote Services** - Network-accessible instances
+- **Cloud Services** - API-based cloud providers
+
+---
+
+## 🔒 **Security Features**
+
+### **Vault Management**
+The secure vault provides encrypted storage for:
+- **API Keys** - Service authentication tokens
+- **Credentials** - Username/password combinations
+- **Certificates** - SSL/TLS certificates
+- **Custom Secrets** - Any sensitive data
+
+#### **Vault Security Features**
+- **AES-256 Encryption** - Military-grade data protection
+- **Auto-lock Timer** - Configurable timeout (5-60 minutes)
+- **Master Password** - Single authentication point
+- **Secure Export** - Encrypted backup capabilities
+
+### **Security Toolkit**
+Access via **Security Hub (🛡️)**:
+
+#### **🔐 Cryptographic Tools**
+- **Password Generator** - Secure password creation
+- **Hash Generator** - MD5, SHA-256, SHA-512 hashing
+- **Encryption/Decryption** - AES text encryption
+- **PGP Key Generation** - RSA/ECC key pairs
+
+#### **🔒 Security Analysis**
+- **Password Analyzer** - Strength assessment and breach checking
+- **Diceware Generator** - Cryptographically secure passphrases
+- **Encoding Tools** - Base64, URL, HTML encoding/decoding
+
+---
+
+## 💬 **Chat Interface**
+
+### **Model Selection**
+- **Dynamic model loading** from connected services
+- **Model-specific parameters** (temperature, max tokens, etc.)
+- **Service switching** without losing conversation
+
+### **Chat Features**
+- **Streaming responses** for real-time interaction
+- **Message history** persistence
+- **System prompts** for behavior customization
+- **Export conversations** for backup/sharing
+
+### **Parameter Control**
+- **Temperature** - Response creativity control
+- **Max Tokens** - Response length limits
+- **Top-P/Top-K** - Advanced sampling parameters
+- **Seed** - Deterministic generation
+
+---
+
+## 🖼️ **Image Generation**
+
+### **Generation Parameters**
+- **Prompt Engineering** - Detailed description input
+- **Style Controls** - Artistic style selection
+- **Quality Settings** - Resolution and quality options
+- **Batch Generation** - Multiple image creation
+
+### **Image Management**
+- **Gallery View** - Generated image collection
+- **Metadata Storage** - Prompt and parameter preservation
+- **Export Options** - High-quality image downloads
+
+---
+
+## 📊 **Monitoring & Diagnostics**
+
+### **Service Status**
+- **Real-time health checks** for all configured services
+- **Connection monitoring** with automatic retry
+- **Performance metrics** and response times
+
+### **Debug Console**
+Access via **Console (🐛)** icon:
+- **Application logs** with filterable severity levels
+- **API request/response** debugging
+- **Error tracking** and stack traces
+- **System information** for troubleshooting
+
+### **Storage Management**
+- **Usage monitoring** with quota tracking
+- **Automatic cleanup** of old logs and data
+- **Manual cleanup tools** for storage optimization
+
+---
+
+## 🛠️ **Advanced Configuration**
+
+### **Application Settings**
+- **Log Level** - Debug verbosity control
+- **Auto-lock Timeout** - Security timer configuration
+- **Default Models** - Per-service model preferences
+
+### **Network Configuration**
+- **Connection Timeouts** - Request timeout settings
+- **Local/Remote IPs** - Network endpoint configuration
+- **SSL/TLS Settings** - Security protocol options
+
+### **Feature Flags**
+- **Experimental Features** - Beta functionality access
+- **UI Enhancements** - Interface experiment toggle
+- **Performance Options** - Optimization controls
+
+---
+
+## 🆘 **Troubleshooting**
+
+### **Common Issues**
+1. **Service Connection Failures**
+   - Check service URL and port
+   - Verify authentication credentials
+   - Test network connectivity
+
+2. **Theme Not Applying**
+   - Refresh the application
+   - Check browser cache
+   - Reset to system defaults
+
+3. **Vault Unlock Issues**
+   - Verify master password
+   - Check auto-lock settings
+   - Clear browser storage if needed
+
+### **Getting Help**
+- **Built-in Documentation** - Comprehensive guides
+- **Debug Console** - Technical diagnostics
+- **Bug Report Generator** - Automatic issue reporting
+- **Export Settings** - Configuration backup for support
+
+---
+
+**💡 Pro Tip:** Use keyboard shortcuts and right-click context menus for faster navigation and access to advanced features. 

@@ -1,5 +1,6 @@
 import type { ServiceDefinition, LlmChatCapability, ParameterDefinition, HealthCapability } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+import { config } from '../../config/env';
 
 const healthCapability: HealthCapability = {
   capability: 'health',
@@ -12,9 +13,10 @@ const llmChatParameters: ParameterDefinition[] = [
   {
     key: 'model',
     label: 'Model',
-    type: 'string',
-    defaultValue: 'unspecified',
-    description: 'The model to use. Note: In LM Studio, the model is loaded via the UI and this parameter is ignored.'
+    type: 'select',
+    defaultValue: config.services.defaultOpenAICompatibleModel,
+    description: 'The model to use for the chat.',
+    optionsEndpoint: 'getModels',
   },
   {
     key: 'temperature',
@@ -70,7 +72,8 @@ export const llmStudioDefinition: ServiceDefinition = {
     api: 'https://lmstudio.ai/docs/local-server',
   },
   authentication: {
-    type: 'none',
+    type: 'bearer_token',
+    defaultValue: config.services.defaultOpenAICompatibleKey
   },
   configuration: {
     help: {

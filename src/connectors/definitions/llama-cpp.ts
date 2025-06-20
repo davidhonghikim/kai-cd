@@ -1,13 +1,18 @@
-import type { ServiceDefinition, LlmChatCapability, ParameterDefinition } from '../../types';
+import type { ServiceDefinition, LlmChatCapability, HealthCapability, ParameterDefinition } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+import { config } from '../../config/env';
 
 const llmChatParameters: ParameterDefinition[] = [
   {
     key: 'model',
     label: 'Model',
-    type: 'string',
-    defaultValue: 'unspecified',
-    description: 'The model to use. Note: In many server setups, the model is loaded at startup and cannot be changed per-request.'
+    type: 'select',
+    defaultValue: config.services.defaultOpenAICompatibleModel,
+    description: 'The model to use for the chat.',
+    optionsEndpoint: 'getModels',
+    optionsPath: 'data',
+    optionsValueKey: 'id',
+    optionsLabelKey: 'id'
   },
   {
     key: 'temperature',
@@ -63,6 +68,13 @@ const llmChatCapability: LlmChatCapability = {
   }
 };
 
+const healthCapability: HealthCapability = {
+  capability: 'health',
+  endpoints: {
+    health: { path: '/health', method: 'GET' }
+  }
+};
+
 const LlamaCppDefinition: ServiceDefinition = {
   type: 'llama-cpp',
   name: 'Llama.cpp',
@@ -71,9 +83,9 @@ const LlamaCppDefinition: ServiceDefinition = {
     api: 'https://github.com/abetlen/llama-cpp-python#openai-compatible-web-server'
   },
   authentication: {
-    type: 'none'
+    type: 'bearer_token'
   },
-  capabilities: [llmChatCapability],
+  capabilities: [llmChatCapability, healthCapability],
   defaultPort: 8000
 };
 

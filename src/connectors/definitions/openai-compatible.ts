@@ -1,5 +1,6 @@
 import type { ServiceDefinition, LlmChatCapability, HealthCapability } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+import { config } from '../../config/env';
 
 const healthCapability: HealthCapability = {
   capability: 'health',
@@ -20,7 +21,7 @@ const llmChatCapability: LlmChatCapability = {
         key: 'model',
         label: 'Model',
         type: 'string',
-        defaultValue: '',
+        defaultValue: config.services.defaultOpenAICompatibleModel,
         description: 'The ID of the model to use for this request.',
         optionsEndpoint: '/v1/models',
         optionsPath: 'data',

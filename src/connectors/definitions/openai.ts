@@ -5,13 +5,14 @@ import type {
 	LangChainCapability
 } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+import { config } from '../../config/env';
 
 const chatParameters: ParameterDefinition[] = [
 	{
 		key: 'model',
 		label: 'Model',
 		type: 'select',
-		defaultValue: 'gpt-4o',
+		defaultValue: config.services.defaultOpenAiModel,
 		description: 'The model to use for the chat.',
 		optionsEndpoint: 'getModels',
 		optionsPath: 'data',

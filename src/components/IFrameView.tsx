@@ -1,23 +1,29 @@
 import React from 'react';
-import type { Service } from '../types';
 
 interface IFrameViewProps {
-  service: Service;
+  src: string;
+  title: string;
 }
 
-const IFrameView: React.FC<IFrameViewProps> = ({ service }) => {
+const IFrameView: React.FC<IFrameViewProps> = ({ src, title }) => {
+  if (!src) {
+    return (
+      <div className="flex items-center justify-center h-full text-slate-400">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-2">No Service URL</h2>
+          <p>The URL for this service is missing or invalid.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col h-screen bg-slate-900">
-      <header className="bg-slate-800 border-b border-slate-700 p-3 shrink-0 text-center">
-        <h1 className="text-lg font-semibold text-slate-100">{service.name}</h1>
-        <p className="text-xs text-slate-400">
-          External UI loaded from: <a href={service.url} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">{service.url}</a>
-        </p>
-      </header>
+    <div className="w-full h-full">
       <iframe
-        src={service.url}
-        title={service.name}
-        className="w-full h-full border-none bg-white"
+        src={src}
+        title={title}
+        className="w-full h-full border-0"
+        allow="clipboard-write"
       />
     </div>
   );

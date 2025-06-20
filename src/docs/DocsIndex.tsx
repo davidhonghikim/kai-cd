@@ -1,19 +1,6 @@
 import React from 'react';
 import { docList } from './doc-loader';
 
-// The import.meta.glob result is an object where keys are file paths
-// e.g., { '../../md/00_Index.md': () => import(...) }
-const docModules = import.meta.glob('/md/*.md');
-
-// Extract and sort the filenames
-const docFiles = Object.keys(docModules)
-  .map(path => {
-    const filename = path.split('/').pop()?.replace('.md', '');
-    return filename;
-  })
-  .filter(Boolean)
-  .sort();
-
 interface DocsIndexProps {
   onSelect: (docName: string) => void;
   activeDoc: string;
@@ -21,7 +8,6 @@ interface DocsIndexProps {
 
 const DocsIndex: React.FC<DocsIndexProps> = ({ onSelect, activeDoc }) => {
   const getDocTitle = (docPath: string) => {
-    // Take the last part of the path for the title
     const title = docPath.split('/').pop() || '';
     return title.replace(/_/g, ' ').replace(/^\d+\s*/, '');
   };

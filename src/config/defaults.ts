@@ -1,59 +1,54 @@
-import type { Service } from '../types';
-import { v4 as uuidv4 } from 'uuid';
-import { a1111Definition } from '../connectors/definitions/a1111';
-import { ollamaDefinition } from '../connectors/definitions/ollama';
-import { openWebUIDefinition } from '../connectors/definitions/open-webui';
-import { comfyuiDefinition } from '../connectors/definitions/comfyui';
-import { openAICompatibleDefinition } from '../connectors/definitions/openai-compatible';
-import { config } from './env';
+import type { NewService } from '../types';
+// Note: This file is currently not used but kept for future reference
 
-export const DEFAULT_SERVICES: Omit<Service, 'id' | 'createdAt' | 'updatedAt' | 'isActive' | 'isConnected' | 'status' | 'enabled'>[] = [
+export const DEFAULT_SERVICES: NewService[] = [
 	// --- Local Services ---
 	{
-		...ollamaDefinition,
 		name: 'Ollama (Local)',
-		url: `http://${config.networking.localIp}:11434`,
+		serviceDefinitionId: 'ollama',
+		ipType: 'local',
 	},
 	{
-		...openWebUIDefinition,
 		name: 'Open WebUI (Local)',
-		url: `http://${config.networking.localIp}:8080`,
+		serviceDefinitionId: 'open-webui',
+		ipType: 'local',
 	},
 	{
-		...a1111Definition,
 		name: 'A1111 (Local)',
-		url: `http://${config.networking.localIp}:7860`,
+		serviceDefinitionId: 'a1111',
+		ipType: 'local',
 	},
 	{
-		...comfyuiDefinition,
 		name: 'ComfyUI (Local)',
-		url: `http://${config.networking.localIp}:8188`,
+		serviceDefinitionId: 'comfyui',
+		ipType: 'local',
 	},
 	// --- Remote Services ---
 	{
-		...ollamaDefinition,
 		name: 'Ollama (Remote)',
-		url: `http://${config.networking.remoteIp}:11434`,
+		serviceDefinitionId: 'ollama',
+		ipType: 'remote',
 	},
 	{
-		...openWebUIDefinition,
 		name: 'Open WebUI (Remote)',
-		url: `http://${config.networking.remoteIp}:3000`,
+		serviceDefinitionId: 'open-webui',
+		ipType: 'remote',
 	},
 	{
-		...a1111Definition,
 		name: 'A1111 (Remote)',
-		url: `http://${config.networking.remoteIp}:7860`,
+		serviceDefinitionId: 'a1111',
+		ipType: 'remote',
 	},
 	{
-		...comfyuiDefinition,
 		name: 'ComfyUI (Remote)',
-		url: `http://${config.networking.remoteIp}:8188`,
+		serviceDefinitionId: 'comfyui',
+		ipType: 'remote',
 	},
 	// --- Cloud Services ---
 	{
-		...openAICompatibleDefinition,
 		name: 'OpenAI API',
-		url: 'https://api.openai.com',
+		serviceDefinitionId: 'openai-compatible',
+		ipType: 'cloud',
+		customUrl: 'https://api.openai.com/v1',
 	}
 ]; 

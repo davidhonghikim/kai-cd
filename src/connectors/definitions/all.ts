@@ -14,6 +14,7 @@ import { openWebUIDefinition } from './open-webui';
 import { openAICompatibleDefinition } from './openai-compatible';
 import { openaiDefinition } from './openai';
 import { qdrantDefinition } from './qdrant';
+import { reticulumDefinition } from './reticulum';
 import { vllmDefinition } from './vllm';
 
 export const allServiceDefinitions = [
@@ -33,5 +34,6 @@ export const allServiceDefinitions = [
   openAICompatibleDefinition,
   openaiDefinition,
   qdrantDefinition,
+  reticulumDefinition,
   vllmDefinition,
 ]; 

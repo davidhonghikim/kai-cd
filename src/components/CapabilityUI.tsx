@@ -6,15 +6,18 @@ interface CapabilityUIProps {
   service: Service;
 }
 
+// A whitelist of capabilities that have a dedicated UI view.
+const RENDERABLE_CAPABILITIES: ReadonlyArray<string> = ['llm_chat', 'image_generation'];
+
 const CapabilityUI: React.FC<CapabilityUIProps> = ({ service }) => {
-  // For now, we will render the UI for the FIRST compatible capability.
-  // This avoids cluttering the UI with multiple views (e.g., chat and model management).
-  // A future enhancement could be to add tabs to switch between capabilities.
-  const primaryCapability = service.capabilities.find(cap => getCapabilityView(cap.capability));
+  // Find the first capability of the service that is in our whitelist of renderable views.
+  const primaryCapability = service.capabilities.find(cap => 
+    RENDERABLE_CAPABILITIES.includes(cap.capability)
+  );
 
   if (!primaryCapability) {
-    // If no capabilities have a registered view, show a generic message
-    // or the first capability's "unknown" view.
+    // If no renderable capabilities are found, show a generic message.
+    // This prevents trying to render a view for 'model_management' or other non-UI capabilities.
     const firstCapability = service.capabilities[0];
     if (!firstCapability) {
       return <div>No capabilities defined for this service.</div>;
@@ -24,6 +27,7 @@ const CapabilityUI: React.FC<CapabilityUIProps> = ({ service }) => {
 
   const ViewComponent = getCapabilityView(primaryCapability.capability);
 
+  // This check should technically be redundant now, but it's good practice.
   return ViewComponent ? (
     <ViewComponent service={service} capability={primaryCapability} />
   ) : (

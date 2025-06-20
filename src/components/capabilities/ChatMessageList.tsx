@@ -1,49 +1,51 @@
 import React from 'react';
-import type { Service } from '../../types';
+import type { Service, ChatMessage } from '../../types';
 import { UserCircleIcon, CpuChipIcon } from '@heroicons/react/24/solid';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ChatMessageListProps {
   service: Service;
+  streamingMessage: ChatMessage | null;
 }
 
-const ChatMessageList: React.FC<ChatMessageListProps> = ({ service }) => {
+const ChatMessageList: React.FC<ChatMessageListProps> = ({ service, streamingMessage }) => {
   const messages = service.history || [];
-
-  if (messages.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full text-slate-500">
-        <CpuChipIcon className="w-16 h-16 mb-4" />
-        <h2 className="text-xl font-semibold">{service.name}</h2>
-        <p>No messages yet. Start the conversation!</p>
-      </div>
-    );
-  }
+  const allMessages = streamingMessage ? [...messages, streamingMessage] : messages;
 
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4">
-      {messages.map((msg, index) => (
-        <div key={index} className={`flex items-start gap-3 ${msg.role === 'user' ? 'justify-end' : ''}`}>
-          {msg.role === 'assistant' && (
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center">
-                <CpuChipIcon className="w-5 h-5 text-cyan-400" />
-            </div>
-          )}
-          <div
-            className={`max-w-xl px-4 py-2 rounded-lg ${
-              msg.role === 'user'
-                ? 'bg-cyan-600 text-white'
-                : 'bg-slate-700 text-slate-200'
-            }`}
-          >
-            <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-          </div>
-           {msg.role === 'user' && (
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center">
-                <UserCircleIcon className="w-5 h-5 text-slate-400" />
+      {allMessages.map((msg, index) => (
+        <MessageRow key={index} message={msg} />
+      ))}
+    </div>
+  );
+};
+
+const MessageRow: React.FC<{ message: ChatMessage }> = ({ message }) => {
+  const isUser = message.role === 'user';
+  const Icon = isUser ? UserCircleIcon : CpuChipIcon;
+  const bgColor = isUser ? 'bg-slate-800' : 'bg-transparent';
+  const name = isUser ? 'You' : 'Assistant';
+
+  return (
+    <div className={`flex items-start space-x-4 p-4 rounded-lg ${bgColor}`}>
+      <Icon className="h-8 w-8 text-slate-400 mt-1" />
+      <div className="flex-1">
+        <p className="font-bold text-slate-300">{name}</p>
+        <div className="prose prose-invert prose-p:text-slate-200 prose-p:leading-relaxed">
+          {message.content ? (
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+          ) : (
+            <div className="flex items-center space-x-2 text-slate-400">
+                <div className="h-2 w-2 bg-slate-400 rounded-full animate-pulse [animation-delay:-0.3s]"></div>
+                <div className="h-2 w-2 bg-slate-400 rounded-full animate-pulse [animation-delay:-0.15s]"></div>
+                <div className="h-2 w-2 bg-slate-400 rounded-full animate-pulse"></div>
+                <span className="text-sm">Thinking...</span>
             </div>
           )}
         </div>
-      ))}
+      </div>
     </div>
   );
 };

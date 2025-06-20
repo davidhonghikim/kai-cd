@@ -1,5 +1,6 @@
 import type { ServiceDefinition, ImageGenerationCapability, ParameterDefinition } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+import { config } from '../../config/env';
 
 const txt2imgParameters: ParameterDefinition[] = [
 	{
@@ -74,22 +75,31 @@ const txt2imgParameters: ParameterDefinition[] = [
 		label: 'Checkpoint Model',
 		type: 'select',
 		description: 'Use a specific checkpoint model for this generation.',
-		defaultValue: '',
+		defaultValue: config.services.defaultA1111Model,
 		optionsEndpoint: 'getModels',
 		optionsPath: '', // The response is an array of objects
 		optionsValueKey: 'model_name',
 		optionsLabelKey: 'title'
 	},
 	{
-		key: 'lora',
-		label: 'LoRA Model',
+		key: 'refiner_checkpoint',
+		label: 'Refiner Checkpoint (SD-XL)',
 		type: 'select',
-		description: 'Select a LoRA model to apply.',
-		defaultValue: '',
-		optionsEndpoint: 'getLoras',
-		optionsPath: '', // The response is an array of objects
-		optionsValueKey: 'name',
-		optionsLabelKey: 'name'
+		description: 'The SD-XL refiner model to use for the second pass.',
+		defaultValue: config.services.defaultA1111Refiner,
+		optionsEndpoint: 'getModels',
+		optionsPath: '',
+		optionsValueKey: 'model_name',
+		optionsLabelKey: 'title'
+	},
+	{
+		key: 'refiner_switch_at',
+		label: 'Refiner Switch At (SD-XL)',
+		type: 'number',
+		defaultValue: 0.8,
+		range: [0, 1],
+		step: 0.05,
+		description: 'The point in the sampling process to switch to the refiner model (e.g., 0.8 for the last 20% of steps).'
 	},
 	{
 		key: 'enable_hr',
@@ -162,6 +172,7 @@ const imageGenerationCapability: ImageGenerationCapability = {
 		img2img: { path: '/sdapi/v1/img2img', method: 'POST' },
 		getModels: { path: '/sdapi/v1/sd-models', method: 'GET' },
 		getLoras: { path: '/sdapi/v1/loras', method: 'GET' },
+		getHypernetworks: { path: '/sdapi/v1/hypernetworks', method: 'GET' },
 		getSamplers: { path: '/sdapi/v1/samplers', method: 'GET' },
 		getUpscalers: { path: '/sdapi/v1/upscalers', method: 'GET' }
 	},

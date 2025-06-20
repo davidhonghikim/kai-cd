@@ -1,23 +1,35 @@
 import React, { useEffect } from 'react';
-import { useThemeStore } from '../store/themeStore';
-import { config } from '../config/env';
+import { useSettingsStore } from '../store/settingsStore';
+import themeManager from '../utils/themeManager';
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { theme, setTheme, _hasHydrated } = useThemeStore();
+const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { theme } = useSettingsStore();
 
   useEffect(() => {
-    // On initial load, set the theme from config if it hasn't been set by the user yet.
-    if (_hasHydrated && theme === 'system') {
-       setTheme(config.ui.defaultTheme);
-    }
-  }, [_hasHydrated, theme, setTheme]);
+    const initializeAndApplyTheme = async () => {
+      try {
+        await themeManager.initialize();
+        
+        // If the current theme from settings is different from theme manager's active theme,
+        // update the theme manager to match
+        const currentActiveTheme = themeManager.getActiveThemeId();
+        if (currentActiveTheme !== theme) {
+          await themeManager.setActiveTheme(theme);
+        } else {
+          // Apply the current theme
+          themeManager.applyTheme();
+        }
+      } catch (error) {
+        console.error('Failed to initialize theme system:', error);
+        // Fallback to basic theme application
+        themeManager.applyTheme();
+      }
+    };
 
-  // This effect runs whenever the theme changes, ensuring the class is applied.
-  useEffect(() => {
-    const isDark =
-      theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    document.documentElement.classList.toggle('dark', isDark);
+    initializeAndApplyTheme();
   }, [theme]);
 
   return <>{children}</>;
-}; 
+};
+
+export default ThemeProvider; 

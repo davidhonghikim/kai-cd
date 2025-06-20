@@ -5,6 +5,7 @@ export const SERVICE_CATEGORIES = {
   VECTOR_DATABASE: 'Vector Database',
   MODEL_MANAGEMENT: 'Model Management',
   STORAGE: 'Storage',
+  NETWORKING: 'Networking',
   SYSTEM: 'System',
 };
 
@@ -19,4 +20,6 @@ export const VIEW_STATES = {
   DOCS: 'Documentation',
   SETTINGS: 'Settings',
   CONSOLE: 'Console',
-}; 
+};
+
+export const DEFAULT_REQUEST_TIMEOUT_MS = 15000; // 15 seconds for API calls 

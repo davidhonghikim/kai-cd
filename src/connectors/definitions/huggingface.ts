@@ -6,6 +6,7 @@ import type {
 	ModelManagementCapability
 } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+import { config } from '../../config/env';
 
 // Note: Hugging Face uses different domains for its Hub API and Inference API.
 // - huggingface.co for model listing and management
@@ -18,7 +19,7 @@ const llmChatParameters: ParameterDefinition[] = [
 		key: 'model',
 		label: 'Model ID',
 		type: 'string',
-		defaultValue: 'mistralai/Mistral-7B-Instruct-v0.2',
+		defaultValue: config.services.defaultHuggingFaceModel,
 		description: 'The ID of the model to use for inference (e.g., mistralai/Mistral-7B-v0.1). This will be part of the URL.',
 	},
 	{
@@ -65,7 +66,7 @@ const imageGenerationParameters: ParameterDefinition[] = [
 		key: 'model',
 		label: 'Model ID',
 		type: 'string',
-		defaultValue: 'stabilityai/stable-diffusion-2-1',
+		defaultValue: config.services.defaultHuggingFaceImageModel,
 		description: 'The ID of the model to use for image generation.',
 	},
 	{
@@ -129,7 +130,7 @@ const modelManagementParameters: ParameterDefinition[] = [
 	},
 ];
 
-const llmChatCapability: LlmChatCapability = {
+const _llmChatCapability: LlmChatCapability = {
 	capability: 'llm_chat',
 	endpoints: {
 		// The model ID must be appended to this path by the client.
@@ -140,7 +141,7 @@ const llmChatCapability: LlmChatCapability = {
 	}
 };
 
-const imageGenerationCapability: ImageGenerationCapability = {
+const _imageGenerationCapability: ImageGenerationCapability = {
 	capability: 'image_generation',
 	endpoints: {
 		// The model ID must be appended to this path by the client.

@@ -5,8 +5,9 @@ import type {
 	ParameterDefinition
 } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+import { config } from '../../config/env';
 
-const models: ModelManagementCapability = {
+const _models: ModelManagementCapability = {
 	capability: 'model_management',
 	endpoints: {
 		list: {
@@ -22,7 +23,7 @@ const chatParameters: ParameterDefinition[] = [
 		key: 'model',
 		label: 'Model',
 		type: 'select',
-		defaultValue: 'claude-3-haiku-20240307',
+		defaultValue: config.services.defaultAnthropicModel,
 		description: 'The model that will complete your prompt.',
 		optionsEndpoint: 'list',
 		optionsPath: 'data',
