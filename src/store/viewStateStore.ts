@@ -4,7 +4,7 @@ import { VIEW_STATES, SELECTED_SERVICE_ID_KEY, INITIAL_TAB_VIEW_KEY } from '../c
 
 export type MainView = typeof VIEW_STATES[keyof typeof VIEW_STATES];
 export type ViewLocation = 'tab' | 'panel';
-export type TabView = 'chat' | 'services' | 'console' | 'docs' | 'settings';
+export type TabView = 'chat' | 'image' | 'services' | 'console' | 'docs' | 'settings';
 
 interface ViewState {
   activeServiceId: string | null;
@@ -31,11 +31,26 @@ export const useViewStateStore = create<ViewState>((set, get) => ({
 
 // --- Chrome Extension Logic ---
 
+const getPrimaryViewForService = (service: Service): TabView => {
+    const capabilities = service.capabilities.map(c => c.capability);
+    if (capabilities.includes('llm_chat')) {
+        return 'chat';
+    }
+    if (capabilities.includes('image_generation')) {
+        return 'image';
+    }
+    // Add other capability-to-view mappings here
+    return 'chat'; // Default fallback
+}
+
 export async function switchToTab(service: Service) {
+  // Determine the best view for the service based on its capabilities
+  const initialView = getPrimaryViewForService(service);
+
   // Set the service and view state *before* the tab is created to avoid race conditions.
   await chrome.storage.local.set({ 
     [SELECTED_SERVICE_ID_KEY]: service.id,
-    [INITIAL_TAB_VIEW_KEY]: 'chat' // Explicitly set the view to chat
+    [INITIAL_TAB_VIEW_KEY]: initialView
   });
   
   // Logic to open the service in a new tab
@@ -47,7 +62,8 @@ export async function switchToTab(service: Service) {
     // Also send a message to the existing tab to update its state
     chrome.tabs.sendMessage(serviceTab.id!, { 
         type: 'SWITCH_SERVICE', 
-        serviceId: service.id 
+        serviceId: service.id,
+        view: initialView
     });
     await chrome.windows.update(serviceTab.windowId, { focused: true });
   } else {
