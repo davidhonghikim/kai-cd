@@ -166,6 +166,7 @@ const Popup: React.FC = () => {
                         window.close();
                       }}
                       className="px-3 py-1 text-xs rounded-md bg-accent-primary text-white hover:bg-accent-primary-state focus:outline-none focus:ring-2 focus:ring-accent-primary"
+                      title={`Open ${service.name} in a new tab`}
                     >
                       Tab
                     </button>
@@ -177,6 +178,7 @@ const Popup: React.FC = () => {
                         window.close();
                       }}
                       className="px-3 py-1 text-xs rounded-md bg-background-tertiary text-text-primary hover:bg-border-primary focus:outline-none focus:ring-2 focus:ring-border-primary"
+                      title={`Open ${service.name} in the side panel`}
                     >
                       Panel
                     </button>

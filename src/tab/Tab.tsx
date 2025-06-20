@@ -34,13 +34,13 @@ const Tab: React.FC = () => {
         if (serviceId) {
             console.log(`Found selected service ID in storage: ${serviceId}`);
             setSelectedServiceId(serviceId);
-            await chrome.storage.local.remove(SELECTED_SERVICE_ID_KEY);
         }
 
       } catch (error) {
         console.error('Failed to get initial state from storage', error);
       } finally {
         setInitialStateLoaded(true);
+        chrome.runtime.sendMessage({ action: 'closeSidePanel' });
       }
     };
 
