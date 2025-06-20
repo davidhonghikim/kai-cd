@@ -147,6 +147,16 @@ class ApiClient {
       throw error;
     }
   }
+
+  async head(baseUrl: string, path: string, auth: AuthDefinition, headers: Record<string, string> = {}) {
+    const url = `${baseUrl.replace(/\/$/, '')}${path}`;
+    const allHeaders = this.getHeaders(auth, headers);
+    const response = await fetch(url, { method: 'HEAD', headers: allHeaders });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response; // HEAD responses have no body to parse
+  }
 }
 
 export const apiClient = new ApiClient(); 

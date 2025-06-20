@@ -1,5 +1,12 @@
-import type { ServiceDefinition, LlmChatCapability } from '../../types';
+import type { ServiceDefinition, LlmChatCapability, HealthCapability } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+
+const healthCapability: HealthCapability = {
+  capability: 'health',
+  endpoints: {
+    health: { path: '/v1/models', method: 'GET' }
+  }
+};
 
 const llmChatCapability: LlmChatCapability = {
   capability: 'llm_chat',
@@ -95,5 +102,5 @@ export const openAICompatibleDefinition: ServiceDefinition = {
   authentication: {
     type: 'bearer_token'
   },
-  capabilities: [llmChatCapability]
+  capabilities: [llmChatCapability, healthCapability]
 }; 

@@ -1,5 +1,12 @@
-import type { ServiceDefinition, LlmChatCapability, ParameterDefinition } from '../../types';
+import type { ServiceDefinition, LlmChatCapability, ParameterDefinition, HealthCapability } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+
+const healthCapability: HealthCapability = {
+  capability: 'health',
+  endpoints: {
+    health: { path: '/v1/models', method: 'GET' }
+  }
+};
 
 const llmChatParameters: ParameterDefinition[] = [
   {
@@ -63,5 +70,5 @@ export const vllmDefinition: ServiceDefinition = {
       instructions: 'Start the vLLM server with the specified model and arguments.',
     },
   },
-  capabilities: [llmChatCapability],
+  capabilities: [llmChatCapability, healthCapability],
 }; 

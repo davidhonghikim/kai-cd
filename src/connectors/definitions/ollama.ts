@@ -1,4 +1,4 @@
-import type { ServiceDefinition, LlmChatCapability, ParameterDefinition } from '../../types';
+import type { ServiceDefinition, LlmChatCapability, ParameterDefinition, HealthCapability } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
 
 const chatParameters: ParameterDefinition[] = [
@@ -40,6 +40,13 @@ const chatParameters: ParameterDefinition[] = [
 	}
 ];
 
+const healthCapability: HealthCapability = {
+	capability: 'health',
+	endpoints: {
+		health: { path: '/', method: 'GET' }
+	}
+};
+
 const llmChatCapability: LlmChatCapability = {
 	capability: 'llm_chat',
 	endpoints: {
@@ -67,5 +74,5 @@ export const ollamaDefinition: ServiceDefinition = {
 			instructions: 'Ollama should work out-of-the-box if it is running on the specified host and port.'
 		}
 	},
-	capabilities: [llmChatCapability]
+	capabilities: [llmChatCapability, healthCapability]
 }; 

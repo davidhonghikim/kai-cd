@@ -126,15 +126,34 @@ const ServiceManagerCore: React.FC = () => {
    const handleCheckStatus = async (service: Service) => {
     setStatus(prev => ({ ...prev, [service.id]: 'checking' }));
     toast.loading(`Checking status for ${service.name}...`, { id: `status-${service.id}` });
+    
+    let isOnline = false;
+    let checkMethod = '';
+
     try {
-      const healthCapability = service.capabilities.find(c => c.capability === 'health') as HealthCapability | undefined;
-      const path = healthCapability?.endpoints.health.path || '/';
-      await apiClient.get(service.url, path, service.authentication);
+      const healthCap = service.capabilities.find(c => c.capability === 'health') as HealthCapability | undefined;
+      const llmCap = service.capabilities.find(c => c.capability === 'llm_chat') as LlmChatCapability | undefined;
+
+      if (healthCap && healthCap.endpoints.health) {
+        checkMethod = `using Health endpoint (${healthCap.endpoints.health.path})`;
+        await apiClient.get(service.url, healthCap.endpoints.health.path, service.authentication);
+        isOnline = true;
+      } else if (llmCap && llmCap.endpoints.getModels) {
+        checkMethod = `using getModels endpoint (${llmCap.endpoints.getModels.path})`;
+        await apiClient.get(service.url, llmCap.endpoints.getModels.path, service.authentication);
+        isOnline = true;
+      } else {
+        checkMethod = 'using HEAD request on base URL';
+        await apiClient.head(service.url, '/', service.authentication);
+        isOnline = true;
+      }
+
       setStatus(prev => ({ ...prev, [service.id]: 'online' }));
       updateService({ ...service, status: 'online' });
-      toast.success(`${service.name} is online!`, { id: `status-${service.id}` });
+      toast.success(`${service.name} is online. ${checkMethod}`, { id: `status-${service.id}` });
+
     } catch (error) {
-      console.error(`Status check failed for ${service.name}:`, error);
+      console.error(`Status check failed for ${service.name} (${checkMethod}):`, error);
       setStatus(prev => ({ ...prev, [service.id]: 'offline' }));
       updateService({ ...service, status: 'offline' });
       toast.error(`${service.name} is offline.`, { id: `status-${service.id}` });

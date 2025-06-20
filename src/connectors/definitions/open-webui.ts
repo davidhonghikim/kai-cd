@@ -1,5 +1,12 @@
-import type { ServiceDefinition, LlmChatCapability, ModelManagementCapability } from '../../types';
+import type { ServiceDefinition, LlmChatCapability, ModelManagementCapability, HealthCapability } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
+
+const healthCapability: HealthCapability = {
+  capability: 'health',
+  endpoints: {
+    health: { path: '/health', method: 'GET' }
+  }
+};
 
 const llmChatCapability: LlmChatCapability = {
   capability: 'llm_chat',
@@ -75,13 +82,13 @@ const OpenWebUIDefinition: ServiceDefinition = {
     api: 'https://docs.openwebui.com/getting-started/api-endpoints/',
   },
   authentication: {
-    type: 'bearer_token',
+    type: 'none'
   },
   // Note: Open WebUI also has a RAG API for file uploads and knowledge bases
   // which could be mapped to a future 'RAGCapability'.
   // Endpoints: POST /api/v1/files/ for upload.
-  capabilities: [llmChatCapability, modelManagementCapability],
+  capabilities: [llmChatCapability, modelManagementCapability, healthCapability],
   defaultPort: 8080,
 };
 
-export { OpenWebUIDefinition as openWebUIDefinition }; 
+export const openWebUIDefinition: ServiceDefinition = OpenWebUIDefinition; 
