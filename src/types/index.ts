@@ -73,11 +73,13 @@ export interface ImageGenerationCapability {
 export interface LlmChatCapability {
   capability: 'llm_chat';
   endpoints: {
-    [endpointKey: string]: Endpoint;
+    chat: Endpoint;
+    getModels?: Endpoint;
   };
   parameters: {
     chat: ParameterDefinition[];
   };
+  models?: string[];
 }
 
 export interface ModelManagementCapability {
@@ -218,10 +220,9 @@ export type Service = ServiceDefinition & {
   url: string;
   enabled: boolean;
   status: 'online' | 'offline' | 'checking' | 'unknown';
+  archived?: boolean;
   createdAt: number;
   updatedAt: number;
-  isActive: boolean;
-  isConnected: boolean;
   lastUsedModel?: string;
 };
 

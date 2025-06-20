@@ -4,12 +4,16 @@ import { v4 as uuidv4 } from 'uuid';
 import { allServiceDefinitions } from '../connectors/definitions/all';
 import { config } from '../config/env';
 import { DEFAULT_SERVICES } from '../config/defaults';
-import type { Service, ServiceDefinition } from '../types';
+import type { Service, ServiceDefinition, AuthDefinition, ServiceType } from '../types';
 
 export type { Service } from '../types';
 
 // This is a subset of the main Service type for creation purposes.
-type NewServiceData = Omit<Service, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'authentication' | 'capabilities' | 'category' | 'enabled' >;
+type NewServiceData = Partial<Omit<Service, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'capabilities' | 'category' | 'enabled' | 'url' >> & {
+    type: ServiceType;
+    url: string;
+    authentication?: AuthDefinition;
+};
 
 export interface ServiceState {
   services: Service[];
@@ -45,8 +49,7 @@ export const useServiceStore = create<ServiceState>()(
           status: 'unknown',
           createdAt: Date.now(),
           updatedAt: Date.now(),
-          isActive: false,
-          isConnected: false,
+          authentication: serviceData.authentication || definition.authentication,
         };
         set((state) => ({ services: [...state.services, newService] }));
       },
@@ -104,8 +107,6 @@ export const useServiceStore = create<ServiceState>()(
               status: 'unknown',
               createdAt: Date.now(),
               updatedAt: Date.now(),
-              isActive: false,
-              isConnected: false,
             }));
             state.services = defaultServices;
             state.selectedServiceId = defaultServices[0]?.id || null;

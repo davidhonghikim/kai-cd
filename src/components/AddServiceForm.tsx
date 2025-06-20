@@ -1,26 +1,21 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useServiceStore, type Service } from '../store/serviceStore';
-import type { ServiceType, AuthDefinition, ServiceDefinition, LlmChatCapability } from '../types';
+import React, { useState, useMemo } from 'react';
+import { useServiceStore } from '../store/serviceStore';
+import type { ServiceType, AuthDefinition, ServiceDefinition } from '../types';
 import { allServiceDefinitions } from '../connectors/definitions/all';
 
 interface AddServiceFormProps {
   onClose: () => void;
-  serviceToEdit?: Service | null;
 }
 
-const AddServiceForm: React.FC<AddServiceFormProps> = ({ onClose, serviceToEdit }) => {
-  const { services, addService, updateService } = useServiceStore();
+const AddServiceForm: React.FC<AddServiceFormProps> = ({ onClose }) => {
+  const { services, addService } = useServiceStore();
   
-  const [selectedType, setSelectedType] = useState<ServiceType | ''>(serviceToEdit?.type || '');
-  const [serviceName, setServiceName] = useState(serviceToEdit?.name || '');
-  const [serviceUrl, setServiceUrl] = useState(serviceToEdit?.url || '');
-  const [defaultModel, setDefaultModel] = useState(serviceToEdit?.lastUsedModel || '');
-  const [authDetails, setAuthDetails] = useState<Record<string, any>>(
-    serviceToEdit ? (serviceToEdit.authentication as any).credentials || {} : {}
-  );
+  const [selectedType, setSelectedType] = useState<ServiceType | ''>('');
+  const [serviceName, setServiceName] = useState('');
+  const [serviceUrl, setServiceUrl] = useState('');
+  const [authDetails, setAuthDetails] = useState<Record<string, any>>({});
 
   const selectedDefinition = allServiceDefinitions.find(def => def.type === selectedType);
-  const isEditMode = !!serviceToEdit;
 
   const existingIpAddresses = useMemo(() => {
     const ips = new Set<string>();
@@ -32,16 +27,6 @@ const AddServiceForm: React.FC<AddServiceFormProps> = ({ onClose, serviceToEdit 
     });
     return Array.from(ips);
   }, [services]);
-
-  useEffect(() => {
-    if (serviceToEdit) {
-      setSelectedType(serviceToEdit.type);
-      setServiceName(serviceToEdit.name);
-      setServiceUrl(serviceToEdit.url);
-      setDefaultModel(serviceToEdit.lastUsedModel || '');
-      setAuthDetails((serviceToEdit.authentication as any).credentials || {});
-    }
-  }, [serviceToEdit]);
 
   const handleTypeChange = (type: ServiceType) => {
     setSelectedType(type);
@@ -73,29 +58,18 @@ const AddServiceForm: React.FC<AddServiceFormProps> = ({ onClose, serviceToEdit 
       finalAuth.credentials = authDetails;
     }
 
-    if (isEditMode && serviceToEdit) {
-      const updatedService: Service = {
-        ...serviceToEdit,
-        name: serviceName,
-        url: serviceUrl,
-        authentication: finalAuth,
-        lastUsedModel: defaultModel,
-      };
-      updateService(updatedService);
-    } else {
-      addService({
-        name: serviceName,
-        type: selectedDefinition.type,
-        url: serviceUrl,
-        authentication: finalAuth,
-      });
-    }
+    addService({
+      name: serviceName,
+      type: selectedDefinition.type,
+      url: serviceUrl,
+      authentication: finalAuth,
+    });
     
     onClose();
   };
   
   const renderAuthFields = () => {
-    if (!selectedDefinition || selectedDefinition.authentication.type === 'none') {
+    if (!selectedDefinition || !selectedDefinition.authentication || selectedDefinition.authentication.type === 'none') {
       return null;
     }
 
@@ -112,19 +86,17 @@ const AddServiceForm: React.FC<AddServiceFormProps> = ({ onClose, serviceToEdit 
               className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               required
             />
+             {auth.help && <p className="mt-2 text-sm text-gray-400">{auth.help}</p>}
           </div>
         );
-      // Other auth types can be added here
       default:
-        return null;
+        return <p className="text-sm text-gray-400">This authentication type is not yet supported in the UI.</p>;
     }
   };
 
-  const llmCapability = selectedDefinition?.capabilities.find(c => c.capability === 'llm_chat') as LlmChatCapability | undefined;
-
   return (
-    <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-xl w-full">
-      <h3 className="text-xl font-semibold mb-4 text-slate-900 dark:text-slate-100">{isEditMode ? 'Edit Service' : 'Add a New Service'}</h3>
+    <div className="bg-slate-800 p-6 rounded-lg shadow-xl w-full">
+      <h3 className="text-xl font-semibold mb-4 text-slate-100">Add a New Service</h3>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="service-type" className="block text-sm font-medium text-gray-300">Service Type</label>
@@ -133,7 +105,6 @@ const AddServiceForm: React.FC<AddServiceFormProps> = ({ onClose, serviceToEdit 
             value={selectedType}
             onChange={(e) => handleTypeChange(e.target.value as ServiceType)}
             className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            disabled={isEditMode}
           >
             <option value="" disabled>Select a type...</option>
             {allServiceDefinitions.map((def: ServiceDefinition) => (
@@ -156,41 +127,26 @@ const AddServiceForm: React.FC<AddServiceFormProps> = ({ onClose, serviceToEdit 
               />
             </div>
             <div>
-              <label htmlFor="service-url" className="block text-sm font-medium text-slate-700 dark:text-slate-300">URL</label>
+              <label htmlFor="service-url" className="block text-sm font-medium text-slate-300">URL</label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   id="service-url"
                   value={serviceUrl}
                   onChange={(e) => setServiceUrl(e.target.value)}
-                  className="mt-1 block w-full bg-slate-100 dark:bg-slate-700 border-slate-300 dark:border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                  className="mt-1 block w-full bg-slate-700 border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
                   required
                 />
-                <select onChange={(e) => handleIpSelect(e.target.value)} className="mt-1 block w-auto bg-slate-100 dark:bg-slate-700 border-slate-300 dark:border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500">
-                    <option value="">Use IP...</option>
+                <select onChange={(e) => handleIpSelect(e.target.value)} className="mt-1 block w-auto bg-slate-700 border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500">
+                    <option value="">Use Known IP...</option>
                     {existingIpAddresses.map(ip => <option key={ip} value={ip}>{ip}</option>)}
                 </select>
               </div>
             </div>
-            {isEditMode && llmCapability && (
-                 <div>
-                    <label htmlFor="default-model" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Default Model</label>
-                    <input
-                        type="text"
-                        id="default-model"
-                        value={defaultModel}
-                        onChange={e => setDefaultModel(e.target.value)}
-                        placeholder="e.g., gpt-4o, llama3"
-                        className="mt-1 block w-full bg-slate-100 dark:bg-slate-700 border-slate-300 dark:border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
-                    />
-                </div>
-            )}
             {renderAuthFields()}
              <div className="flex justify-end space-x-2 pt-4">
-                <button type="button" onClick={onClose} className="px-4 py-2 bg-slate-200 dark:bg-slate-600 rounded-md hover:bg-slate-300 dark:hover:bg-slate-700">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700">
-                {isEditMode ? 'Save Changes' : 'Add Service'}
-                </button>
+                <button type="button" onClick={onClose} className="px-4 py-2 bg-slate-600 rounded-md hover:bg-slate-700">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700">Add Service</button>
             </div>
           </>
         )}

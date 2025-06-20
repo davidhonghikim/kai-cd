@@ -8,9 +8,11 @@ import {
   ArrowsUpDownIcon,
   CloudIcon,
   ClipboardDocumentListIcon,
-  ArchiveBoxIcon
+  ArchiveBoxIcon,
+  InboxArrowDownIcon
 } from '@heroicons/react/24/solid';
 import AddServiceForm from './AddServiceForm';
+import ServiceEditor from './ServiceEditor';
 import type { Service, LlmChatCapability, HealthCapability } from '../types';
 import { apiClient } from '../utils/apiClient';
 import toast from 'react-hot-toast';
@@ -34,7 +36,12 @@ const ServiceDetails: React.FC<{ service: Service }> = ({ service }) => {
             const fetchModels = async () => {
                 setIsLoadingModels(true);
                 try {
-                    const response = await apiClient.get(service.url, llmCapability.endpoints.getModels.path, service.authentication);
+                    const getModelsEndpoint = llmCapability.endpoints.getModels;
+                    if (!getModelsEndpoint) {
+                        // This should not happen due to the check above, but satisfies TypeScript
+                        return;
+                    }
+                    const response = await apiClient.get(service.url, getModelsEndpoint.path, service.authentication);
                     const modelsData = response.data || response;
                     if (Array.isArray(modelsData)) {
                         setModels(modelsData.map(m => m.id || m.name).filter(Boolean));
@@ -77,29 +84,43 @@ const ServiceDetails: React.FC<{ service: Service }> = ({ service }) => {
 };
 
 
-// --- Service Manager Core Component (the part you liked) ---
+// --- Service Manager Core Component ---
 const ServiceManagerCore: React.FC = () => {
   const { services, removeService, updateService, setServices } = useServiceStore();
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [serviceToEdit, setServiceToEdit] = useState<Service | null>(null);
+  const [isAddingService, setIsAddingService] = useState(false);
+  const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
   const [status, setStatus] = useState<Record<string, 'online' | 'offline' | 'checking'>>({});
   const [expandedServiceId, setExpandedServiceId] = useState<string | null>(null);
 
   const handleAddClick = () => {
-    setServiceToEdit(null);
-    setIsFormOpen(true);
+    setIsAddingService(true);
+    setEditingServiceId(null);
     setExpandedServiceId(null);
   };
 
   const handleEditClick = (service: Service) => {
-    setServiceToEdit(service);
-    setIsFormOpen(true);
+    setEditingServiceId(service.id);
     setExpandedServiceId(null);
+    setIsAddingService(false);
   };
   
-  const handleCloseForm = () => {
-    setIsFormOpen(false);
-    setServiceToEdit(null);
+  const handleCloseForms = () => {
+    setIsAddingService(false);
+    setEditingServiceId(null);
+  };
+
+  const handleArchiveService = (service: Service) => {
+    if (window.confirm(`Are you sure you want to archive ${service.name}? It will be hidden but not deleted.`)) {
+      updateService({ ...service, archived: true });
+      toast.success(`${service.name} has been archived.`);
+    }
+  };
+
+  const handleDeleteService = (serviceId: string, serviceName: string) => {
+    if (window.confirm(`Are you sure you want to permanently delete ${serviceName}? This action cannot be undone.`)) {
+      removeService(serviceId);
+      toast.success(`${serviceName} has been deleted.`);
+    }
   };
 
    const handleCheckStatus = async (service: Service) => {
@@ -121,13 +142,13 @@ const ServiceManagerCore: React.FC = () => {
   };
 
   const onDragEnd = (result: any) => {
-    // This functionality is temporarily disabled until a React 19 compatible library is found.
     toast.error('Reordering is currently disabled.');
   };
   
   const toggleDetails = (serviceId: string) => {
     setExpandedServiceId(prevId => (prevId === serviceId ? null : serviceId));
-    setIsFormOpen(false);
+    setEditingServiceId(null);
+    setIsAddingService(false);
   };
     
     const handleExportServices = () => {
@@ -182,25 +203,27 @@ const ServiceManagerCore: React.FC = () => {
     return <span title={title} className={`block w-3 h-3 rounded-full ${bgColor}`} />;
   };
 
+    const activeServices = services.filter(s => !s.archived);
+    const archivedServices = services.filter(s => s.archived);
+
     return (
         <div className="p-4 md:p-6 h-full flex flex-col">
-            {isFormOpen && (
-                <div className="mb-4 fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-                    <div className="bg-slate-800 rounded-lg shadow-2xl w-full max-w-2xl">
-                         <AddServiceForm onClose={handleCloseForm} serviceToEdit={serviceToEdit} />
-                    </div>
+            {isAddingService && (
+                <div className="mb-4 bg-slate-800 rounded-lg shadow-2xl">
+                     <AddServiceForm onClose={handleCloseForms} />
                 </div>
             )}
             
             <div className="flex-grow overflow-y-auto pr-2">
                 <div className="space-y-4">
-                    <div className="flex justify-end mb-4">
-                        <button onClick={handleAddClick} className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700" title="Add new service">Add New Service</button>
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-2xl font-bold text-slate-100">Active Services</h2>
+                        <button onClick={handleAddClick} className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700" title="Add a new service">Add New Service</button>
                     </div>
-                    {services.map((service, index) => (
+                    {activeServices.map((service, index) => (
                     <div key={service.id} className="bg-slate-800 rounded-lg shadow-md transition-all hover:shadow-lg">
                         <div className="flex items-center p-4">
-                            <div className="flex-none text-slate-500 pr-4" title="Drag to reorder"><ArrowsUpDownIcon className="h-5 w-5" /></div>
+                            <div className="flex-none text-slate-500 pr-4" title="Drag to reorder (disabled)"><ArrowsUpDownIcon className="h-5 w-5" /></div>
                             <div className="flex-grow">
                                 <div className="flex items-center space-x-3">
                                     {renderStatusIndicator(service.id)}
@@ -209,12 +232,14 @@ const ServiceManagerCore: React.FC = () => {
                                 <p className="text-sm text-slate-400 break-all">{service.url}</p>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <button onClick={() => handleCheckStatus(service)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title="Check Status"><WifiIcon className="w-5 h-5" /></button>
+                                <button onClick={() => handleCheckStatus(service)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title="Check Service Status"><WifiIcon className="w-5 h-5" /></button>
                                 <button onClick={() => handleEditClick(service)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title="Edit Service"><PencilIcon className="w-5 h-5" /></button>
                                 <button onClick={() => toggleDetails(service.id)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title={expandedServiceId === service.id ? 'Hide Details' : 'Show Details'}><ChevronDownIcon className={`h-5 w-5 transition-transform ${expandedServiceId === service.id ? 'rotate-180' : ''}`} /></button>
-                                <button onClick={() => { if (window.confirm(`Are you sure you want to delete ${service.name}?`)) { removeService(service.id); } }} className="p-2 text-red-500 rounded-md hover:bg-red-700 hover:text-white" title="Delete Service"><TrashIcon className="w-5 h-5" /></button>
+                                <button onClick={() => handleArchiveService(service)} className="p-2 text-amber-500 rounded-md hover:bg-amber-700 hover:text-white" title="Archive Service"><ArchiveBoxIcon className="w-5 h-5" /></button>
+                                <button onClick={() => handleDeleteService(service.id, service.name)} className="p-2 text-red-500 rounded-md hover:bg-red-700 hover:text-white" title="Delete Service"><TrashIcon className="w-5 h-5" /></button>
                             </div>
                         </div>
+                        {editingServiceId === service.id && <ServiceEditor service={service} onClose={handleCloseForms} />}
                         {expandedServiceId === service.id && <ServiceDetails service={service} />}
                     </div>
                     ))}
