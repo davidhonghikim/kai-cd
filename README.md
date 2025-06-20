@@ -1,54 +1,53 @@
-# React + TypeScript + Vite
+# Kai-CD: The Developer's AI Command Deck
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Kai-CD is a browser extension that acts as a unified command center for interacting with a diverse ecosystem of local and remote AI services. It's designed for developers, researchers, and power users who work with multiple AI models and tools, eliminating the need to juggle various UIs and APIs.
 
-Currently, two official plugins are available:
+![Kai-CD Screenshot (to be added)]()
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Core Features
 
-## Expanding the ESLint configuration
+-   **Unified Interface:** Manage and interact with LLMs (Ollama, OpenAI), Image Generation models (Stable Diffusion, ComfyUI), Vector Databases (Chroma, Qdrant), and more from a single, intuitive UI.
+-   **Dynamic & Extensible:** The UI is dynamically generated from "Service Definitions." Adding support for a new service is as simple as creating a new definition file.
+-   **Rich Parameter Control:** A powerful and consistent UI for adjusting API parameters for any service.
+-   **State Management:** Securely saves your service configurations and connections in your browser's local storage.
+-   **Developer-Focused:** Includes a built-in logging console, bug report generator, and detailed troubleshooting guides.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Getting Started
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### Prerequisites
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+-   [Node.js](https://nodejs.org/) (v18 or later)
+-   A Chromium-based browser (Google Chrome, Brave, etc.)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Installation
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-repo/kai-cd.git
+    cd kai-cd
+    ```
+    *(Note: Replace the URL with the actual repository URL when available.)*
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Run the development server:**
+    This command builds the extension and watches for changes.
+    ```bash
+    npm run dev
+    ```
+
+4.  **Load the extension in your browser:**
+    -   Navigate to `chrome://extensions`.
+    -   Enable "Developer mode".
+    -   Click "Load unpacked" and select the `dist` directory from the project folder.
+
+## How It Works
+
+The core of Kai-CD is the "Rich Service Definition" architecture. Each supported service is defined by a single TypeScript file that contains all the information the application needs to generate a UI, construct API calls, and handle authentication. This makes the system incredibly modular and easy for anyone to extend.
+
+## Contributing
+
+Contributions are welcome! The best way to contribute is by adding a new Service Definition. See the documentation in the `documentation/developers` directory for a detailed guide.
