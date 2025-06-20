@@ -29,3 +29,4 @@ dist-ssr
 
 # User-specific environment overrides
 src/config/user.env.ts
+node_modules/
