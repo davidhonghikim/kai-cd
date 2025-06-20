@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { LockOpenIcon, KeyIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 import useVaultStore from '../store/vaultStore';
 import toast from 'react-hot-toast';
-import VaultSetup from './security/VaultSetup';
-import VaultUnlock from './security/VaultUnlock';
 
 const VaultManager: React.FC = () => {
   const { status, setMasterPassword, unlock } = useVaultStore();

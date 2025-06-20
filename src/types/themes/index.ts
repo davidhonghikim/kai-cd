@@ -1,4 +1,4 @@
-import { ThemePreset } from '../theme';
+import type { ThemePreset } from './types';
 import { LIGHT_THEMES } from './lightThemes';
 import { DARK_THEMES } from './darkThemes';
 import { DEVELOPER_THEMES } from './developerThemes';

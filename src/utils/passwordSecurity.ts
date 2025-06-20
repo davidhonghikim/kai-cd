@@ -115,8 +115,8 @@ function calculateEntropy(password: string): number {
   if (/[a-z]/.test(password)) charsetSize += 26; // lowercase
   if (/[A-Z]/.test(password)) charsetSize += 26; // uppercase  
   if (/[0-9]/.test(password)) charsetSize += 10; // numbers
-  if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) charsetSize += 32; // common symbols
-  if (/[^\w\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) charsetSize += 64; // extended chars
+  if (/[!@#$%^&*()_+=[\]{};':"\\|,.<>?]/.test(password)) charsetSize += 32; // common symbols
+  if (/[^\w!@#$%^&*()_+=[\]{};':"\\|,.<>?]/.test(password)) charsetSize += 64; // extended chars
   
   // Shannon entropy: log2(charset^length)
   const entropy = Math.log2(Math.pow(charsetSize, password.length));
@@ -178,7 +178,7 @@ function detectPatterns(password: string): string[] {
     patterns.push('Common substitution: 0 for o');
   }
   
-  if (/[5\$]/.test(password) && password.toLowerCase().includes('s')) {
+  if (/[5$]/.test(password) && password.toLowerCase().includes('s')) {
     patterns.push('Common substitution: 5 or $ for s');
   }
   
@@ -187,7 +187,7 @@ function detectPatterns(password: string): string[] {
     patterns.push('Contains year');
   }
   
-  if (/\d{1,2}\/\d{1,2}\/\d{2,4}|\d{1,2}-\d{1,2}-\d{2,4}/.test(password)) {
+  if (/\d{1,2}]\d{1,2}]\d{2,4}|\d{1,2}-\d{1,2}-\d{2,4}/.test(password)) {
     patterns.push('Contains date format');
   }
   
@@ -277,8 +277,8 @@ export async function analyzePasswordSecurity(
     hasLowercase: /[a-z]/.test(password),
     hasUppercase: /[A-Z]/.test(password),
     hasNumbers: /[0-9]/.test(password),
-    hasSymbols: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
-    hasUnicode: /[^\x00-\x7F]/.test(password)
+    hasSymbols: /[!@#$%^&*()_+=[\]{};':"\\|,.<>?-]/.test(password),
+    hasUnicode: /[^\x20-\x7E]/.test(password)
   };
   
   // Calculate entropy

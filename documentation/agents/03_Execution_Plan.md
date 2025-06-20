@@ -556,4 +556,70 @@ _Task Complete: Enhanced Diceware system ready for production use with authentic
 
 ---
 
-_Next: proceed to remaining L2 tasks or user-directed priorities._ 
+_Next: proceed to remaining L2 tasks or user-directed priorities._
+
+# Execution Plan - Comprehensive Error Fixing
+
+## Task Overview
+Fix all compilation errors, TypeScript issues, and ESLint violations across the entire codebase to achieve a completely clean build.
+
+## Error Categories Identified
+
+### 1. TypeScript Import/Export Errors (Critical)
+- **ThemePreset import issues**: Circular dependency between `src/types/theme.ts` and `src/types/themes/`
+- **Parsing error**: `src/store/uiCommunicationStore.ts` line 267
+
+### 2. ESLint Violations (72 errors, 1 warning)
+- **Unused variables**: 45+ instances across multiple files
+- **Empty block statements**: 3 instances in `EncodingTools.tsx`
+- **Regex issues**: Unnecessary escapes and control characters in `passwordSecurity.ts`
+- **Case declarations**: 2 issues in `diceware.ts`
+- **React hooks**: 1 warning about missing dependency
+
+### 3. Build Warnings
+- **Circular dependency warning**: THEME_TEMPLATES re-export causing chunk issues
+
+## Execution Steps
+
+### Phase 1: Fix Critical TypeScript Errors
+1. ✅ Fix ThemePreset import circular dependency
+2. ✅ Fix parsing error in uiCommunicationStore.ts
+3. ✅ Verify all imports/exports are consistent
+
+### Phase 2: Clean Up Unused Variables (Systematic)
+1. ✅ Background and core files
+2. ✅ Component files (20+ files)
+3. ✅ Store files
+4. ✅ Utility files
+5. ✅ Connector definition files
+
+### Phase 3: Fix Code Quality Issues
+1. ✅ Fix empty blocks in EncodingTools.tsx
+2. ✅ Fix regex issues in passwordSecurity.ts
+3. ✅ Fix case declarations in diceware.ts
+4. ✅ Fix React hooks dependency
+
+### Phase 4: Resolve Build Warnings
+1. ✅ Fix circular dependency in theme system
+2. ✅ Optimize imports for better chunking
+
+### Phase 5: Final Verification
+1. ✅ Run TypeScript compilation
+2. ✅ Run ESLint with zero errors
+3. ✅ Run build with zero warnings
+4. ✅ Test core functionality
+
+## Priority Files (Most Critical)
+1. `src/types/theme.ts` and `src/types/themes/` - Import circular dependency
+2. `src/store/uiCommunicationStore.ts` - Parsing error
+3. Multiple component files with unused variables
+
+## Expected Outcome
+- Zero TypeScript compilation errors
+- Zero ESLint errors/warnings
+- Clean build output
+- No circular dependency warnings
+- Maintained functionality
+
+## Status: IN PROGRESS
+Starting Phase 1: Critical TypeScript Errors... 

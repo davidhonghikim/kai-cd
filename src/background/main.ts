@@ -17,10 +17,10 @@ try {
   console.log('[BACKGROUND] Storage monitoring initialized successfully');
 
 // Listens for a message from the popup to open a service in a new tab.
-  chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
-    console.log('[BACKGROUND] Received message:', message);
-  if (message.action === 'openTab') {
-    const { service, view } = message.payload;
+  chrome.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
+    console.log('[BACKGROUND] Received message:', request);
+  if (request.action === 'openTab') {
+    const { service, view } = request.payload;
     const serviceId = service?.id; // Correctly extract the ID
     const tabUrl = chrome.runtime.getURL('tab.html');
 
@@ -80,3 +80,7 @@ try {
     console.error('[BACKGROUND] ERROR: window object access in service worker context detected');
   }
 } 
+
+chrome.storage.onChanged.addListener((_changes, _namespace) => {
+  // Storage change monitoring (currently unused but reserved for future use)
+}); 

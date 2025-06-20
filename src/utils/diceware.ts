@@ -242,13 +242,14 @@ function applyCapitalization(word: string, type: CapitalizationType): string {
       return word.charAt(0).toUpperCase() + word.slice(1);
     case 'all':
       return word.toUpperCase();
-    case 'random':
+    case 'random': {
       // Randomly capitalize each letter
       return word.split('').map(char => {
         const shouldCapitalize = new Uint8Array(1);
         crypto.getRandomValues(shouldCapitalize);
         return shouldCapitalize[0] % 2 === 0 ? char.toUpperCase() : char;
       }).join('');
+    }
     default:
       return word;
   }
@@ -358,7 +359,7 @@ export async function generateDicewarePassphrase(options: DicewareOptions): Prom
       case 'end':
         numbersAdded.push(numberString);
         break;
-      case 'random':
+      case 'random': {
         // Insert at random position
         const randomPos = new Uint8Array(1);
         crypto.getRandomValues(randomPos);
@@ -366,7 +367,8 @@ export async function generateDicewarePassphrase(options: DicewareOptions): Prom
         words.splice(insertIndex, 0, numberString);
         numbersAdded.push(numberString);
         break;
-      case 'between':
+      }
+      case 'between': {
         // Insert numbers between words
         for (let i = 1; i < words.length; i += 2) {
           const num = generateRandomNumbers(1);
@@ -374,6 +376,7 @@ export async function generateDicewarePassphrase(options: DicewareOptions): Prom
           numbersAdded.push(num);
         }
         break;
+      }
     }
   }
 

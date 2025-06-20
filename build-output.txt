@@ -1,0 +1,32 @@
+
+> kai-cd@0.0.0 build
+> vite build
+
+vite v6.3.5 building for production...
+transforming...
+src/types/themes/darkThemes.ts (1:9): "ThemePreset" is not exported by "src/types/theme.ts", imported by "src/types/themes/darkThemes.ts".
+src/types/themes/index.ts (1:9): "ThemePreset" is not exported by "src/types/theme.ts", imported by "src/types/themes/index.ts".
+✓ 1164 modules transformed.
+Export "THEME_TEMPLATES" of module "src/types/themes/index.ts" was reexported through module "src/types/theme.ts" while both modules are dependencies of each other and will end up in different chunks by current Rollup settings. This scenario is not well supported at the moment as it will produce a circular dependency between chunks and will likely lead to broken execution order.
+Either change the import in "src/components/ThemeCustomizer.tsx" to point directly to the exporting module or reconfigure "output.manualChunks" to ensure these modules end up in the same chunk.
+rendering chunks...
+computing gzip size...
+[vite-plugin-static-copy] Copied 6 items.
+dist/popup.html                                0.65 kB │ gzip:   0.34 kB
+dist/docs.html                                 0.73 kB │ gzip:   0.35 kB
+dist/sidepanel.html                            0.82 kB │ gzip:   0.38 kB
+dist/tab.html                                  0.98 kB │ gzip:   0.41 kB
+dist/assets/ThemeProvider-DbymQAAE.css        68.00 kB │ gzip:  11.67 kB
+dist/assets/docs-BiCFl5Gj.js                   0.56 kB │ gzip:   0.31 kB
+dist/background.js                             2.60 kB │ gzip:   0.92 kB
+dist/assets/storageQuotaManager-DKQYOw5w.js    3.55 kB │ gzip:   1.32 kB
+dist/assets/sidepanel-DcN_P5cz.js              5.12 kB │ gzip:   1.61 kB
+dist/assets/popup-BRUvTf82.js                 15.41 kB │ gzip:   3.47 kB
+dist/assets/logger-B9k6Lm7S.js                32.50 kB │ gzip:   8.65 kB
+dist/assets/ServiceSelector-BOBZE6Z6.js       35.31 kB │ gzip:   8.15 kB
+dist/assets/viewStateStore-BAfcAiV6.js        96.07 kB │ gzip:  22.12 kB
+dist/assets/DocsViewer-D0Bd5HHG.js           193.16 kB │ gzip:  60.90 kB
+dist/assets/tab-Cm8ne4e1.js                  290.40 kB │ gzip:  47.35 kB
+dist/assets/index-D5NOW8lr.js                372.48 kB │ gzip:  74.62 kB
+dist/assets/ThemeProvider-D-yG6FL6.js        773.66 kB │ gzip: 139.78 kB
+✓ built in 4.13s

@@ -1,4 +1,4 @@
-import { ThemePreset } from '../theme';
+import type { ThemePreset } from './types';
 
 export const DARK_THEMES: ThemePreset[] = [
   {

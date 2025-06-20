@@ -25,7 +25,7 @@ const StorageManagement: React.FC = () => {
     try {
       const info = await getStorageUsage();
       setStorageInfo(info);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to load storage information');
     } finally {
       setIsLoading(false);
@@ -42,7 +42,7 @@ const StorageManagement: React.FC = () => {
       const removedCount = await manualLogCleanup(days);
       toast.success(`Removed ${removedCount} old log entries`);
       await loadStorageInfo(); // Refresh storage info
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to cleanup logs');
     } finally {
       setIsPerformingCleanup(false);
@@ -55,7 +55,7 @@ const StorageManagement: React.FC = () => {
       await autoManageStorage();
       toast.success('Auto-management completed');
       await loadStorageInfo(); // Refresh storage info
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to run auto-management');
     } finally {
       setIsPerformingCleanup(false);

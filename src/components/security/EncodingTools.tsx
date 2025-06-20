@@ -26,8 +26,8 @@ const EncodingTools: React.FC = () => {
       setBase64Output(base64Encode(input));
       setHexOutput(hexEncode(input));
       setUrlOutput(urlEncode(input));
-    } catch (error) {
-      console.error('Encoding failed:', error);
+    } catch (e) {
+      // Silently handle encoding errors - invalid input is expected
     }
   };
 
@@ -56,12 +56,12 @@ const EncodingTools: React.FC = () => {
         setUrlOutput('');
       } else {
         // Try all decodings
-        try { setBase64Output(base64Decode(input)); } catch {}
-        try { setHexOutput(hexDecode(input)); } catch {}
-        try { setUrlOutput(urlDecode(input)); } catch {}
+        try { setBase64Output(base64Decode(input)); } catch { /* Invalid base64 input is expected */ }
+        try { setHexOutput(hexDecode(input)); } catch { /* Invalid hex input is expected */ }
+        try { setUrlOutput(urlDecode(input)); } catch { /* Invalid URL encoding is expected */ }
       }
-    } catch (error) {
-      console.error('Decoding failed:', error);
+    } catch (e) {
+      // Silently handle decoding errors - invalid input is expected
     }
   };
 

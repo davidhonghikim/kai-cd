@@ -89,7 +89,7 @@ const CredentialManager: React.FC = () => {
       }
       
       resetForm();
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to save credential');
     }
   };
@@ -131,7 +131,7 @@ const CredentialManager: React.FC = () => {
     try {
       await navigator.clipboard.writeText(value);
       toast.success(`${name} copied to clipboard`);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to copy to clipboard');
     }
   };

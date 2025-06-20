@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import { 
   ShieldCheckIcon, 
   KeyIcon, 
-  HashtagIcon, 
-  CubeTransparentIcon,
-  FingerPrintIcon,
-  LockClosedIcon 
+  FingerPrintIcon
 } from '@heroicons/react/24/outline';
 import PasswordGenerator from './security/PasswordGenerator';
 import PasswordAnalyzer from './security/PasswordAnalyzer';

@@ -1,0 +1,140 @@
+
+/Users/danger/CascadeProjects/kai-cd/src/background/main.ts
+  20:50  error  '_sender' is defined but never used        @typescript-eslint/no-unused-vars
+  20:59  error  '_sendResponse' is defined but never used  @typescript-eslint/no-unused-vars
+  60:58  error  '_sendResponse' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/components/ConsoleLogView.tsx
+  116:16  error  '_error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/components/CredentialManager.tsx
+   92:14  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  134:14  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/components/SecurityHub.tsx
+  5:3  error  'HashtagIcon' is defined but never used          @typescript-eslint/no-unused-vars
+  6:3  error  'CubeTransparentIcon' is defined but never used  @typescript-eslint/no-unused-vars
+  8:3  error  'LockClosedIcon' is defined but never used       @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/components/ServiceManagement.tsx
+   53:22  error  '_err' is defined but never used                        @typescript-eslint/no-unused-vars
+  155:9   error  '_onDragEnd' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  155:35  error  '_result' is defined but never used                     @typescript-eslint/no-unused-vars
+  167:9   error  '_archivedServices' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  184:51  error  '_index' is defined but never used                      @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/components/SettingsView.tsx
+  11:13  error  'theme' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/components/StorageManagement.tsx
+  28:14  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  45:14  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  58:14  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/components/ThemeCustomizer.tsx
+  11:3   error  'SwatchIcon' is defined but never used                   @typescript-eslint/no-unused-vars
+  27:10  error  'editingTheme' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  27:24  error  'setEditingTheme' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  30:10  error  'showImportModal' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  30:27  error  'setShowImportModal' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/components/VaultManager.tsx
+   5:8   error  'VaultSetup' is defined but never used   @typescript-eslint/no-unused-vars
+   6:8   error  'VaultUnlock' is defined but never used  @typescript-eslint/no-unused-vars
+  45:14  error  '_error' is defined but never used       @typescript-eslint/no-unused-vars
+  69:14  error  '_error' is defined but never used       @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/components/capabilities/ChatInputForm.tsx
+  12:9  error  '_inputRef' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/components/security/EncodingTools.tsx
+  59:61  error  Empty block statement  no-empty
+  60:55  error  Empty block statement  no-empty
+  61:55  error  Empty block statement  no-empty
+
+/Users/danger/CascadeProjects/kai-cd/src/components/security/PasswordGenerator.tsx
+  86:13  error  'description' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/components/ui/Tooltip.tsx
+  198:6  warning  React Hook useEffect has a missing dependency: 'updatePosition'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/danger/CascadeProjects/kai-cd/src/connectors/definitions/anthropic.ts
+  10:7  error  '_models' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/connectors/definitions/comfyui.ts
+  16:7  error  '_LlmChat' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/connectors/definitions/huggingface.ts
+  133:7  error  '_llmChatCapability' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  144:7  error  '_imageGenerationCapability' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/connectors/definitions/reticulum.ts
+  3:10  error  'config' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/core/config/index.ts
+  54:13  error  '_metadata' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/features/themes/components/ThemeCreationForm.tsx
+  2:10  error  'PlusIcon' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/popup/Popup.tsx
+  30:16  error  '_error' is defined but never used                      @typescript-eslint/no-unused-vars
+  37:9   error  '_openViewInNewTab' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/store/logStore.ts
+  4:10  error  'persist' is defined but never used            @typescript-eslint/no-unused-vars
+  4:19  error  'createJSONStorage' is defined but never used  @typescript-eslint/no-unused-vars
+  5:10  error  'chromeStorage' is defined but never used      @typescript-eslint/no-unused-vars
+  6:16  error  'uuidv4' is defined but never used             @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/store/serviceStore.ts
+  290:17  error  '_hasHydrated' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/store/settingsStore.ts
+  22:11  error  '_get' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/store/uiCommunicationStore.ts
+  267:59  error  Parsing error: ']' expected
+
+/Users/danger/CascadeProjects/kai-cd/src/store/viewStateStore.ts
+  5:23  error  'INITIAL_TAB_VIEW_KEY' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/tab/Tab.tsx
+  103:14  error  '_error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/utils/apiClient.ts
+  36:14  error  '_e' is defined but never used  @typescript-eslint/no-unused-vars
+  84:18  error  '_e' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/utils/bugReportGenerator.ts
+  7:38  error  '_history' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/utils/cryptoTools.ts
+   55:9   error  'startTime' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  109:9   error  'startTime' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  138:7   error  'algorithm' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  203:12  error  'error' is defined but never used               @typescript-eslint/no-unused-vars
+  218:12  error  'error' is defined but never used               @typescript-eslint/no-unused-vars
+  246:12  error  'error' is defined but never used               @typescript-eslint/no-unused-vars
+  335:14  error  'error' is defined but never used               @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/utils/diceware.ts
+  363:9  error  Unexpected lexical declaration in case block  no-case-declarations
+  365:9  error  Unexpected lexical declaration in case block  no-case-declarations
+
+/Users/danger/CascadeProjects/kai-cd/src/utils/logger.ts
+  18:7   error  '_LOG_LEVEL_MAP' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  47:18  error  '_e' is defined but never used                       @typescript-eslint/no-unused-vars
+
+/Users/danger/CascadeProjects/kai-cd/src/utils/passwordSecurity.ts
+  118:24  error  Unnecessary escape character: \[                             no-useless-escape
+  118:41  error  Unnecessary escape character: \/                             no-useless-escape
+  119:29  error  Unnecessary escape character: \[                             no-useless-escape
+  119:46  error  Unnecessary escape character: \/                             no-useless-escape
+  181:10  error  Unnecessary escape character: \$                             no-useless-escape
+  280:34  error  Unnecessary escape character: \[                             no-useless-escape
+  280:51  error  Unnecessary escape character: \/                             no-useless-escape
+  281:17  error  Unexpected control character(s) in regular expression: \x00  no-control-regex
+
+✖ 73 problems (72 errors, 1 warning)
+

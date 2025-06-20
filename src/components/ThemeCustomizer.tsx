@@ -7,9 +7,7 @@ import {
   DocumentArrowUpIcon,
   EyeIcon,
   CheckIcon,
-  XMarkIcon,
-  SwatchIcon,
-  SparklesIcon
+  XMarkIcon,SparklesIcon
 } from '@heroicons/react/24/outline';
 import themeManager from '../utils/themeManager';
 import { type CustomTheme, type ThemePreference, THEME_TEMPLATES } from '../types/theme';
@@ -24,10 +22,10 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ onThemeChange }) => {
   const [themes, setThemes] = useState<CustomTheme[]>([]);
   const [activeThemeId, setActiveThemeId] = useState<ThemePreference>('system');
   const [isCreating, setIsCreating] = useState(false);
-  const [editingTheme, setEditingTheme] = useState<CustomTheme | null>(null);
+  // const [editingTheme, setEditingTheme] = useState<CustomTheme | null>(null);
   const [newThemeName, setNewThemeName] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState(THEME_TEMPLATES[0]);
-  const [showImportModal, setShowImportModal] = useState(false);
+  // const [showImportModal, setShowImportModal] = useState(false);
 
   useEffect(() => {
     initializeThemes();
