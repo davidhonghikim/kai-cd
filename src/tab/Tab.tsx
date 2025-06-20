@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useServiceStore } from '../store/serviceStore';
 import { switchToPanel } from '../store/viewStateStore';
 import CapabilityUI from '../components/CapabilityUI';
@@ -13,33 +13,65 @@ import ServiceSelector from '../components/ServiceSelector';
 import ConsoleLogView from '../components/ConsoleLogView';
 import type { TabView } from '../store/viewStateStore';
 
+const getPrimaryViewForService = (service: Service): TabView => {
+    const capabilities = service.capabilities.map(c => c.capability);
+    if (capabilities.includes('llm_chat')) {
+        return 'chat';
+    }
+    if (capabilities.includes('image_generation')) {
+        return 'image';
+    }
+    return 'chat'; 
+}
+
 const Tab: React.FC = () => {
-  const { services, selectedServiceId, setSelectedServiceId } = useServiceStore();
+  const { services, selectedServiceId, setSelectedServiceId, getServiceById } = useServiceStore();
   const [activeKey, setActiveKey] = useState<TabView>('chat');
   const [initialStateLoaded, setInitialStateLoaded] = useState(false);
 
   useEffect(() => {
     const getInitialState = async () => {
       try {
-        const result = await chrome.storage.local.get([INITIAL_TAB_VIEW_KEY, SELECTED_SERVICE_ID_KEY]);
+        // First, try to get the service ID from the URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const serviceIdFromUrl = urlParams.get('serviceId');
         
-        const initialView = result[INITIAL_TAB_VIEW_KEY];
-        if (initialView && ['chat', 'image', 'services', 'docs', 'settings', 'console'].includes(initialView)) {
-          console.log(`Found initial view in storage: ${initialView}`);
-          setActiveKey(initialView as TabView);
-          await chrome.storage.local.remove(INITIAL_TAB_VIEW_KEY);
+        let serviceIdToSelect: string | null = null;
+        let viewToSelect: TabView | null = null;
+
+        if (serviceIdFromUrl) {
+          console.log(`[Tab] Found serviceId in URL: ${serviceIdFromUrl}`);
+          const service = getServiceById(serviceIdFromUrl);
+          if (service) {
+            serviceIdToSelect = service.id;
+            viewToSelect = getPrimaryViewForService(service);
+          }
+        } else {
+          // Fallback to chrome.storage.local if no URL param
+          const result = await chrome.storage.local.get([INITIAL_TAB_VIEW_KEY, SELECTED_SERVICE_ID_KEY]);
+          
+          viewToSelect = result[INITIAL_TAB_VIEW_KEY];
+          serviceIdToSelect = result[SELECTED_SERVICE_ID_KEY];
+          
+          // Clean up storage keys after reading them
+          await chrome.storage.local.remove([INITIAL_TAB_VIEW_KEY, SELECTED_SERVICE_ID_KEY]);
+        }
+        
+        if (serviceIdToSelect) {
+            console.log(`[Tab] Setting selected service ID to: ${serviceIdToSelect}`);
+            setSelectedServiceId(serviceIdToSelect);
         }
 
-        const serviceId = result[SELECTED_SERVICE_ID_KEY];
-        if (serviceId) {
-            console.log(`Found selected service ID in storage: ${serviceId}`);
-            setSelectedServiceId(serviceId);
+        if (viewToSelect && ['chat', 'image', 'services', 'docs', 'settings', 'console'].includes(viewToSelect)) {
+          console.log(`[Tab] Setting initial view to: ${viewToSelect}`);
+          setActiveKey(viewToSelect as TabView);
         }
 
       } catch (error) {
-        console.error('Failed to get initial state from storage', error);
+        console.error('[Tab] Failed to get initial state:', error);
       } finally {
         setInitialStateLoaded(true);
+        // Let the background script know the tab has loaded its state and can close the side panel
         chrome.runtime.sendMessage({ action: 'closeSidePanel' });
       }
     };
@@ -63,26 +95,37 @@ const Tab: React.FC = () => {
     return () => {
         chrome.runtime.onMessage.removeListener(messageListener);
     };
-  }, [setSelectedServiceId]);
+  }, [setSelectedServiceId, getServiceById]);
+
+  const activeService = useMemo(() => {
+    return services.find(s => s.id === selectedServiceId);
+  }, [services, selectedServiceId]);
 
   useEffect(() => {
-    // When the chat tab is active, ensure a chat service is selected.
-    // This should only run AFTER the initial state has been loaded from storage.
-    if (initialStateLoaded && activeKey === 'chat' && !selectedServiceId) {
-        const firstChatService = services.find(s => s.enabled && s.capabilities.some(c => c.capability === 'llm_chat'));
+    // When the view changes, if there's no active service that matches the view,
+    // find and select the first available one.
+    if (!initialStateLoaded) return;
+
+    const suitableServiceExists = activeService && 
+        ((activeKey === 'chat' && activeService.capabilities.some(c => c.capability === 'llm_chat')) ||
+         (activeKey === 'image' && activeService.capabilities.some(c => c.capability === 'image_generation')));
+
+    if (suitableServiceExists) {
+        return; // Already have a good service selected
+    }
+
+    if (activeKey === 'chat') {
+        const firstChatService = services.find(s => s.enabled && !s.archived && s.capabilities.some(c => c.capability === 'llm_chat'));
         if (firstChatService) {
-            console.log(`[Tab] No chat service selected. Defaulting to first available: ${firstChatService.name}`);
             setSelectedServiceId(firstChatService.id);
         }
-    }
-    if (initialStateLoaded && activeKey === 'image' && !selectedServiceId) {
-        const firstImageService = services.find(s => s.enabled && s.capabilities.some(c => c.capability === 'image_generation'));
+    } else if (activeKey === 'image') {
+        const firstImageService = services.find(s => s.enabled && !s.archived && s.capabilities.some(c => c.capability === 'image_generation'));
         if (firstImageService) {
-            console.log(`[Tab] No image service selected. Defaulting to first available: ${firstImageService.name}`);
             setSelectedServiceId(firstImageService.id);
         }
     }
-  }, [activeKey, services, selectedServiceId, setSelectedServiceId, initialStateLoaded]);
+  }, [activeKey, services, activeService, setSelectedServiceId, initialStateLoaded]);
 
   const navItems: { name: TabView; icon: React.FC<any> }[] = [
     { name: 'chat', icon: CommandLineIcon },
@@ -104,39 +147,39 @@ const Tab: React.FC = () => {
   };
 
   const renderContent = () => {
-    const selectedService = services.find(s => s.id === selectedServiceId);
+    if (!initialStateLoaded) {
+        return (
+            <div className="flex flex-col items-center justify-center h-full text-slate-500">
+                <CloudIcon className="w-16 h-16 animate-pulse" />
+                <h2 className="text-xl font-semibold mt-4">Loading...</h2>
+            </div>
+        );
+    }
+    
+    if (!activeService && (activeKey === 'chat' || activeKey === 'image')) {
+        const message = activeKey === 'chat' ? 'No Chat Service' : 'No Image Service';
+        const capabilityMessage = activeKey === 'chat' ? 'chat' : 'image generation';
+        const Icon = activeKey === 'chat' ? CommandLineIcon : PhotoIcon;
+        return (
+          <div className="flex flex-col items-center justify-center h-full text-slate-500">
+            <Icon className="w-16 h-16 mb-4" />
+            <h2 className="text-xl font-semibold">{message}</h2>
+            <p>Go to "Services" to add and enable a service with {capabilityMessage} capabilities.</p>
+          </div>
+        );
+    }
 
     switch (activeKey) {
       case 'chat':
-        if (selectedService && selectedService.capabilities.some(c => c.capability === 'llm_chat')) {
-          return <CapabilityUI service={selectedService} />;
+        if (activeService && activeService.capabilities.some(c => c.capability === 'llm_chat')) {
+          return <CapabilityUI service={activeService} />;
         }
-        const firstChatService = services.find(s => s.enabled && s.capabilities.some(c => c.capability === 'llm_chat'));
-        if (firstChatService) {
-          return <CapabilityUI service={firstChatService} />;
-        }
-        return (
-          <div className="flex flex-col items-center justify-center h-full text-slate-500">
-            <CommandLineIcon className="w-16 h-16 mb-4" />
-            <h2 className="text-xl font-semibold">No Chat Service</h2>
-            <p>Go to "Services" to add and enable a service with chat capabilities.</p>
-          </div>
-        );
+        break; // Fall through to default message if service doesn't have the capability
       case 'image':
-        if (selectedService && selectedService.capabilities.some(c => c.capability === 'image_generation')) {
-          return <CapabilityUI service={selectedService} />;
+        if (activeService && activeService.capabilities.some(c => c.capability === 'image_generation')) {
+          return <CapabilityUI service={activeService} />;
         }
-        const firstImageService = services.find(s => s.enabled && s.capabilities.some(c => c.capability === 'image_generation'));
-        if (firstImageService) {
-          return <CapabilityUI service={firstImageService} />;
-        }
-        return (
-          <div className="flex flex-col items-center justify-center h-full text-slate-500">
-            <PhotoIcon className="w-16 h-16 mb-4" />
-            <h2 className="text-xl font-semibold">No Image Service</h2>
-            <p>Go to "Services" to add and enable a service with image generation capabilities.</p>
-          </div>
-        );
+        break; // Fall through to default message if service doesn't have the capability
       case 'services':
         return <ServiceManagement />;
       case 'docs':
@@ -154,6 +197,14 @@ const Tab: React.FC = () => {
             </div>
         );
     }
+    // Default case for when a service is selected but doesn't have the right capability for the view
+    return (
+        <div className="flex flex-col items-center justify-center h-full text-slate-500">
+            <ShieldExclamationIcon className="w-16 h-16 mb-4" />
+            <h2 className="text-xl font-semibold">Capability Mismatch</h2>
+            <p><span className="font-bold">{activeService?.name}</span> does not have <span className="font-bold">{activeKey}</span> capabilities.</p>
+        </div>
+    );
   };
 
   const getHeaderInfo = () => {
@@ -161,10 +212,10 @@ const Tab: React.FC = () => {
 
     switch (activeKey) {
       case 'chat':
-        const chatService = selectedService || services.find(s => s.enabled && s.capabilities.some(c => c.capability === 'llm_chat'));
+        const chatService = selectedService || services.find(s => s.enabled && !s.archived && s.capabilities.some(c => c.capability === 'llm_chat'));
         return { title: 'Chat', host: getServiceHost(chatService), service: chatService };
       case 'image':
-        const imageService = selectedService || services.find(s => s.enabled && s.capabilities.some(c => c.capability === 'image_generation'));
+        const imageService = selectedService || services.find(s => s.enabled && !s.archived && s.capabilities.some(c => c.capability === 'image_generation'));
         return { title: 'Image Generation', host: getServiceHost(imageService), service: imageService };
       case 'services':
         return { title: 'Service Manager', host: '', service: null };
@@ -175,17 +226,16 @@ const Tab: React.FC = () => {
       case 'console':
         return { title: 'Console Logs', host: '', service: null };
       default:
-        const activeService = services.find(s => s.id === selectedServiceId) || services.find(s => s.enabled);
+        const activeService = services.find(s => s.id === selectedServiceId) || services.find(s => s.enabled && !s.archived);
         return { title: activeService?.name || 'Kai', host: getServiceHost(activeService), service: activeService };
     }
   }
 
-  const { title, host, service: activeService } = getHeaderInfo();
+  const { title, host, service: currentService } = getHeaderInfo();
   
-  const chatServices = services.filter(s => s.capabilities.some(c => c.capability === 'llm_chat'));
-  const imageServices = services.filter(s => s.capabilities.some(c => c.capability === 'image_generation'));
-  const allServices = services; // For the service selector dropdown
-
+  const chatServices = services.filter(s => s.enabled && !s.archived && s.capabilities.some(c => c.capability === 'llm_chat'));
+  const imageServices = services.filter(s => s.enabled && !s.archived && s.capabilities.some(c => c.capability === 'image_generation'));
+  
   const getSelectorServices = () => {
     switch(activeKey) {
         case 'chat': return chatServices;
@@ -229,9 +279,9 @@ const Tab: React.FC = () => {
                 onSelectService={setSelectedServiceId}
               />
             )}
-            {activeService && (
+            {currentService && (
               <button
-                onClick={() => switchToPanel(activeService)}
+                onClick={() => switchToPanel(currentService)}
                 className="p-1 text-slate-400 hover:text-slate-200"
                 title="Open in side panel"
               >
@@ -243,7 +293,12 @@ const Tab: React.FC = () => {
 
         {/* Content Area */}
         <div className="flex-1 overflow-auto bg-slate-950">
-          {renderContent()}
+          {initialStateLoaded ? renderContent() : (
+             <div className="flex flex-col items-center justify-center h-full text-slate-500">
+                <CloudIcon className="w-16 h-16 animate-pulse" />
+                <h2 className="text-xl font-semibold mt-4">Loading...</h2>
+            </div>
+          )}
         </div>
       </div>
     </div>

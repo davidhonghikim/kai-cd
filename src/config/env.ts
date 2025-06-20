@@ -31,6 +31,7 @@ export const config = {
 	// Settings for development, debugging, and experimental features.
 	developer: {
 		logLevel: 'info', // 'debug', 'info', 'warn', 'error', or 'silent'
+        loadDefaultServices: true, // Load default services if the store is empty
 
 		// Experimental feature flags
 		featureFlags: {

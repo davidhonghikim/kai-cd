@@ -138,7 +138,7 @@ const Popup: React.FC = () => {
       <main className="overflow-y-auto p-4 space-y-4">
         {services.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {services.map(service => (
+            {services.filter(s => s.enabled && !s.archived).map(service => (
               <div
                 key={service.id}
                 onClick={() => handleServiceClick(service)}

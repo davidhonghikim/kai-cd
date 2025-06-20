@@ -1,63 +1,49 @@
-import React, { useRef, useEffect } from 'react';
-import type { ChatMessage } from '../../types';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { UserIcon, CpuChipIcon } from '@heroicons/react/24/solid';
+import React from 'react';
+import type { Service } from '../../types';
+import { UserCircleIcon, CpuChipIcon } from '@heroicons/react/24/solid';
 
 interface ChatMessageListProps {
-  messages: ChatMessage[];
-  isLoading: boolean;
+  service: Service;
 }
 
-const ChatMessageList: React.FC<ChatMessageListProps> = ({ messages, isLoading }) => {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+const ChatMessageList: React.FC<ChatMessageListProps> = ({ service }) => {
+  const messages = service.history || [];
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const Message = ({ msg }: { msg: ChatMessage }) => {
-    const isUser = msg.role === 'user';
-    const Icon = isUser ? UserIcon : CpuChipIcon;
-
+  if (messages.length === 0) {
     return (
-      <div className={`flex items-start gap-4 p-4 ${isUser ? '' : 'bg-slate-100 dark:bg-slate-800'}`}>
-        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${isUser ? 'bg-cyan-500 text-white' : 'bg-slate-600 text-white'}`}>
-          <Icon className="w-5 h-5" />
-        </div>
-        <div className="flex-1 pt-0.5">
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            className="prose dark:prose-invert max-w-none"
-            components={{
-              // Add custom components for code blocks, etc. if needed
-            }}
-          >
-            {msg.content}
-          </ReactMarkdown>
-        </div>
+      <div className="flex flex-col items-center justify-center h-full text-slate-500">
+        <CpuChipIcon className="w-16 h-16 mb-4" />
+        <h2 className="text-xl font-semibold">{service.name}</h2>
+        <p>No messages yet. Start the conversation!</p>
       </div>
     );
-  };
+  }
 
   return (
-    <div className="flex-1 overflow-y-auto">
-      {messages.map(msg => <Message key={msg.id} msg={msg} />)}
-      {isLoading && (
-         <div className="flex items-start gap-4 p-4 bg-slate-100 dark:bg-slate-800">
-          <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-slate-600 text-white">
-            <CpuChipIcon className="w-5 h-5 animate-pulse" />
+    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {messages.map((msg, index) => (
+        <div key={index} className={`flex items-start gap-3 ${msg.role === 'user' ? 'justify-end' : ''}`}>
+          {msg.role === 'assistant' && (
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center">
+                <CpuChipIcon className="w-5 h-5 text-cyan-400" />
+            </div>
+          )}
+          <div
+            className={`max-w-xl px-4 py-2 rounded-lg ${
+              msg.role === 'user'
+                ? 'bg-cyan-600 text-white'
+                : 'bg-slate-700 text-slate-200'
+            }`}
+          >
+            <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
           </div>
-          <div className="flex-1 pt-1.5">
-            <div className="w-3 h-3 bg-slate-400 rounded-full animate-pulse"></div>
-          </div>
+           {msg.role === 'user' && (
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center">
+                <UserCircleIcon className="w-5 h-5 text-slate-400" />
+            </div>
+          )}
         </div>
-      )}
-      <div ref={messagesEndRef} />
+      ))}
     </div>
   );
 };

@@ -53,21 +53,23 @@ export async function switchToTab(service: Service) {
     [INITIAL_TAB_VIEW_KEY]: initialView
   });
   
-  // Logic to open the service in a new tab
-  const tabs = await chrome.tabs.query({ url: chrome.runtime.getURL('tab.html') });
+  const tabUrl = chrome.runtime.getURL(`tab.html?serviceId=${service.id}`);
+  const tabs = await chrome.tabs.query({ url: tabUrl });
   let serviceTab = tabs[0];
 
-  if (serviceTab) {
-    await chrome.tabs.update(serviceTab.id!, { active: true });
+  if (serviceTab && serviceTab.id) {
+    await chrome.tabs.update(serviceTab.id, { active: true });
     // Also send a message to the existing tab to update its state
-    chrome.tabs.sendMessage(serviceTab.id!, { 
+    // This is useful if the user clicks the same service again to maybe refocus or refresh.
+    chrome.tabs.sendMessage(serviceTab.id, { 
         type: 'SWITCH_SERVICE', 
         serviceId: service.id,
         view: initialView
     });
     await chrome.windows.update(serviceTab.windowId, { focused: true });
   } else {
-    await chrome.tabs.create({ url: 'tab.html' });
+    // No specific tab found, create a new one
+    await chrome.tabs.create({ url: tabUrl });
   }
 
   // The side panel will be closed by the newly opened/focused tab once it has loaded.
