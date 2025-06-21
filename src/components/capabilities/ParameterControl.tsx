@@ -78,8 +78,11 @@ const ParameterControl: React.FC<ParameterControlProps> = ({ param, value, onCha
 
   const findEndpointInService = (service: Service, endpointName: string) => {
     for (const capability of service.capabilities) {
-      if ('endpoints' in capability && capability.endpoints[endpointName]) {
-        return capability.endpoints[endpointName];
+      if ('endpoints' in capability && capability.endpoints) {
+        const endpoints = capability.endpoints as Record<string, any>;
+        if (endpoints[endpointName]) {
+          return endpoints[endpointName];
+        }
       }
     }
     return null;
@@ -188,7 +191,7 @@ const ParameterControl: React.FC<ParameterControlProps> = ({ param, value, onCha
             className="w-full px-2 py-1 bg-slate-200 dark:bg-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
         );
-      case 'select':
+      case 'select': {
         const options = dynamicOptions.length > 0 ? dynamicOptions : (param.options || []);
         const hasOptions = options.length > 0;
 
@@ -231,6 +234,7 @@ const ParameterControl: React.FC<ParameterControlProps> = ({ param, value, onCha
             )}
           </div>
         );
+      }
       default:
         return <p className="text-sm text-slate-500">Unsupported control type: {type}</p>;
     }

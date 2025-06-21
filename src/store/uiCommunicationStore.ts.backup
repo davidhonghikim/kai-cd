@@ -264,13 +264,11 @@ const useUICommunicationStore = create<UICommunicationState & UICommunicationAct
   },
 
   getComponentData: (componentId: string) => {
-    const components = get().components;
-    return components[componentId as keyof typeof components] || defaultComponentState;
+    return get().components[componentId as keyof typeof get().components] || defaultComponentState;
   },
 
   isComponentActive: (componentId: string) => {
-    const components = get().components;
-    return components[componentId as keyof typeof components]?.isActive || false;
+    return get().components[componentId as keyof typeof get().components]?.isActive || false;
   },
 
   getActiveComponents: () => {

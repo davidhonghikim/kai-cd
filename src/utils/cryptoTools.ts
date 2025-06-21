@@ -52,7 +52,7 @@ export async function generatePGPKeyPair(
   keySize: 2048 | 4096 = 4096,
   expirationDays?: number
 ): Promise<PGPKeyPair> {
-  const startTime = performance.now();
+  const _startTime = performance.now();
   
   try {
     // Generate RSA key pair using Web Crypto API
@@ -106,11 +106,10 @@ export async function generateSSHKeyPair(
   keySize?: number,
   comment?: string
 ): Promise<SSHKeyPair> {
-  const startTime = performance.now();
+  const _startTime = performance.now();
   
   try {
     let keyPair: CryptoKeyPair;
-    let algorithm: string;
     
     if (keyType === 'ed25519') {
       // Ed25519 keys
@@ -120,8 +119,7 @@ export async function generateSSHKeyPair(
         },
         true,
         ['sign', 'verify']
-      );
-      algorithm = 'Ed25519';
+      ) as CryptoKeyPair;
     } else if (keyType === 'rsa') {
       // RSA keys
       const size = keySize || 4096;
@@ -135,7 +133,6 @@ export async function generateSSHKeyPair(
         true,
         ['sign', 'verify']
       );
-      algorithm = 'RSA';
     } else {
       throw new Error(`Unsupported key type: ${keyType}`);
     }
@@ -200,7 +197,7 @@ export function base64Encode(input: string): string {
 export function base64Decode(input: string): string {
   try {
     return decodeURIComponent(escape(atob(input)));
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Invalid Base64 input');
   }
 }
@@ -215,7 +212,7 @@ export function urlEncode(input: string): string {
 export function urlDecode(input: string): string {
   try {
     return decodeURIComponent(input);
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Invalid URL encoding');
   }
 }
@@ -243,7 +240,7 @@ export function hexDecode(input: string): string {
     
     const decoder = new TextDecoder();
     return decoder.decode(bytes);
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Invalid hex input');
   }
 }
@@ -332,7 +329,7 @@ export async function simulatePortScan(
         banner: status === 'open' ? `${services[port] || 'Unknown'} service banner` : undefined,
         responseTime: Math.round(responseTime)
       });
-    } catch (error) {
+    } catch (_error) {
       const responseTime = performance.now() - startTime;
       results.push({
         host,

@@ -16,6 +16,9 @@ import useVaultStore from '../../store/vaultStore';
 import useSecurityStateStore from '../../store/securityStateStore';
 import toast from 'react-hot-toast';
 
+// Type declaration for process.env
+declare const process: { env: { NODE_ENV: string } };
+
 interface PasswordGeneratorProps {
   onPasswordGenerated?: (password: string) => void;
   showCopyButton?: boolean;
@@ -97,10 +100,6 @@ const PasswordGenerator: React.FC<PasswordGeneratorProps> = ({
     }
 
     try {
-      const description = dicewareResult 
-        ? `${dicewareResult.words.length}-word Diceware (${dicewareResult.entropyBits} bits)`
-        : 'Generated password';
-      
       await addCredential({
         name: `Generated Password - ${new Date().toLocaleDateString()}`,
         type: 'none',

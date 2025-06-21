@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { useServiceStore, type Service } from './serviceStore';
 import { chromeStorage } from './chromeStorage';
-import { VIEW_STATES, INITIAL_TAB_VIEW_KEY } from '../config/constants';
+import { VIEW_STATES } from '../config/constants';
 import type { LlmChatCapability } from '../types';
 
 export type MainView = typeof VIEW_STATES[keyof typeof VIEW_STATES];

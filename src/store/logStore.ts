@@ -1,9 +1,6 @@
 console.log('[LOG_STORE] Starting logStore module initialization...');
 
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { chromeStorage } from './chromeStorage';
-import { v4 as uuidv4 } from 'uuid';
 
 console.log('[LOG_STORE] All imports completed successfully');
 

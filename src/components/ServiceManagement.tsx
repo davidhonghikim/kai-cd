@@ -18,7 +18,6 @@ import type { Service, LlmChatCapability } from '../types';
 import { apiClient } from '../utils/apiClient';
 import toast from 'react-hot-toast';
 import StatusIndicator from './StatusIndicator';
-import { useModelList } from '../hooks/useModelList';
 
 // --- Placeholder Components ---
 const PlaceholderManager: React.FC<{ title: string }> = ({ title }) => (
@@ -44,7 +43,7 @@ const LlmModelDetails: React.FC<{ capability: LlmChatCapability, service: Servic
             setIsLoadingModels(true);
             setError(null);
             try {
-                const response = await apiClient.get(service.url, getModelsEndpoint.path, service.authentication);
+                const response = await apiClient.get(service.id, getModelsEndpoint.path);
                 const modelsData = response.data || response;
                 let parsedModels: string[] = [];
                 if (Array.isArray(modelsData)) {

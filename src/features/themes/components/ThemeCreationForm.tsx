@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import { THEME_TEMPLATES } from '../../../types/theme';
 import { Button, Input } from '../../../shared/components/forms';
 

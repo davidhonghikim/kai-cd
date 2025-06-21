@@ -26,7 +26,7 @@ const EncodingTools: React.FC = () => {
       setBase64Output(base64Encode(input));
       setHexOutput(hexEncode(input));
       setUrlOutput(urlEncode(input));
-    } catch (e) {
+    } catch (_e) {
       // Silently handle encoding errors - invalid input is expected
     }
   };
@@ -60,7 +60,7 @@ const EncodingTools: React.FC = () => {
         try { setHexOutput(hexDecode(input)); } catch { /* Invalid hex input is expected */ }
         try { setUrlOutput(urlDecode(input)); } catch { /* Invalid URL encoding is expected */ }
       }
-    } catch (e) {
+    } catch (_e) {
       // Silently handle decoding errors - invalid input is expected
     }
   };

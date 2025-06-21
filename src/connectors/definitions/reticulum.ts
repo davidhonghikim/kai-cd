@@ -1,6 +1,6 @@
 import type { ServiceDefinition, ParameterDefinition, HealthCapability } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
-import { config } from '../../config/env';
+import { config as _config } from '../../config/env';
 
 // Reticulum network interface parameters
 const networkParameters: ParameterDefinition[] = [

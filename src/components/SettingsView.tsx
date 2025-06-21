@@ -8,7 +8,7 @@ import { type ThemePreference } from '../types/theme';
 import useVaultStore, { type AutoLockTimeout } from '../store/vaultStore';
 
 const SettingsView: React.FC = () => {
-    const { theme, setTheme, logLevel, setLogLevel } = useSettingsStore();
+    const { setTheme, logLevel, setLogLevel } = useSettingsStore();
     const { autoLockTimeout, setAutoLockTimeout } = useVaultStore();
 
     const handleThemeChange = (themeId: ThemePreference) => {
