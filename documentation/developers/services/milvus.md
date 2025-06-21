@@ -667,4 +667,3 @@ class MilvusCloudNativeAPIClient {
 **Priority**: High  
 **Next Milestone**: Phase 1 - Cloud-Native Operations (2 weeks)  
 **Integration Level**: Enterprise Cloud Platform (30% complete)  
-**Capabilities**: Billion-Scale + Multi-Cloud + Enterprise Analytics + AI-Native Operations 

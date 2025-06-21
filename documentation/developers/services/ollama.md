@@ -990,4 +990,3 @@ interface OllamaPerformanceManager {
 - **Intelligent Model Switching**: Automatic optimization based on context
 - **Advanced Memory System**: Persistent, intelligent conversation memory
 - **Local AI Workflows**: Automated batch processing and content generation
-- **Performance Intelligence**: Real-time optimization and resource management 

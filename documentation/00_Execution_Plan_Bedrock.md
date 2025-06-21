@@ -83,4 +83,3 @@ This plan is built on three expert-level recommendations to solve the project's 
 3.  **Enhance the Backup Manager:**
     *   Update `src/utils/backupManager.ts` to use the `DatabaseService`.
     *   The `exportData` function will now pull all data from the database into a single, versioned JSON file.
-    *   The `importData` function will safely populate the database from a backup file, with clear user confirmation prompts. 

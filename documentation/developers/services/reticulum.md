@@ -207,4 +207,3 @@ Join the public testnet to experiment with Reticulum:
 - **Manual:** [https://markqvist.github.io/Reticulum/manual/](https://markqvist.github.io/Reticulum/manual/)
 - **Examples:** Available in the Reticulum repository under `/Examples`
 - **API Documentation:** Included with the Reticulum installation
-- **Community:** Active community on various platforms for support and development 

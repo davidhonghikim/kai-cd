@@ -273,4 +273,3 @@ Every decision you make as an AI agent helps move Kai-CD toward becoming kAI and
 3. **Make informed decisions** (bridge/)
 4. **Create lasting value** for the kOS ecosystem
 
-**The documentation is your roadmap. Use it wisely.** 

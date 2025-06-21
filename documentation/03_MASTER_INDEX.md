@@ -273,4 +273,3 @@ agent_notes: "Central navigation hub - use this to find any documentation in the
 
 ---
 
-*This index is automatically maintained as new documentation is added. Last comprehensive update: 2025-01-27 (Phase 9)*

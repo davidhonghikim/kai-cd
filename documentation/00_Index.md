@@ -73,4 +73,3 @@ _Central hub for all Kai-CD project documentation_
 
 ---
 _Documentation maintained by: Claude (AI Assistant) and project contributors_  
-_Last updated: 2025-01-27_ 

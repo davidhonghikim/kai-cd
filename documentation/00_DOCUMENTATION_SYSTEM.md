@@ -319,4 +319,3 @@ agent_notes: "Specific guidance for AI agents"
 
 ---
 
-*This document serves as the foundation for all kOS documentation. All contributors and AI agents should follow these standards to maintain consistency and usability.* 

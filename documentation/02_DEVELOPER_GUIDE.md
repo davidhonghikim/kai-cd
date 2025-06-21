@@ -303,4 +303,3 @@ Treat documentation with the same care as code:
 - **Maintenance**: Keep it current and accurate
 - **Refactoring**: Improve structure and clarity over time
 
-**Good documentation enables great software. Your contributions matter.** 
