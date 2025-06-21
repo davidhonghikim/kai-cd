@@ -3,7 +3,7 @@ import { persist, createJSONStorage, type StateStorage } from 'zustand/middlewar
 import { v4 as uuidv4 } from 'uuid';
 import { allServiceDefinitions } from '../connectors/definitions/all';
 import { config } from '../config/env';
-import type { Service, NewService, HealthCapability } from '../types';
+import type { Service, NewService, HealthCapability, ChatMessage } from '../types';
 import { apiClient } from '../utils/apiClient';
 import { ollamaDefinition } from '../connectors/definitions/ollama';
 import { openWebUIDefinition } from '../connectors/definitions/open-webui';
@@ -115,14 +115,19 @@ export interface ServiceState {
   removeService: (serviceId: string) => void;
   setSelectedServiceId: (serviceId: string | null) => void;
   setServices: (services: Service[]) => void;
-  getServiceById: (serviceId:string) => Service | undefined; // No longer needs to calculate URL
+  getServiceById: (serviceId:string) => Service | undefined;
   addCustomUrl: (url: string) => void;
   updateCustomUrl: (oldUrl: string, newUrl: string) => void;
   removeCustomUrl: (url: string) => void;
-  addMessageToHistory: (serviceId: string, message: { role: 'user' | 'assistant' | 'system'; content: string }) => void;
+  addMessageToHistory: (serviceId: string, message: ChatMessage) => void;
   _hasHydrated: boolean;
   updateServiceLastUsedModel: (serviceId: string, modelId: string) => void;
   checkServiceStatus: (service: Service) => Promise<void>;
+  startPeriodicStatusCheck: () => number;
+  stopPeriodicStatusCheck: (intervalId: number) => void;
+  // Service management functions
+  sortServices: (sortBy: 'name' | 'status' | 'type' | 'lastChecked') => void;
+  toggleServiceArchive: (serviceId: string) => void;
 }
 
 const chromeStorage: StateStorage = {
@@ -256,7 +261,17 @@ export const useServiceStore = create<ServiceState>()(
         
         const healthCapability = serviceToCheck.capabilities.find(c => c.capability === 'health') as HealthCapability | undefined;
         if (!healthCapability) {
-          updateService({ id: serviceToCheck.id, status: 'online', lastChecked: Date.now() });
+          // For services without health endpoints, try a basic connectivity test
+          try {
+            const response = await fetch(serviceToCheck.url, { 
+              method: 'HEAD', 
+              mode: 'no-cors',
+              signal: AbortSignal.timeout(5000) 
+            });
+            updateService({ id: serviceToCheck.id, status: 'online', lastChecked: Date.now() });
+          } catch (error) {
+            updateService({ id: serviceToCheck.id, status: 'offline', lastChecked: Date.now() });
+          }
           return;
         }
 
@@ -271,6 +286,62 @@ export const useServiceStore = create<ServiceState>()(
           }
         }
       },
+
+      // Add periodic status checking
+      startPeriodicStatusCheck: () => {
+        const checkInterval = setInterval(() => {
+          const state = get();
+          const activeServices = state.services.filter(s => !s.archived && s.enabled);
+          
+          activeServices.forEach(service => {
+            // Only check if it's been more than 2 minutes since last check
+            const timeSinceLastCheck = Date.now() - service.lastChecked;
+            if (timeSinceLastCheck > 120000) { // 2 minutes
+              state.checkServiceStatus(service);
+            }
+          });
+        }, 60000); // Check every minute
+        
+        return checkInterval;
+      },
+
+      stopPeriodicStatusCheck: (intervalId: number) => {
+        clearInterval(intervalId);
+      },
+
+      // Service management functions
+      sortServices: (sortBy) => {
+        set((state) => {
+          const sorted = [...state.services].sort((a, b) => {
+            switch (sortBy) {
+              case 'name':
+                return a.name.localeCompare(b.name);
+              case 'status':
+                const statusOrder = { 'online': 0, 'checking': 1, 'offline': 2, 'error': 3, 'unknown': 4 };
+                return statusOrder[a.status] - statusOrder[b.status];
+              case 'type':
+                return a.type.localeCompare(b.type);
+              case 'lastChecked':
+                return b.lastChecked - a.lastChecked;
+              default:
+                return 0;
+            }
+          });
+          return { services: sorted };
+        });
+      },
+
+      toggleServiceArchive: (serviceId) => {
+        set((state) => {
+          const services = state.services.map((service) => {
+            if (service.id === serviceId) {
+              return { ...service, archived: !service.archived, updatedAt: Date.now() };
+            }
+            return service;
+          });
+          return { services };
+        });
+      },
     }),
     {
       name: 'service-storage',
@@ -282,6 +353,43 @@ export const useServiceStore = create<ServiceState>()(
             if (state.services.length === 0 && config.developer.loadDefaultServices) {
                 console.log("No services found in storage, populating with defaults.");
                 state.services = getInitialDefaultServices();
+            } else {
+                // Migration: Update existing services with correct URLs and authentication based on current config
+                const { localIp, remoteIp } = config.networking;
+                let needsUpdate = false;
+                
+                const updatedServices = state.services.map(service => {
+                    let updatedService = { ...service };
+                    
+                    // URL Migration: Update URLs for local/remote services
+                    if (service.ipType === 'local' || service.ipType === 'remote') {
+                        const expectedIp = service.ipType === 'local' ? localIp : remoteIp;
+                        const expectedUrl = `http://${expectedIp}:${service.defaultPort}`;
+                        
+                        if (service.url !== expectedUrl) {
+                            console.log(`🔄 Migrating service "${service.name}" URL from ${service.url} to ${expectedUrl}`);
+                            updatedService.url = expectedUrl;
+                            updatedService.updatedAt = Date.now();
+                            needsUpdate = true;
+                        }
+                    }
+                    
+                    // Authentication Migration: Remove credentials from services that don't need them
+                    const definition = allServiceDefinitions.find(d => d.type === service.type);
+                    if (definition && definition.authentication.type === 'none' && service.credentialId) {
+                        console.log(`🔄 Removing unnecessary credential from "${service.name}" (${service.type})`);
+                        updatedService.credentialId = undefined;
+                        updatedService.updatedAt = Date.now();
+                        needsUpdate = true;
+                    }
+                    
+                    return updatedService;
+                });
+                
+                if (needsUpdate) {
+                    state.services = updatedServices;
+                    console.log("✅ Service configurations updated to match current definitions");
+                }
             }
         }
         useServiceStore.setState({ _hasHydrated: true });

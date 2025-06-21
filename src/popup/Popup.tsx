@@ -47,15 +47,31 @@ const Popup: React.FC = () => {
       toast.error('Select a service first');
       return;
     }
-    const currentTab = (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
-    if (currentTab.id) {
-      await chrome.sidePanel.setOptions({
-        tabId: currentTab.id,
-        path: 'sidepanel.html',
-        enabled: !isPanelOpen,
-      });
-      await chrome.sidePanel.open({ tabId: currentTab.id });
-      setIsPanelOpen(!isPanelOpen);
+    
+    try {
+      const currentTab = (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
+      if (currentTab?.id) {
+        if (isPanelOpen) {
+          // Close the panel
+          await chrome.sidePanel.setOptions({
+            tabId: currentTab.id,
+            enabled: false,
+          });
+          setIsPanelOpen(false);
+        } else {
+          // Open the panel
+          await chrome.sidePanel.setOptions({
+            tabId: currentTab.id,
+            path: 'sidepanel.html',
+            enabled: true,
+          });
+          await chrome.sidePanel.open({ tabId: currentTab.id });
+          setIsPanelOpen(true);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to toggle panel:', error);
+      toast.error('Failed to toggle panel');
     }
   };
 
@@ -90,7 +106,7 @@ const Popup: React.FC = () => {
             )}
           </button>
           <button
-            onClick={() => { switchToTab('services'); window.close(); }}
+            onClick={async () => { await switchToTab('services'); window.close(); }}
             className="flex items-center gap-1 px-2 py-1 hover:bg-background-tertiary rounded"
             aria-label="Service Manager"
             title="Service Manager"
@@ -98,7 +114,7 @@ const Popup: React.FC = () => {
             <WrenchScrewdriverIcon className="h-5 w-5" />
           </button>
           <button
-            onClick={() => { switchToTab('settings'); window.close(); }}
+            onClick={async () => { await switchToTab('settings'); window.close(); }}
             className="flex items-center gap-1 px-2 py-1 hover:bg-background-tertiary rounded"
             aria-label="Settings"
             title="Settings"
@@ -106,7 +122,7 @@ const Popup: React.FC = () => {
             <Cog6ToothIcon className="h-5 w-5" />
           </button>
           <button
-            onClick={() => { switchToTab('docs'); window.close(); }}
+            onClick={async () => { await switchToTab('docs'); window.close(); }}
             className="flex items-center gap-1 px-2 py-1 hover:bg-background-tertiary rounded"
             aria-label="Documentation"
             title="Documentation"
@@ -145,10 +161,10 @@ const Popup: React.FC = () => {
                   </div>
                   <div className="flex gap-2 shrink-0">
                     <button
-                      onClick={(e) => {
+                      onClick={async (e) => {
                         e.stopPropagation();
                         console.log(`[Popup] "Tab" button clicked for service: ${service.name} (${service.id})`);
-                        switchToTab(service);
+                        await switchToTab(service);
                         window.close();
                       }}
                       className="px-3 py-1 text-xs rounded-md bg-accent-primary text-white hover:bg-accent-primary-state focus:outline-none focus:ring-2 focus:ring-accent-primary"

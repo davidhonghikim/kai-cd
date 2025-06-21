@@ -32,7 +32,7 @@ const Sidepanel: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
                 <button
-                onClick={() => switchToTab(selectedService)}
+                onClick={async () => await switchToTab(selectedService)}
                 className="p-1 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
                 title="Open in new tab"
                 >
@@ -40,9 +40,17 @@ const Sidepanel: React.FC = () => {
                 </button>
                 <button
                     onClick={async () => {
-                        const currentTab = (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
-                        if (currentTab?.id) {
-                            await chrome.sidePanel.setOptions({ tabId: currentTab.id, enabled: false });
+                        try {
+                            const currentTab = (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
+                            if (currentTab?.id) {
+                                await chrome.sidePanel.setOptions({ tabId: currentTab.id, enabled: false });
+                                // Also close the panel window if possible
+                                window.close();
+                            }
+                        } catch (error) {
+                            console.error('Failed to close side panel:', error);
+                            // Fallback: try to close the window
+                            window.close();
                         }
                     }}
                     className="p-1 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"

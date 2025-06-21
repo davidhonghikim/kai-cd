@@ -4,7 +4,7 @@ import { useServiceStore } from '../store/serviceStore';
 import { useViewStateStore } from '../store/viewStateStore';
 import CapabilityUI from '../components/CapabilityUI';
 import StatusIndicator from '../components/StatusIndicator';
-import { ArrowTopRightOnSquareIcon, ArrowsPointingOutIcon, CloudIcon, DocumentTextIcon, Cog6ToothIcon, CommandLineIcon, ShieldExclamationIcon, PhotoIcon, WrenchScrewdriverIcon, LockClosedIcon, ShieldCheckIcon } from '@heroicons/react/24/solid';
+import { ArrowTopRightOnSquareIcon, ArrowsPointingOutIcon, CloudIcon, DocumentTextIcon, Cog6ToothIcon, CommandLineIcon, ShieldExclamationIcon, PhotoIcon, WrenchScrewdriverIcon, LockClosedIcon, ShieldCheckIcon, ClipboardDocumentListIcon, ArchiveBoxIcon } from '@heroicons/react/24/solid';
 import ServiceSelector from '../components/ServiceSelector';
 import IFrameView from '../components/IFrameView';
 import type { Service } from '../types';
@@ -18,6 +18,14 @@ import VaultManager from '../components/VaultManager';
 import CredentialManager from '../components/CredentialManager';
 import SecurityHub from '../components/SecurityHub';
 import useVaultStore from '../store/vaultStore';
+
+// --- Placeholder Components ---
+const PlaceholderManager: React.FC<{ title: string }> = ({ title }) => (
+    <div className="p-6 text-slate-400">
+        <h2 className="text-2xl font-bold text-slate-200 mb-2">{title}</h2>
+        <p>This feature is coming soon.</p>
+    </div>
+);
 
 const Tab: React.FC = () => {
   const serviceStoreHasHydrated = useStore(useServiceStore, (s) => s._hasHydrated);
@@ -116,6 +124,10 @@ const Tab: React.FC = () => {
         return activeService ? <CapabilityUI service={activeService} /> : <NoServiceSelectedView />;
       case 'services':
         return <ServiceManagement />;
+      case 'prompts':
+        return <PlaceholderManager title="Prompt Manager" />;
+      case 'artifacts':
+        return <PlaceholderManager title="Artifacts Manager" />;
       case 'vault':
         return (
           <div className="p-6">
@@ -156,8 +168,11 @@ const Tab: React.FC = () => {
         <NavItem icon={CommandLineIcon} view="chat" activeView={activeView} setView={setActiveView} title="LLM Chat - AI conversation interface" />
         <NavItem icon={PhotoIcon} view="image" activeView={activeView} setView={setActiveView} title="Image Generation - AI image creation tools" />
         <div className="flex-grow"></div>
-        {/* Settings/Management Icons */}
+        {/* Management Icons */}
         <NavItem icon={WrenchScrewdriverIcon} view="services" activeView={activeView} setView={setActiveView} title="Service Management - Configure AI services" />
+        <NavItem icon={ClipboardDocumentListIcon} view="prompts" activeView={activeView} setView={setActiveView} title="Prompt Manager - Save and organize prompts" />
+        <NavItem icon={ArchiveBoxIcon} view="artifacts" activeView={activeView} setView={setActiveView} title="Artifacts Manager - Generated content storage" />
+        {/* Security & Settings Icons */}
         <NavItem icon={LockClosedIcon} view="vault" activeView={activeView} setView={setActiveView} title="Secure Vault - Encrypted credential storage" />
         <NavItem icon={ShieldCheckIcon} view="security" activeView={activeView} setView={setActiveView} title="Security Toolkit - Cryptographic and security tools" />
         <NavItem icon={DocumentTextIcon} view="docs" activeView={activeView} setView={setActiveView} title="Documentation - User guides and help" />

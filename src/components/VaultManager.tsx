@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
-import { LockOpenIcon, KeyIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
+import { LockOpenIcon, KeyIcon, ExclamationTriangleIcon, InformationCircleIcon } from '@heroicons/react/24/solid';
 import useVaultStore from '../store/vaultStore';
 import toast from 'react-hot-toast';
+import {
+  generateDicewarePassphrase,
+  generateSimplePassword,
+  DICEWARE_PRESETS,
+  WORDLIST_INFO,
+  type DicewareResult,
+  type DicewareOptions
+} from '../utils/diceware';
 
 const VaultManager: React.FC = () => {
   const { status, setMasterPassword, unlock } = useVaultStore();

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { Service, ChatMessage } from '../../types';
 import { UserCircleIcon, CpuChipIcon } from '@heroicons/react/24/solid';
 import ReactMarkdown from 'react-markdown';
@@ -12,6 +12,9 @@ interface ChatMessageListProps {
 const ChatMessageList: React.FC<ChatMessageListProps> = ({ service, streamingMessage }) => {
   const messages = service.history || [];
   const allMessages = streamingMessage ? [...messages, streamingMessage] : messages;
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
 
   // Sort messages by timestamp if available, otherwise maintain order
   const sortedMessages = allMessages.map((msg, index) => ({
@@ -19,8 +22,42 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({ service, streamingMes
     timestamp: msg.timestamp || Date.now() - (allMessages.length - index) * 1000
   })).sort((a, b) => a.timestamp - b.timestamp);
 
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (shouldAutoScroll && scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [sortedMessages.length, streamingMessage?.content, shouldAutoScroll]);
+
+  // Handle user scroll behavior
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    
+    const container = scrollContainerRef.current;
+    const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 10; // 10px tolerance
+    
+    if (isAtBottom) {
+      setUserHasScrolledUp(false);
+      setShouldAutoScroll(true);
+    } else {
+      setUserHasScrolledUp(true);
+      setShouldAutoScroll(false);
+    }
+  };
+
+  // Reset auto-scroll when switching services or starting new conversation
+  useEffect(() => {
+    setUserHasScrolledUp(false);
+    setShouldAutoScroll(true);
+  }, [service.id]);
+
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div 
+      ref={scrollContainerRef}
+      className="flex-1 overflow-y-auto"
+      onScroll={handleScroll}
+    >
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
         {sortedMessages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-12">
@@ -40,6 +77,25 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({ service, streamingMes
           ))
         )}
       </div>
+      
+      {/* Scroll to bottom button */}
+      {userHasScrolledUp && (
+        <button
+          onClick={() => {
+            setShouldAutoScroll(true);
+            setUserHasScrolledUp(false);
+            if (scrollContainerRef.current) {
+              scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+            }
+          }}
+          className="fixed bottom-20 right-8 bg-cyan-600 hover:bg-cyan-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 z-10"
+          title="Scroll to bottom"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 };

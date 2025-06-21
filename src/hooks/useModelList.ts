@@ -37,8 +37,8 @@ export const useModelList = (serviceId: string | null, activeView: 'chat' | 'ima
                 
                 try {
                     logger.debug('[useModelList] Starting fetchModels...');
-                    logger.debug('[useModelList] Service:', service);
-                    logger.debug('[useModelList] Capability:', capability);
+                    logger.debug('[useModelList] Service:', service?.name, 'at', service?.url);
+                    logger.debug('[useModelList] Capability:', capability?.capability, 'type');
 
                     const getModelsEndpoint = (capability as any)?.endpoints?.getModels;
 
@@ -46,7 +46,7 @@ export const useModelList = (serviceId: string | null, activeView: 'chat' | 'ima
 
                     if (!getModelsEndpoint) {
                         const staticModels = (capability as any)?.models?.map((m: string) => ({ value: m, label: m })) || [];
-                        logger.debug('[useModelList] No dynamic endpoint. Using static models:', staticModels);
+                        logger.debug('[useModelList] No dynamic endpoint. Using', staticModels.length, 'static models');
                         setModels(staticModels);
                         setIsLoading(false);
                         return;
@@ -92,7 +92,7 @@ export const useModelList = (serviceId: string | null, activeView: 'chat' | 'ima
                     setModels(parsedModels);
 
                 } catch (err: any) {
-                    logger.error(`[useModelList] FATAL ERROR in fetchModels for ${service?.name}:`, err);
+                    logger.error(`[useModelList] FATAL ERROR in fetchModels for ${service?.name} (${service?.url}):`, err);
                     setError(err.message || 'An unknown error occurred.');
                     setModels([]);
                 } finally {

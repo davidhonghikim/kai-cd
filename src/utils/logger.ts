@@ -50,7 +50,11 @@ const customLogger = (level: LogLevel, message: string, context?: Record<string,
         }
     }
 
-    originalConsole[level.toLowerCase() as 'log'](`[${timestamp}] [${level}] ${message}`, consoleContext);
+    if (consoleContext && Object.keys(consoleContext).length > 0) {
+        originalConsole[level.toLowerCase() as 'log'](`[${timestamp}] [${level}] ${message}`, consoleContext);
+    } else {
+        originalConsole[level.toLowerCase() as 'log'](`[${timestamp}] [${level}] ${message}`);
+    }
   
   } catch (logError) {
       originalConsole.error('--- LOGGER FAILURE ---');
@@ -61,6 +65,28 @@ const customLogger = (level: LogLevel, message: string, context?: Record<string,
   }
 };
 
+const getObjectInfo = (obj: any): string => {
+    if (obj === null) return 'null';
+    if (Array.isArray(obj)) return `Array(${obj.length})`;
+    
+    const constructor = obj.constructor?.name || 'Object';
+    const keys = Object.keys(obj);
+    
+    // For common objects, show more specific info
+    if (constructor === 'Object' && keys.length > 0) {
+        const keyPreview = keys.slice(0, 3).join(', ');
+        const moreKeys = keys.length > 3 ? `, +${keys.length - 3} more` : '';
+        return `{${keyPreview}${moreKeys}}`;
+    }
+    
+    // For class instances, show constructor and key count
+    if (constructor !== 'Object') {
+        return `${constructor}(${keys.length} props)`;
+    }
+    
+    return constructor;
+};
+
 const formatArgs = (args: any[]): { message: string, context: Record<string, any> | undefined } => {
     const context: Record<string, any> = {};
     let contextIndex = 0;
@@ -68,8 +94,49 @@ const formatArgs = (args: any[]): { message: string, context: Record<string, any
     const messageParts = args.map(arg => {
         if (typeof arg === 'object' && arg !== null) {
             const key = `context_${contextIndex++}`;
-            context[key] = arg;
-            return `[${key}]`; // Placeholder for the object
+            
+            // Handle Error objects specifically
+            if (arg instanceof Error) {
+                context[key] = {
+                    name: arg.name,
+                    message: arg.message,
+                    stack: arg.stack
+                };
+                return `[${key}] ${arg.name}: ${arg.message}`; // Show error info in message
+            }
+            
+            // Handle other objects
+            try {
+                // Try to serialize the object to check if it's serializable
+                JSON.stringify(arg);
+                context[key] = arg;
+                
+                // For simple objects with basic values, show them inline
+                const keys = Object.keys(arg);
+                if (keys.length <= 3 && keys.every(k => 
+                    typeof arg[k] === 'string' || 
+                    typeof arg[k] === 'number' || 
+                    typeof arg[k] === 'boolean' ||
+                    arg[k] === null || 
+                    arg[k] === undefined
+                )) {
+                    const values = keys.map(k => `${k}: ${arg[k]}`).join(', ');
+                    return `{${values}}`;
+                }
+                
+                // Show meaningful info about the object in the message
+                const objectInfo = getObjectInfo(arg);
+                return `[${key}] ${objectInfo}`;
+            } catch (_e) {
+                // For non-serializable objects, extract meaningful info
+                const objectInfo = {
+                    type: Object.prototype.toString.call(arg),
+                    constructor: arg.constructor?.name || 'Unknown',
+                    keys: Object.keys(arg).slice(0, 10) // First 10 keys
+                };
+                context[key] = objectInfo;
+                return `[${key}] ${objectInfo.constructor}`;
+            }
         }
         return String(arg);
     });

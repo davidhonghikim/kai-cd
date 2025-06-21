@@ -7,7 +7,7 @@ import type { LlmChatCapability } from '../types';
 
 export type MainView = typeof VIEW_STATES[keyof typeof VIEW_STATES];
 export type ViewLocation = 'tab' | 'panel';
-export type TabView = 'chat' | 'image' | 'services' | 'vault' | 'security' | 'console' | 'docs' | 'settings';
+export type TabView = 'chat' | 'image' | 'services' | 'prompts' | 'artifacts' | 'vault' | 'security' | 'console' | 'docs' | 'settings';
 
 interface ViewState {
   _hasHydrated: boolean;
@@ -109,7 +109,7 @@ const getPrimaryViewForService = (service: Service): TabView => {
  * Opens the main Kai-CD tab view. Can be called with a service to open a service-specific
  * view, or with a generic TabView string to open a manager view (e.g., 'settings').
  */
-export function switchToTab(payload: Service | TabView) {
+export async function switchToTab(payload: Service | TabView) {
   let messagePayload: { service?: Service, view: TabView };
 
   if (typeof payload === 'string') {
@@ -118,6 +118,16 @@ export function switchToTab(payload: Service | TabView) {
   } else {
     // It's a service object
     messagePayload = { service: payload, view: getPrimaryViewForService(payload) };
+  }
+
+  // Close the side panel if it's open
+  try {
+    const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (currentTab?.id) {
+      await chrome.sidePanel.setOptions({ tabId: currentTab.id, enabled: false });
+    }
+  } catch (error) {
+    console.log('Side panel not available or already closed');
   }
 
   chrome.runtime.sendMessage({

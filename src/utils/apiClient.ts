@@ -25,6 +25,7 @@ interface ApiClientOptions {
   headers?: Record<string, string>;
   body?: any;
   timeoutMs?: number;
+  signal?: AbortSignal;
 }
 
 const validateUrl = (url: string) => {
@@ -95,7 +96,7 @@ class ApiClient {
             throw error; // Re-throw custom errors
         }
         // Catch network errors (e.g., service down)
-        logger.error('API Client Network Error:', { error });
+        logger.error('API Client Network Error:', error);
         throw new ApiError('ERR_API_UNREACHABLE', (error as Error).message);
       }
     }
@@ -143,8 +144,13 @@ class ApiClient {
     if (!service) throw new ApiError('ERR_SERVICE_NOT_FOUND');
     
     const { credentialId, authentication, headers, url } = service;
-    const { credentials } = useVaultStore.getState();
     
+    // For services that don't need authentication, return early with no credentials
+    if (authentication.type === 'none') {
+      return { url, authType: authentication.type, credentialValue: null, headers: headers || {} };
+    }
+    
+    const { credentials } = useVaultStore.getState();
     const credential = credentials.find(c => c.id === credentialId);
     const credentialValue = credential ? credential.value : null;
 
@@ -230,13 +236,12 @@ class ApiClient {
         const errorText = await response.text();
         const errorMessage = errorText || `HTTP error! status: ${response.status}`;
         
-        logger.error('[apiClient.postStream] HTTP Error:', { 
-          serviceId,
-          fullUrl,
-          status: response.status,
-          statusText: response.statusText,
-          errorText,
-          code
+        const service = useServiceStore.getState().getServiceById(serviceId);
+        logger.error(`[apiClient.postStream] HTTP ${response.status} Error:`, {
+          service: service?.name || serviceId,
+          url: fullUrl,
+          error: `${response.status} ${response.statusText}`,
+          details: errorText
         });
         
         throw new ApiError(code, errorMessage);
@@ -259,11 +264,10 @@ class ApiClient {
       }
     } catch (error) {
        if (error instanceof ApiError) {
-          logger.error('[apiClient.postStream] API Error:', { 
-            serviceId,
-            code: error.code, 
-            message: error.message,
-            errorInfo: error.errorInfo
+          const service = useServiceStore.getState().getServiceById(serviceId);
+          logger.error(`[apiClient.postStream] API Error ${error.code}:`, {
+            service: service?.name || serviceId,
+            message: error.message
           });
           toast.error(error.errorInfo.message);
           throw error;
@@ -272,12 +276,11 @@ class ApiClient {
          const errorMessage = error instanceof Error ? error.message : String(error);
          const apiError = new ApiError('ERR_API_UNREACHABLE', errorMessage);
          
-         logger.error('[apiClient.postStream] Network Error:', { 
-           serviceId,
-           fullUrl,
-           errorName: (error as Error).name,
-           errorMessage,
-           stack: (error as Error).stack
+         const service = useServiceStore.getState().getServiceById(serviceId);
+         logger.error(`[apiClient.postStream] Network Error:`, {
+           service: service?.name || serviceId,
+           url: fullUrl,
+           error: `${(error as Error).name}: ${errorMessage}`
          });
          
          toast.error(apiError.errorInfo.message);

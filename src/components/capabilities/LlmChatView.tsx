@@ -70,7 +70,11 @@ const LlmChatView: React.FC<LlmChatViewProps> = ({ service, capability }) => {
       }
     } finally {
       if (finalContent) {
-        addMessageToHistory(service.id, { role: 'assistant', content: finalContent });
+        addMessageToHistory(service.id, { 
+          role: 'assistant', 
+          content: finalContent,
+          timestamp: Date.now()
+        });
       }
       setStreamingMessage(null);
     }
@@ -84,12 +88,20 @@ const LlmChatView: React.FC<LlmChatViewProps> = ({ service, capability }) => {
     };
 
     abortControllerRef.current = new AbortController();
-    const userMessage: ChatMessage = { role: 'user', content: input };
+    const userMessage: ChatMessage = { 
+      role: 'user', 
+      content: input,
+      timestamp: Date.now()
+    };
     addMessageToHistory(service.id, userMessage);
     
     setInput('');
 
-    const assistantMessage: ChatMessage = { role: 'assistant', content: ''};
+    const assistantMessage: ChatMessage = { 
+      role: 'assistant', 
+      content: '',
+      timestamp: Date.now()
+    };
     setStreamingMessage(assistantMessage);
 
     try {
@@ -124,13 +136,17 @@ const LlmChatView: React.FC<LlmChatViewProps> = ({ service, capability }) => {
       );
       await handleStreamedResponse(stream);
 
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof ApiError) {
         // The toast is already shown by the apiClient for stream errors, so we just log it.
         logger.error('Chat submission failed', { code: error.code, message: error.message });
       } else if ((error as Error).name === 'AbortError') {
         toast.success('Request stopped');
-        addMessageToHistory(service.id, { role: 'assistant', content: (streamingMessage?.content || '') + ' [Stopped]'});
+        addMessageToHistory(service.id, { 
+          role: 'assistant', 
+          content: (streamingMessage?.content || '') + ' [Stopped]',
+          timestamp: Date.now()
+        });
       } else {
         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
         toast.error(`An unexpected error occurred: ${errorMessage}`);
