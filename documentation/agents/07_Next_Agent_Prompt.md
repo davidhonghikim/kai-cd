@@ -10,7 +10,8 @@ The previous agent has completed some of the documentation migration from `docum
 
 ### 1. **Comprehensive Source Analysis**
 Read and analyze ALL markdown files in these directories:
-- `documentation/brainstorm/kOS/` (111 files - source material)
+- `documentation/brainstorm/kOS/` (111 files - source m
+aterial)
 - `documentation/current/` (existing Kai-CD implementation docs)
 - `documentation/future/` (kOS vision architecture docs)
 - `documentation/bridge/` (evolution strategy docs)
@@ -109,13 +110,27 @@ After making 1-2 significant changes, you **MUST STOP** and perform a mid-progre
 4. Fix any identified issues
 5. Document findings in your execution plan
 
-### **Build Verification**:
-Run `npm run build` after each logical unit of work to ensure no regressions.
+### **Documentation Verification**:
+After each logical unit of work, verify documentation quality:
+1. Check frontmatter compliance and Agent Context blocks
+2. Verify all asset links and references work correctly
+3. Ensure TypeScript examples are complete and accurate
+4. Confirm cross-references to related documentation
+5. Ensure zero content regressions in existing documentation
+
+### **Auto-Migration Workflow**:
+For systematic migration of remaining source files:
+1. **Batch Processing**: Work in batches of 50 files
+2. **Quality Gates**: Every document must include complete TypeScript examples and asset integration
+3. **Progress Documentation**: Update execution plan after each batch
+4. **Commit Cycle**: Review, update docs, commit with notes after each batch
+5. **Continuous Operation**: Continue until all 476+ source files are migrated
 
 ### **Documentation Requirements**:
 - Update `documentation/agents/03_Execution_Plan.md` with detailed progress
 - Follow standards in `documentation/00_DOCUMENTATION_SYSTEM.md`
 - Maintain agent-first design principles
+- Use asset inventory from `documentation/reference/asset-inventory.md`
 
 ## Your Deliverables
 

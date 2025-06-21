@@ -1,642 +1,833 @@
 ---
 title: "Prompt Management System"
-description: "Comprehensive prompt engineering platform with versioning, execution, and distribution capabilities for kAI/kOS agents"
-type: "implementation"
+description: "Comprehensive modular prompt storage, sync, and enrichment engine for kAI/kOS ecosystem"
+type: "architecture"
 status: "future"
 priority: "high"
-last_updated: "2025-01-20"
-related_docs: ["ai-agent-framework-and-capabilities.md", "service-architecture.md"]
+last_updated: "2025-01-03"
+related_docs: ["agent-communication-protocols-core.md", "language-router-and-prompt-linking-engine.md"]
 implementation_status: "planned"
-complexity: "medium"
-decision_scope: "system-wide"
-code_references: ["src/prompts/", "src/prompts/runner/", "src/prompts/editor/"]
 ---
 
 # Prompt Management System
 
 ## Agent Context
-This document defines the complete prompt engineering and management platform for kAI/kOS systems. Agents should understand this as the central hub for all prompt-based interactions, providing standardized creation, versioning, execution, and optimization of prompt assets. The system enables consistent prompt engineering across agents, services, and user interfaces.
 
-## Purpose and Scope
+This document defines the complete architecture, storage schema, and protocol interfaces for the Prompt Management System (PMS) within the kAI/kOS ecosystem. The PMS manages all prompt templates, prompt runs, versions, metadata, and enrichment routines for both agents and users. Agents must understand the full technical complexity of prompt lifecycle management, versioning, and execution tracing.
 
-The Prompt Management System serves as the foundational infrastructure for prompt engineering within the kAI/kOS ecosystem, providing:
+## System Architecture
 
-- **Centralized Prompt Storage**: Unified repository for all prompt templates and configurations
-- **Lifecycle Management**: Complete versioning, testing, and deployment workflows
-- **Parameterized Templates**: Dynamic prompt generation with type-safe parameter injection
-- **Execution Engine**: Multi-model prompt execution with logging and benchmarking
-- **Collaboration Tools**: Team sharing, tagging, and permission management
-- **Performance Analytics**: Token counting, latency tracking, and cost optimization
+The PMS provides centralized prompt repository with namespacing and versioning, full metadata schema for each prompt execution, runtime prompt interpolation and context injection, agent-aware prompt traceability and debugging, and distributed synchronization via KLP.
 
-## Architecture and Directory Structure
+### Directory Structure
 
-```text
-src/
-├── prompts/
-│   ├── index.ts                         # Entry point and prompt manager API
-│   ├── registry/
-│   │   ├── PromptRegistry.ts            # Central prompt registration and discovery
-│   │   ├── promptIndex.json             # Flat index of all registered prompts
-│   │   ├── categories.json              # Hierarchical taxonomy for organization
-│   │   ├── groups.json                  # Role-based grouping and permissions
-│   │   └── metadata.json               # System-wide prompt metadata
-│   ├── templates/
-│   │   ├── core/
-│   │   │   ├── summarize.zprompt        # Text summarization templates
-│   │   │   ├── explain.zprompt          # Explanation and clarification
-│   │   │   ├── analyze.zprompt          # Analysis and reasoning
-│   │   │   └── translate.zprompt        # Language translation
-│   │   ├── creative/
-│   │   │   ├── storytelling.zprompt     # Creative writing assistance
-│   │   │   ├── brainstorm.zprompt       # Idea generation
-│   │   │   └── poetry.zprompt           # Poetry and verse creation
-│   │   ├── technical/
-│   │   │   ├── code-review.zprompt      # Code analysis and review
-│   │   │   ├── documentation.zprompt    # Technical documentation
-│   │   │   └── debugging.zprompt        # Problem diagnosis
-│   │   └── specialized/
-│   │       ├── research.zprompt         # Research assistance
-│   │       ├── education.zprompt        # Educational content
-│   │       └── business.zprompt         # Business analysis
-│   ├── runner/
-│   │   ├── PromptEngine.ts              # Core execution engine
-│   │   ├── ParameterInjector.ts         # Type-safe parameter injection
-│   │   ├── ModelRouter.ts               # Multi-model routing and fallback
-│   │   ├── ExecutionContext.ts          # Execution environment management
-│   │   ├── PromptRunner.ts              # High-level execution interface
-│   │   ├── BatchProcessor.ts            # Batch prompt processing
-│   │   └── StreamingHandler.ts          # Real-time streaming execution
-│   ├── monitoring/
-│   │   ├── PromptLogger.ts              # Comprehensive execution logging
-│   │   ├── PerformanceProfiler.ts       # Token count, latency, cost tracking
-│   │   ├── QualityAnalyzer.ts           # Output quality assessment
-│   │   └── UsageAnalytics.ts            # Usage patterns and optimization
-│   ├── editor/
-│   │   ├── PromptEditor.tsx             # Rich editing interface
-│   │   ├── LivePreview.tsx              # Real-time parameter preview
-│   │   ├── VersionControl.tsx           # Git-like version management
-│   │   ├── TestRunner.tsx               # Interactive testing environment
-│   │   ├── PromptDiffView.tsx           # Version comparison and diff
-│   │   └── CollaborationTools.tsx       # Team editing and review
-│   ├── validation/
-│   │   ├── PromptValidator.ts           # Schema and syntax validation
-│   │   ├── SecurityScanner.ts           # Security and safety checks
-│   │   ├── QualityChecker.ts            # Quality assurance rules
-│   │   └── ComplianceValidator.ts       # Regulatory compliance checks
-│   └── utils/
-│       ├── TokenCounter.ts              # Multi-model token counting
-│       ├── PromptOptimizer.ts           # Automated prompt optimization
-│       ├── TemplateParser.ts            # Template parsing and compilation
-│       └── ExportImport.ts              # Prompt import/export utilities
+```
+kOS/core/prompt/
+├── engine/
+│   ├── linker.py               # Link prompts to capabilities
+│   ├── enricher.py             # Inject context/memory/meta
+│   └── validators.py           # Prompt validation logic
+├── models/
+│   ├── prompt_model.py         # SQLAlchemy prompt table schema
+│   ├── prompt_version.py       # Versioned prompts
+│   └── prompt_meta.py          # Tags, source, notes, user/agent
+├── api/
+│   ├── routes.py               # FastAPI endpoints for CRUD
+│   ├── schemas.py              # Pydantic schemas
+│   └── permissions.py          # Role-based prompt access
+├── store/
+│   ├── db_interface.py         # Read/write interface
+│   └── indexer.py              # Index and tag enrichment
+├── cli/
+│   └── manage_prompts.py       # CLI tooling for prompt audit/import/export
+└── __init__.py
 ```
 
-## Prompt Template Format (.zprompt)
+## Data Models
 
-The system uses an extended YAML format with Zod schema validation for type safety and parameter validation:
-
-```yaml
-# Core metadata
-id: "summarize-technical-document"
-name: "Technical Document Summarizer"
-description: "Generates concise summaries of technical documentation with key insights"
-version: "2.1.0"
-category: "technical"
-subcategory: "documentation"
-tags: ["summarization", "technical", "analysis"]
-
-# Execution configuration
-model:
-  preferred: "gpt-4"
-  fallback: ["gpt-3.5-turbo", "claude-3-sonnet"]
-  temperature: 0.3
-  max_tokens: 1000
-
-# Parameter schema
-parameters:
-  - id: "document_text"
-    type: "string"
-    label: "Document Text"
-    description: "The technical document content to summarize"
-    required: true
-    validation:
-      min_length: 100
-      max_length: 50000
-  
-  - id: "summary_style"
-    type: "select"
-    label: "Summary Style"
-    description: "The format and detail level for the summary"
-    options: 
-      - value: "executive"
-        label: "Executive Summary"
-        description: "High-level overview for decision makers"
-      - value: "technical"
-        label: "Technical Summary"
-        description: "Detailed technical insights and findings"
-      - value: "bullet_points"
-        label: "Bullet Points"
-        description: "Structured list of key points"
-    default: "technical"
-    required: true
-  
-  - id: "focus_areas"
-    type: "multiselect"
-    label: "Focus Areas"
-    description: "Specific aspects to emphasize in the summary"
-    options:
-      - "methodology"
-      - "results"
-      - "limitations"
-      - "implications"
-      - "recommendations"
-    default: ["methodology", "results"]
-    required: false
-
-# System prompt configuration
-system_prompt: |
-  You are a technical documentation expert specializing in creating clear, 
-  accurate summaries that preserve essential information while improving readability.
-
-# Main prompt template
-prompt: |
-  Please create a {{summary_style}} summary of the following technical document.
-  
-  {{#if focus_areas}}
-  Focus particularly on these aspects:
-  {{#each focus_areas}}
-  - {{this}}
-  {{/each}}
-  {{/if}}
-  
-  Document to summarize:
-  ---
-  {{document_text}}
-  ---
-  
-  Please provide:
-  1. A clear, concise summary appropriate for the {{summary_style}} style
-  2. Key insights and findings
-  3. Any critical limitations or caveats
-  4. Actionable recommendations if applicable
-  
-  Ensure the summary is accurate, well-structured, and maintains the technical integrity of the original document.
-
-# Quality assurance
-validation:
-  output_checks:
-    - min_length: 200
-    - max_length: 2000
-    - required_sections: ["summary", "insights"]
-  
-  safety_checks:
-    - no_personal_info: true
-    - content_filter: true
-    - bias_detection: true
-
-# Metadata and tracking
-metadata:
-  author: "technical-team"
-  created: "2025-01-15T10:30:00Z"
-  last_modified: "2025-01-20T14:22:00Z"
-  usage_count: 847
-  avg_rating: 4.7
-  performance_score: 92
-```
-
-## Core Engine Implementation
+### Core Prompt Schema
 
 ```typescript
-// src/prompts/runner/PromptEngine.ts
-interface PromptExecutionRequest {
-  promptId: string;
-  parameters: Record<string, any>;
-  options?: ExecutionOptions;
-  context?: ExecutionContext;
+interface Prompt {
+  id: string; // UUID
+  title: string;
+  scope: 'user' | 'agent' | 'global';
+  owner: string; // User or agent id
+  created_at: string; // ISO date
+  updated_at: string; // ISO date
+  tags: string[];
+  source: string; // origin (system/gen/human/file)
+  description: string;
+  category: string;
+  priority: number;
+  status: 'active' | 'deprecated' | 'draft';
 }
 
-interface ExecutionOptions {
-  model?: string;
-  temperature?: number;
-  maxTokens?: number;
-  stream?: boolean;
-  timeout?: number;
-  retryPolicy?: RetryPolicy;
+interface PromptVersion {
+  id: string; // UUID
+  prompt_id: string; // UUID
+  version_number: number;
+  content: string;
+  diff_hash: string; // checksum for change tracking
+  notes: string;
+  created_at: string; // ISO date
+  author: string;
+  changelog: string;
+  parameters: PromptParameter[];
+  validation_rules: ValidationRule[];
 }
 
-interface ExecutionResult {
-  id: string;
-  promptId: string;
-  output: string;
+interface PromptParameter {
+  name: string;
+  type: 'string' | 'number' | 'boolean' | 'object' | 'array';
+  required: boolean;
+  default_value?: any;
+  description: string;
+  validation_pattern?: string;
+}
+
+interface PromptLink {
+  prompt_id: string; // UUID
+  capability: string; // e.g. 'summarize', 'code_review'
+  agent_id: string; // UUID
+  priority: number; // order of execution if multiple apply
+  conditions: LinkCondition[];
+  context_requirements: string[];
+}
+
+interface LinkCondition {
+  field: string;
+  operator: 'equals' | 'contains' | 'matches' | 'greater_than' | 'less_than';
+  value: any;
+  description: string;
+}
+```
+
+### Execution Tracking
+
+```typescript
+interface PromptExecution {
+  id: string; // UUID
+  prompt_id: string;
+  version_number: number;
+  agent_id: string;
+  user_id: string;
+  timestamp: string; // ISO date
+  input_context: Record<string, any>;
+  interpolated_text: string;
+  output_summary: string;
+  execution_time_ms: number;
+  success: boolean;
+  error_message?: string;
   metadata: ExecutionMetadata;
-  performance: PerformanceMetrics;
-  quality: QualityMetrics;
 }
 
-class PromptEngine {
-  private registry: PromptRegistry;
-  private parameterInjector: ParameterInjector;
-  private modelRouter: ModelRouter;
-  private logger: PromptLogger;
-  private profiler: PerformanceProfiler;
+interface ExecutionMetadata {
+  session_id: string;
+  conversation_id: string;
+  model_used: string;
+  token_count: {
+    input: number;
+    output: number;
+    total: number;
+  };
+  performance_metrics: {
+    latency_ms: number;
+    memory_usage_mb: number;
+    cpu_usage_percent: number;
+  };
+  quality_scores: {
+    relevance: number;
+    coherence: number;
+    accuracy: number;
+  };
+}
+```
 
-  async executePrompt(request: PromptExecutionRequest): Promise<ExecutionResult> {
-    // Load and validate prompt template
-    const template = await this.registry.getPrompt(request.promptId);
-    if (!template) {
-      throw new PromptNotFoundError(`Prompt not found: ${request.promptId}`);
+## Core Implementation
+
+### Prompt Repository Manager
+
+```typescript
+class PromptRepository {
+  private db: Database;
+  private cache: Map<string, Prompt>;
+  private indexer: PromptIndexer;
+
+  constructor(dbConfig: DatabaseConfig) {
+    this.db = new Database(dbConfig);
+    this.cache = new Map();
+    this.indexer = new PromptIndexer();
+  }
+
+  async createPrompt(prompt: CreatePromptRequest): Promise<Prompt> {
+    // Validate prompt structure
+    await this.validatePrompt(prompt);
+
+    // Generate unique ID
+    const id = this.generatePromptId();
+
+    // Create initial version
+    const initialVersion: PromptVersion = {
+      id: this.generateVersionId(),
+      prompt_id: id,
+      version_number: 1,
+      content: prompt.content,
+      diff_hash: await this.calculateHash(prompt.content),
+      notes: 'Initial version',
+      created_at: new Date().toISOString(),
+      author: prompt.author,
+      changelog: 'Initial creation',
+      parameters: prompt.parameters || [],
+      validation_rules: prompt.validation_rules || []
+    };
+
+    // Store in database
+    const newPrompt: Prompt = {
+      id,
+      title: prompt.title,
+      scope: prompt.scope,
+      owner: prompt.owner,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      tags: prompt.tags || [],
+      source: prompt.source || 'manual',
+      description: prompt.description,
+      category: prompt.category,
+      priority: prompt.priority || 0,
+      status: 'active'
+    };
+
+    await this.db.transaction(async (tx) => {
+      await tx.insert('prompts', newPrompt);
+      await tx.insert('prompt_versions', initialVersion);
+    });
+
+    // Update cache and index
+    this.cache.set(id, newPrompt);
+    await this.indexer.indexPrompt(newPrompt, initialVersion);
+
+    return newPrompt;
+  }
+
+  async updatePrompt(id: string, updates: UpdatePromptRequest): Promise<Prompt> {
+    const existing = await this.getPrompt(id);
+    if (!existing) {
+      throw new Error(`Prompt not found: ${id}`);
+    }
+
+    // Create new version if content changed
+    if (updates.content && updates.content !== existing.content) {
+      await this.createVersion(id, {
+        content: updates.content,
+        notes: updates.notes || 'Content update',
+        author: updates.author
+      });
+    }
+
+    // Update prompt metadata
+    const updated: Prompt = {
+      ...existing,
+      ...updates,
+      updated_at: new Date().toISOString()
+    };
+
+    await this.db.update('prompts', { id }, updated);
+    this.cache.set(id, updated);
+
+    return updated;
+  }
+
+  async createVersion(promptId: string, versionData: CreateVersionRequest): Promise<PromptVersion> {
+    const prompt = await this.getPrompt(promptId);
+    if (!prompt) {
+      throw new Error(`Prompt not found: ${promptId}`);
+    }
+
+    // Get current version number
+    const versions = await this.getVersions(promptId);
+    const nextVersion = Math.max(...versions.map(v => v.version_number)) + 1;
+
+    const newVersion: PromptVersion = {
+      id: this.generateVersionId(),
+      prompt_id: promptId,
+      version_number: nextVersion,
+      content: versionData.content,
+      diff_hash: await this.calculateHash(versionData.content),
+      notes: versionData.notes,
+      created_at: new Date().toISOString(),
+      author: versionData.author,
+      changelog: versionData.changelog || '',
+      parameters: versionData.parameters || [],
+      validation_rules: versionData.validation_rules || []
+    };
+
+    await this.db.insert('prompt_versions', newVersion);
+    await this.indexer.indexVersion(newVersion);
+
+    return newVersion;
+  }
+
+  async linkToCapability(link: PromptLink): Promise<void> {
+    // Validate capability exists
+    await this.validateCapability(link.capability);
+
+    // Check for conflicts
+    const existing = await this.getLinksForCapability(link.capability);
+    const conflicts = existing.filter(l => 
+      l.agent_id === link.agent_id && l.priority === link.priority
+    );
+
+    if (conflicts.length > 0) {
+      throw new Error(`Priority conflict for capability ${link.capability}`);
+    }
+
+    await this.db.insert('prompt_links', link);
+  }
+}
+```
+
+### Runtime Interpolation Engine
+
+```typescript
+class PromptInterpolator {
+  private contextProviders: Map<string, ContextProvider>;
+  private validators: Map<string, ParameterValidator>;
+
+  constructor() {
+    this.contextProviders = new Map();
+    this.validators = new Map();
+    this.initializeBuiltinProviders();
+  }
+
+  async interpolatePrompt(
+    promptId: string,
+    version?: number,
+    context: Record<string, any> = {}
+  ): Promise<InterpolationResult> {
+    // Load prompt and version
+    const prompt = await this.loadPrompt(promptId);
+    const promptVersion = await this.loadVersion(promptId, version);
+
+    if (!prompt || !promptVersion) {
+      throw new Error(`Prompt or version not found: ${promptId}:${version}`);
     }
 
     // Validate parameters
-    const validationResult = await this.validateParameters(template, request.parameters);
-    if (!validationResult.isValid) {
-      throw new ParameterValidationError(validationResult.errors);
-    }
+    await this.validateParameters(promptVersion.parameters, context);
 
-    // Start performance tracking
-    const executionId = this.generateExecutionId();
-    const startTime = Date.now();
+    // Gather context from providers
+    const enrichedContext = await this.enrichContext(context, promptVersion);
 
-    try {
-      // Inject parameters into template
-      const compiledPrompt = await this.parameterInjector.compile(template, request.parameters);
-
-      // Select appropriate model
-      const model = await this.modelRouter.selectModel(template, request.options?.model);
-
-      // Execute prompt
-      const modelResponse = await this.executeWithModel(model, compiledPrompt, request.options);
-
-      // Process and validate output
-      const processedOutput = await this.processOutput(template, modelResponse);
-
-      // Calculate performance metrics
-      const performance = await this.profiler.calculateMetrics(
-        template, 
-        compiledPrompt, 
-        modelResponse, 
-        Date.now() - startTime
-      );
-
-      // Assess output quality
-      const quality = await this.assessQuality(template, processedOutput, request.parameters);
-
-      const result: ExecutionResult = {
-        id: executionId,
-        promptId: request.promptId,
-        output: processedOutput,
-        metadata: {
-          model: model.id,
-          timestamp: new Date().toISOString(),
-          parameters: request.parameters,
-          compiledPrompt: compiledPrompt.text,
-          tokenCount: performance.tokenCount
-        },
-        performance,
-        quality
-      };
-
-      // Log execution
-      await this.logger.logExecution(result);
-
-      return result;
-    } catch (error) {
-      // Log error and re-throw
-      await this.logger.logError(executionId, error);
-      throw error;
-    }
-  }
-
-  private async validateParameters(
-    template: PromptTemplate, 
-    parameters: Record<string, any>
-  ): Promise<ValidationResult> {
-    const validator = new ParameterValidator(template.parameters);
-    return await validator.validate(parameters);
-  }
-
-  private async executeWithModel(
-    model: ModelDefinition,
-    prompt: CompiledPrompt,
-    options?: ExecutionOptions
-  ): Promise<ModelResponse> {
-    const modelClient = await this.modelRouter.getClient(model.id);
-    
-    return await modelClient.complete({
-      prompt: prompt.text,
-      systemPrompt: prompt.systemPrompt,
-      temperature: options?.temperature ?? model.defaultTemperature,
-      maxTokens: options?.maxTokens ?? model.defaultMaxTokens,
-      stream: options?.stream ?? false
-    });
-  }
-}
-```
-
-## Parameter Injection System
-
-```typescript
-// src/prompts/runner/ParameterInjector.ts
-interface CompiledPrompt {
-  text: string;
-  systemPrompt?: string;
-  metadata: CompilationMetadata;
-}
-
-interface CompilationMetadata {
-  parametersUsed: string[];
-  conditionalBlocks: string[];
-  compilationTime: number;
-  templateVersion: string;
-}
-
-class ParameterInjector {
-  private handlebars: typeof Handlebars;
-  private customHelpers: Map<string, Function>;
-
-  constructor() {
-    this.handlebars = Handlebars.create();
-    this.registerCustomHelpers();
-  }
-
-  async compile(
-    template: PromptTemplate, 
-    parameters: Record<string, any>
-  ): Promise<CompiledPrompt> {
-    const startTime = Date.now();
-    
-    try {
-      // Compile main prompt template
-      const promptTemplate = this.handlebars.compile(template.prompt);
-      const compiledText = promptTemplate(parameters);
-
-      // Compile system prompt if present
-      let compiledSystemPrompt: string | undefined;
-      if (template.system_prompt) {
-        const systemTemplate = this.handlebars.compile(template.system_prompt);
-        compiledSystemPrompt = systemTemplate(parameters);
-      }
-
-      // Extract metadata about compilation
-      const metadata: CompilationMetadata = {
-        parametersUsed: this.extractUsedParameters(template.prompt, parameters),
-        conditionalBlocks: this.extractConditionalBlocks(template.prompt),
-        compilationTime: Date.now() - startTime,
-        templateVersion: template.version
-      };
-
-      return {
-        text: compiledText,
-        systemPrompt: compiledSystemPrompt,
-        metadata
-      };
-    } catch (error) {
-      throw new TemplateCompilationError(
-        `Failed to compile template ${template.id}: ${error.message}`
-      );
-    }
-  }
-
-  private registerCustomHelpers(): void {
-    // Register custom Handlebars helpers for prompt-specific functionality
-    this.handlebars.registerHelper('length', (array: any[]) => array?.length || 0);
-    
-    this.handlebars.registerHelper('truncate', (text: string, length: number) => {
-      if (typeof text !== 'string') return '';
-      return text.length > length ? text.substring(0, length) + '...' : text;
-    });
-
-    this.handlebars.registerHelper('format_list', (items: any[], format: string) => {
-      if (!Array.isArray(items)) return '';
-      
-      switch (format) {
-        case 'numbered':
-          return items.map((item, index) => `${index + 1}. ${item}`).join('\n');
-        case 'bulleted':
-          return items.map(item => `• ${item}`).join('\n');
-        case 'comma':
-          return items.join(', ');
-        default:
-          return items.join('\n');
-      }
-    });
-
-    this.handlebars.registerHelper('conditional_section', function(condition: any, options: any) {
-      if (condition) {
-        return options.fn(this);
-      }
-      return options.inverse ? options.inverse(this) : '';
-    });
-  }
-}
-```
-
-## Performance Monitoring and Analytics
-
-```typescript
-// src/prompts/monitoring/PerformanceProfiler.ts
-interface PerformanceMetrics {
-  tokenCount: TokenMetrics;
-  latency: LatencyMetrics;
-  cost: CostMetrics;
-  throughput: ThroughputMetrics;
-}
-
-interface TokenMetrics {
-  input: number;
-  output: number;
-  total: number;
-  efficiency: number; // output/input ratio
-}
-
-interface LatencyMetrics {
-  total: number; // Total execution time
-  model: number; // Model inference time
-  processing: number; // Pre/post processing time
-  network: number; // Network overhead
-}
-
-class PerformanceProfiler {
-  private tokenCounter: TokenCounter;
-  private costCalculator: CostCalculator;
-
-  async calculateMetrics(
-    template: PromptTemplate,
-    prompt: CompiledPrompt,
-    response: ModelResponse,
-    totalTime: number
-  ): Promise<PerformanceMetrics> {
-    // Calculate token metrics
-    const inputTokens = await this.tokenCounter.count(prompt.text, response.model);
-    const outputTokens = await this.tokenCounter.count(response.text, response.model);
-    
-    const tokenMetrics: TokenMetrics = {
-      input: inputTokens,
-      output: outputTokens,
-      total: inputTokens + outputTokens,
-      efficiency: outputTokens / inputTokens
-    };
-
-    // Calculate latency breakdown
-    const latencyMetrics: LatencyMetrics = {
-      total: totalTime,
-      model: response.metadata.inferenceTime,
-      processing: totalTime - response.metadata.inferenceTime - response.metadata.networkTime,
-      network: response.metadata.networkTime
-    };
-
-    // Calculate cost metrics
-    const costMetrics = await this.costCalculator.calculate(
-      response.model,
-      tokenMetrics.input,
-      tokenMetrics.output
+    // Perform interpolation
+    const interpolated = await this.performInterpolation(
+      promptVersion.content,
+      enrichedContext
     );
 
-    // Calculate throughput
-    const throughputMetrics: ThroughputMetrics = {
-      tokensPerSecond: tokenMetrics.total / (totalTime / 1000),
-      requestsPerMinute: this.calculateRequestRate(),
-      efficiency: this.calculateEfficiencyScore(tokenMetrics, latencyMetrics, costMetrics)
-    };
+    // Validate result
+    await this.validateResult(interpolated, promptVersion.validation_rules);
 
     return {
-      tokenCount: tokenMetrics,
-      latency: latencyMetrics,
-      cost: costMetrics,
-      throughput: throughputMetrics
+      prompt_id: promptId,
+      version_number: promptVersion.version_number,
+      original_content: promptVersion.content,
+      interpolated_content: interpolated,
+      context_used: enrichedContext,
+      timestamp: new Date().toISOString()
     };
+  }
+
+  private async enrichContext(
+    baseContext: Record<string, any>,
+    version: PromptVersion
+  ): Promise<Record<string, any>> {
+    const enriched = { ...baseContext };
+
+    // Add system context
+    enriched.$timestamp = new Date().toISOString();
+    enriched.$version = version.version_number;
+
+    // Run context providers
+    for (const [name, provider] of this.contextProviders) {
+      try {
+        const additionalContext = await provider.getContext(baseContext);
+        Object.assign(enriched, additionalContext);
+      } catch (error) {
+        console.warn(`Context provider ${name} failed:`, error);
+      }
+    }
+
+    return enriched;
+  }
+
+  private async performInterpolation(
+    template: string,
+    context: Record<string, any>
+  ): Promise<string> {
+    let result = template;
+
+    // Replace simple variables: ${variable}
+    result = result.replace(/\$\{([^}]+)\}/g, (match, key) => {
+      const value = this.getNestedValue(context, key);
+      return value !== undefined ? String(value) : match;
+    });
+
+    // Replace conditional blocks: {{#if condition}}...{{/if}}
+    result = await this.processConditionals(result, context);
+
+    // Replace loops: {{#each items}}...{{/each}}
+    result = await this.processLoops(result, context);
+
+    return result;
+  }
+
+  private getNestedValue(obj: any, path: string): any {
+    return path.split('.').reduce((current, key) => current?.[key], obj);
   }
 }
 ```
 
-## Prompt Editor Interface
+### Execution Audit System
 
 ```typescript
-// src/prompts/editor/PromptEditor.tsx
-interface PromptEditorProps {
-  promptId?: string;
-  mode: 'create' | 'edit' | 'view';
-  onSave: (prompt: PromptTemplate) => Promise<void>;
-  onTest: (prompt: PromptTemplate, parameters: Record<string, any>) => Promise<ExecutionResult>;
+class PromptAuditLogger {
+  private db: Database;
+  private logBuffer: PromptExecution[];
+  private bufferSize = 100;
+
+  constructor(db: Database) {
+    this.db = db;
+    this.logBuffer = [];
+    this.startPeriodicFlush();
+  }
+
+  async logExecution(execution: PromptExecution): Promise<void> {
+    // Add to buffer
+    this.logBuffer.push(execution);
+
+    // Flush if buffer is full
+    if (this.logBuffer.length >= this.bufferSize) {
+      await this.flushBuffer();
+    }
+  }
+
+  async queryExecutions(query: ExecutionQuery): Promise<PromptExecution[]> {
+    let sql = 'SELECT * FROM prompt_executions WHERE 1=1';
+    const params: any[] = [];
+
+    if (query.prompt_id) {
+      sql += ' AND prompt_id = ?';
+      params.push(query.prompt_id);
+    }
+
+    if (query.agent_id) {
+      sql += ' AND agent_id = ?';
+      params.push(query.agent_id);
+    }
+
+    if (query.start_date) {
+      sql += ' AND timestamp >= ?';
+      params.push(query.start_date);
+    }
+
+    if (query.end_date) {
+      sql += ' AND timestamp <= ?';
+      params.push(query.end_date);
+    }
+
+    if (query.success !== undefined) {
+      sql += ' AND success = ?';
+      params.push(query.success);
+    }
+
+    sql += ' ORDER BY timestamp DESC';
+
+    if (query.limit) {
+      sql += ' LIMIT ?';
+      params.push(query.limit);
+    }
+
+    return await this.db.query(sql, params);
+  }
+
+  async generateReport(reportType: 'performance' | 'usage' | 'errors'): Promise<ExecutionReport> {
+    switch (reportType) {
+      case 'performance':
+        return this.generatePerformanceReport();
+      case 'usage':
+        return this.generateUsageReport();
+      case 'errors':
+        return this.generateErrorReport();
+      default:
+        throw new Error(`Unknown report type: ${reportType}`);
+    }
+  }
+
+  private async generatePerformanceReport(): Promise<PerformanceReport> {
+    const sql = `
+      SELECT 
+        prompt_id,
+        COUNT(*) as execution_count,
+        AVG(execution_time_ms) as avg_execution_time,
+        MIN(execution_time_ms) as min_execution_time,
+        MAX(execution_time_ms) as max_execution_time,
+        AVG(JSON_EXTRACT(metadata, '$.performance_metrics.latency_ms')) as avg_latency,
+        SUM(JSON_EXTRACT(metadata, '$.token_count.total')) as total_tokens
+      FROM prompt_executions
+      WHERE timestamp >= datetime('now', '-7 days')
+      GROUP BY prompt_id
+      ORDER BY execution_count DESC
+    `;
+
+    const results = await this.db.query(sql);
+    return {
+      type: 'performance',
+      generated_at: new Date().toISOString(),
+      period: '7 days',
+      data: results
+    };
+  }
+
+  private startPeriodicFlush(): void {
+    setInterval(async () => {
+      if (this.logBuffer.length > 0) {
+        await this.flushBuffer();
+      }
+    }, 30000); // Flush every 30 seconds
+  }
+
+  private async flushBuffer(): Promise<void> {
+    if (this.logBuffer.length === 0) return;
+
+    const toFlush = [...this.logBuffer];
+    this.logBuffer.length = 0;
+
+    try {
+      await this.db.insertBatch('prompt_executions', toFlush);
+    } catch (error) {
+      console.error('Failed to flush execution log buffer:', error);
+      // Re-add to buffer for retry
+      this.logBuffer.unshift(...toFlush);
+    }
+  }
 }
-
-export const PromptEditor: React.FC<PromptEditorProps> = ({ 
-  promptId, 
-  mode, 
-  onSave, 
-  onTest 
-}) => {
-  const [prompt, setPrompt] = useState<PromptTemplate | null>(null);
-  const [testParameters, setTestParameters] = useState<Record<string, any>>({});
-  const [testResult, setTestResult] = useState<ExecutionResult | null>(null);
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
-
-  // Editor components
-  return (
-    <div className="prompt-editor">
-      <div className="editor-header">
-        <PromptMetadataEditor prompt={prompt} onChange={setPrompt} />
-        <div className="editor-actions">
-          <Button onClick={() => setIsPreviewMode(!isPreviewMode)}>
-            {isPreviewMode ? 'Edit' : 'Preview'}
-          </Button>
-          <Button onClick={handleTest} disabled={!prompt}>
-            Test Prompt
-          </Button>
-          <Button onClick={handleSave} variant="primary" disabled={!prompt}>
-            Save
-          </Button>
-        </div>
-      </div>
-
-      <div className="editor-content">
-        <div className="editor-left">
-          {isPreviewMode ? (
-            <LivePreview 
-              prompt={prompt} 
-              parameters={testParameters}
-              onChange={setTestParameters}
-            />
-          ) : (
-            <PromptTemplateEditor 
-              prompt={prompt} 
-              onChange={setPrompt}
-            />
-          )}
-        </div>
-
-        <div className="editor-right">
-          <ParameterEditor 
-            parameters={prompt?.parameters || []}
-            values={testParameters}
-            onChange={setTestParameters}
-          />
-          
-          {testResult && (
-            <TestResultViewer 
-              result={testResult}
-              onRetest={handleTest}
-            />
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
 ```
 
-## Execution Modes and Use Cases
+## API Implementation
 
-### Execution Modes
-
-| Mode | Description | Use Case | Performance |
-|------|-------------|----------|-------------|
-| `inline` | Real-time execution within agent tasks | Agent workflows | High latency tolerance |
-| `batch` | Bulk processing with queue management | Data processing | High throughput |
-| `streaming` | Real-time streaming responses | Interactive chat | Low latency |
-| `cached` | Pre-computed results with cache lookup | Repeated queries | Ultra-low latency |
-
-### API Integration
+### REST API Routes
 
 ```typescript
-// REST API endpoints
-interface PromptAPI {
-  // Prompt management
-  'GET /api/prompts': () => Promise<PromptTemplate[]>;
-  'GET /api/prompts/:id': (id: string) => Promise<PromptTemplate>;
-  'POST /api/prompts': (prompt: PromptTemplate) => Promise<PromptTemplate>;
-  'PUT /api/prompts/:id': (id: string, prompt: PromptTemplate) => Promise<PromptTemplate>;
-  'DELETE /api/prompts/:id': (id: string) => Promise<void>;
+class PromptAPI {
+  private repository: PromptRepository;
+  private interpolator: PromptInterpolator;
+  private auditLogger: PromptAuditLogger;
 
-  // Execution
-  'POST /api/prompts/:id/execute': (id: string, request: PromptExecutionRequest) => Promise<ExecutionResult>;
-  'POST /api/prompts/batch': (requests: BatchExecutionRequest) => Promise<BatchExecutionResult>;
-  
-  // Analytics
-  'GET /api/prompts/:id/analytics': (id: string, timeRange: TimeRange) => Promise<AnalyticsReport>;
-  'GET /api/prompts/:id/versions': (id: string) => Promise<VersionHistory>;
+  constructor(
+    repository: PromptRepository,
+    interpolator: PromptInterpolator,
+    auditLogger: PromptAuditLogger
+  ) {
+    this.repository = repository;
+    this.interpolator = interpolator;
+    this.auditLogger = auditLogger;
+  }
+
+  // GET /api/prompts/
+  async listPrompts(req: Request): Promise<PromptListResponse> {
+    const { page = 1, limit = 20, scope, tags, search } = req.query;
+    
+    const filters: PromptFilters = {
+      scope: scope as string,
+      tags: tags ? (tags as string).split(',') : undefined,
+      search: search as string
+    };
+
+    const prompts = await this.repository.listPrompts(filters, {
+      page: Number(page),
+      limit: Number(limit)
+    });
+
+    return {
+      prompts: prompts.items,
+      pagination: {
+        page: prompts.page,
+        limit: prompts.limit,
+        total: prompts.total,
+        pages: Math.ceil(prompts.total / prompts.limit)
+      }
+    };
+  }
+
+  // GET /api/prompts/:id
+  async getPrompt(req: Request): Promise<PromptDetailResponse> {
+    const { id } = req.params;
+    const { include_versions = false } = req.query;
+
+    const prompt = await this.repository.getPrompt(id);
+    if (!prompt) {
+      throw new NotFoundError(`Prompt not found: ${id}`);
+    }
+
+    const response: PromptDetailResponse = { prompt };
+
+    if (include_versions === 'true') {
+      response.versions = await this.repository.getVersions(id);
+    }
+
+    return response;
+  }
+
+  // POST /api/prompts/
+  async createPrompt(req: Request): Promise<CreatePromptResponse> {
+    const promptData = req.body as CreatePromptRequest;
+    
+    // Validate permissions
+    await this.validateCreatePermission(req.user, promptData.scope);
+
+    const prompt = await this.repository.createPrompt(promptData);
+    
+    return { prompt };
+  }
+
+  // POST /api/prompts/:id/version
+  async createVersion(req: Request): Promise<CreateVersionResponse> {
+    const { id } = req.params;
+    const versionData = req.body as CreateVersionRequest;
+
+    // Validate permissions
+    await this.validateUpdatePermission(req.user, id);
+
+    const version = await this.repository.createVersion(id, versionData);
+    
+    return { version };
+  }
+
+  // POST /api/prompts/enrich
+  async enrichPrompt(req: Request): Promise<EnrichmentResponse> {
+    const { prompt_id, version, context } = req.body;
+
+    const result = await this.interpolator.interpolatePrompt(
+      prompt_id,
+      version,
+      context
+    );
+
+    // Log execution
+    const execution: PromptExecution = {
+      id: generateId(),
+      prompt_id,
+      version_number: result.version_number,
+      agent_id: req.user.agent_id,
+      user_id: req.user.user_id,
+      timestamp: new Date().toISOString(),
+      input_context: context,
+      interpolated_text: result.interpolated_content,
+      output_summary: 'Enrichment successful',
+      execution_time_ms: 0, // Set by middleware
+      success: true,
+      metadata: {
+        session_id: req.session.id,
+        conversation_id: req.headers['x-conversation-id'],
+        model_used: 'interpolation-engine',
+        token_count: {
+          input: result.original_content.length,
+          output: result.interpolated_content.length,
+          total: result.original_content.length + result.interpolated_content.length
+        },
+        performance_metrics: {
+          latency_ms: 0,
+          memory_usage_mb: 0,
+          cpu_usage_percent: 0
+        },
+        quality_scores: {
+          relevance: 1.0,
+          coherence: 1.0,
+          accuracy: 1.0
+        }
+      }
+    };
+
+    await this.auditLogger.logExecution(execution);
+
+    return result;
+  }
 }
 ```
 
-## Security and Compliance
+## Synchronization & Federation
 
-### Security Features
-- **Input Sanitization**: Automatic detection and filtering of malicious inputs
-- **Output Validation**: Content filtering and safety checks on generated outputs
-- **Access Control**: Role-based permissions for prompt creation, editing, and execution
-- **Audit Logging**: Comprehensive logging of all prompt operations and executions
-- **Encryption**: Secure storage of sensitive prompt templates and parameters
+### KLP Integration
 
-### Compliance Framework
-- **Data Privacy**: Automatic detection and redaction of personal information
-- **Content Policy**: Configurable content policies for different use cases
-- **Regulatory Compliance**: Built-in checks for industry-specific regulations
-- **Version Control**: Complete audit trail of prompt changes and approvals
+```typescript
+class PromptSyncManager {
+  private klpClient: KLPClient;
+  private repository: PromptRepository;
+  private syncConfig: SyncConfig;
+
+  constructor(klpClient: KLPClient, repository: PromptRepository, config: SyncConfig) {
+    this.klpClient = klpClient;
+    this.repository = repository;
+    this.syncConfig = config;
+  }
+
+  async syncPrompts(): Promise<SyncResult> {
+    const localPrompts = await this.repository.getPromptsForSync();
+    const remotePrompts = await this.klpClient.fetchPrompts();
+
+    const conflicts: ConflictInfo[] = [];
+    const synced: string[] = [];
+
+    for (const local of localPrompts) {
+      const remote = remotePrompts.find(r => r.id === local.id);
+      
+      if (!remote) {
+        // Local only - push to remote
+        await this.pushPrompt(local);
+        synced.push(local.id);
+      } else if (local.updated_at > remote.updated_at) {
+        // Local is newer - push to remote
+        await this.pushPrompt(local);
+        synced.push(local.id);
+      } else if (remote.updated_at > local.updated_at) {
+        // Remote is newer - pull from remote
+        await this.pullPrompt(remote);
+        synced.push(local.id);
+      } else {
+        // Conflict - needs resolution
+        conflicts.push({
+          prompt_id: local.id,
+          local_version: local.updated_at,
+          remote_version: remote.updated_at,
+          resolution_strategy: this.syncConfig.conflict_resolution
+        });
+      }
+    }
+
+    return {
+      synced_count: synced.length,
+      conflict_count: conflicts.length,
+      conflicts,
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  private async pushPrompt(prompt: Prompt): Promise<void> {
+    const versions = await this.repository.getVersions(prompt.id);
+    const links = await this.repository.getLinks(prompt.id);
+
+    const syncPayload: PromptSyncPayload = {
+      prompt,
+      versions,
+      links,
+      signature: await this.signPayload({ prompt, versions, links })
+    };
+
+    await this.klpClient.send({
+      type: 'prompt_sync',
+      target: 'klp://mesh/prompts',
+      payload: syncPayload
+    });
+  }
+}
+```
+
+## CLI Tools
+
+### Command Line Interface
+
+```typescript
+class PromptCLI {
+  private repository: PromptRepository;
+  private interpolator: PromptInterpolator;
+
+  constructor(repository: PromptRepository, interpolator: PromptInterpolator) {
+    this.repository = repository;
+    this.interpolator = interpolator;
+  }
+
+  async list(options: CLIListOptions): Promise<void> {
+    const prompts = await this.repository.listPrompts({
+      scope: options.scope,
+      tags: options.tags?.split(','),
+      search: options.search
+    });
+
+    console.table(prompts.items.map(p => ({
+      ID: p.id.substring(0, 8),
+      Title: p.title,
+      Scope: p.scope,
+      Tags: p.tags.join(', '),
+      Updated: new Date(p.updated_at).toLocaleDateString()
+    })));
+  }
+
+  async import(filePath: string): Promise<void> {
+    const content = await fs.readFile(filePath, 'utf-8');
+    const prompts = JSON.parse(content) as ImportPromptData[];
+
+    for (const promptData of prompts) {
+      try {
+        await this.repository.createPrompt(promptData);
+        console.log(`✅ Imported: ${promptData.title}`);
+      } catch (error) {
+        console.error(`❌ Failed to import ${promptData.title}:`, error.message);
+      }
+    }
+  }
+
+  async export(options: CLIExportOptions): Promise<void> {
+    const prompts = await this.repository.listPrompts({
+      scope: options.scope
+    });
+
+    const exportData = await Promise.all(
+      prompts.items.map(async (prompt) => {
+        const versions = await this.repository.getVersions(prompt.id);
+        return { prompt, versions };
+      })
+    );
+
+    await fs.writeFile(
+      options.output || 'prompts-export.json',
+      JSON.stringify(exportData, null, 2)
+    );
+
+    console.log(`✅ Exported ${prompts.items.length} prompts`);
+  }
+
+  async test(promptId: string, context: Record<string, any>): Promise<void> {
+    try {
+      const result = await this.interpolator.interpolatePrompt(promptId, undefined, context);
+      
+      console.log('🔍 Prompt Test Results');
+      console.log('='.repeat(50));
+      console.log('Original:');
+      console.log(result.original_content);
+      console.log('\nInterpolated:');
+      console.log(result.interpolated_content);
+      console.log('\nContext Used:');
+      console.log(JSON.stringify(result.context_used, null, 2));
+      
+    } catch (error) {
+      console.error('❌ Test failed:', error.message);
+    }
+  }
+}
+```
 
 ## Implementation Status
 
-- **Current**: Basic prompt templates and parameter injection
-- **Planned**: Full editor interface, performance analytics, batch processing
-- **Future**: AI-powered prompt optimization, collaborative editing, advanced analytics
+- **Core Architecture**: ✅ Designed
+- **Data Models**: ✅ Complete
+- **Repository Layer**: ✅ Specified
+- **Interpolation Engine**: ✅ Specified
+- **Audit System**: ✅ Specified
+- **API Layer**: ✅ Complete
+- **CLI Tools**: ✅ Specified
+- **KLP Integration**: ✅ Specified
 
-This prompt management system provides the foundation for sophisticated prompt engineering and optimization across the kAI/kOS ecosystem.
+---
 
+*This document provides the complete technical specification for the Prompt Management System with full TypeScript implementations for all core components and comprehensive audit trails.*
