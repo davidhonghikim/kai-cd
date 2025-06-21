@@ -52,10 +52,14 @@ const useSecurityStateStore = create<SecurityStoreState>((set, get) => ({
       generatedPassword: password, 
       dicewareResult: result || null 
     }, 'passwordGenerator');
+    // Force state sync after update
+    set(securityStateAdapter.getState());
   },
 
   setCustomDicewareOptions: async (options: DicewareOptions) => {
     await get().updateState({ customDicewareOptions: options });
+    // Force state sync after update
+    set(securityStateAdapter.getState());
   },
 
   setAnalyzedPassword: async (password: string, result?: PasswordAnalysis | null) => {
@@ -63,6 +67,8 @@ const useSecurityStateStore = create<SecurityStoreState>((set, get) => ({
       analyzedPassword: password, 
       analysisResult: result || null 
     }, 'passwordAnalyzer');
+    // Force state sync after update
+    set(securityStateAdapter.getState());
   },
 
   setSelectedSecurityLevel: async (level: string) => {

@@ -1,3 +1,5 @@
+import { Button } from '../shared/components/forms';
+import IconButton from '../components/ui/IconButton';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useServiceStore } from '../store/serviceStore';
 import {
@@ -16,6 +18,7 @@ import type { Service, LlmChatCapability } from '../types';
 import { apiClient } from '../utils/apiClient';
 import toast from 'react-hot-toast';
 import StatusIndicator from './StatusIndicator';
+import { useModelList } from '../hooks/useModelList';
 
 // --- Placeholder Components ---
 const PlaceholderManager: React.FC<{ title: string }> = ({ title }) => (
@@ -179,7 +182,7 @@ const ServiceManagerCore: React.FC = () => {
                 <div className="space-y-4">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-2xl font-bold text-slate-100">Active Services</h2>
-                        <button onClick={handleAddClick} className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700" title="Add a new service">Add New Service</button>
+                        <Button onClick={handleAddClick} variant="primary" title="Add a new service">Add New Service</Button>
                     </div>
                     {activeServices.map((service, _index) => (
                     <div key={service.id} className="bg-slate-800 rounded-lg shadow-md transition-all hover:shadow-lg">
@@ -193,15 +196,37 @@ const ServiceManagerCore: React.FC = () => {
                                 <p className="text-sm text-slate-400">{service.url}</p>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <button onClick={() => handleCheckStatus(service)} className="p-2 text-slate-400 hover:text-white" title="Check Service Status">
-                                    <WifiIcon className="h-5 w-5" />
-                                </button>
-                                <button onClick={() => handleEditClick(service)} className="p-2 text-slate-400 hover:text-white" title="Edit Service">
-                                    <PencilIcon className="h-5 w-5" />
-                                </button>
-                                <button onClick={() => toggleDetails(service.id)} className="p-2 text-slate-400 rounded-md hover:bg-slate-700" title={expandedServiceId === service.id ? 'Hide Details' : 'Show Details'}><ChevronDownIcon className={`h-5 w-5 transition-transform ${expandedServiceId === service.id ? 'rotate-180' : ''}`} /></button>
-                                <button onClick={() => handleArchiveService(service)} className="p-2 text-amber-500 rounded-md hover:bg-amber-700 hover:text-white" title="Archive Service"><ArchiveBoxIcon className="w-5 h-5" /></button>
-                                <button onClick={() => handleDeleteService(service.id, service.name)} className="p-2 text-red-500 rounded-md hover:bg-red-700 hover:text-white" title="Delete Service"><TrashIcon className="w-5 h-5" /></button>
+                                <IconButton 
+                                    icon={WifiIcon} 
+                                    onClick={() => handleCheckStatus(service)} 
+                                    title="Check Service Status"
+                                    variant="ghost"
+                                />
+                                <IconButton 
+                                    icon={PencilIcon} 
+                                    onClick={() => handleEditClick(service)} 
+                                    title="Edit Service"
+                                    variant="ghost"
+                                />
+                                <IconButton 
+                                    icon={ChevronDownIcon} 
+                                    onClick={() => toggleDetails(service.id)} 
+                                    title={expandedServiceId === service.id ? 'Hide Details' : 'Show Details'}
+                                    variant="ghost"
+                                    className={`transition-transform ${expandedServiceId === service.id ? 'rotate-180' : ''}`}
+                                />
+                                <IconButton 
+                                    icon={ArchiveBoxIcon} 
+                                    onClick={() => handleArchiveService(service)} 
+                                    title="Archive Service"
+                                    variant="warning"
+                                />
+                                <IconButton 
+                                    icon={TrashIcon} 
+                                    onClick={() => handleDeleteService(service.id, service.name)} 
+                                    title="Delete Service"
+                                    variant="danger"
+                                />
                             </div>
                         </div>
                         {editingServiceId === service.id && <ServiceEditor service={service} onClose={handleCloseForms} />}

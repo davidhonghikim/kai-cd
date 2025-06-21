@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import type { Service, NewService, ServiceType, IpType } from '../types';
 import { useServiceStore } from '../store/serviceStore';
 import { allServiceDefinitions } from '../connectors/definitions/all';
-import useVaultStore from '../store/vaultStore';
 import toast from 'react-hot-toast';
 import { config } from '../config/env';
 
@@ -22,7 +21,6 @@ type FormData = Omit<NewService, 'serviceDefinitionId' | 'nameIsIp'> & {
 
 const ServiceForm: React.FC<ServiceFormProps> = ({ service, onClose }) => {
   const { addService, updateService, customUrls } = useServiceStore();
-  const { credentials } = useVaultStore();
   const { localIp, remoteIp } = config.networking;
 
   const getInitialState = (): FormData => {
@@ -46,17 +44,12 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ service, onClose }) => {
       serviceDefinitionId: service?.type || definition.type,
       ipType,
       customUrl,
-      credentialId: service?.credentialId,
       port: service?.defaultPort || definition.defaultPort,
       enabled: service?.enabled ?? true,
     };
   };
 
   const [formData, setFormData] = useState<FormData>(getInitialState());
-
-  // Get current service definition
-  const currentDefinition = allServiceDefinitions.find(d => d.type === formData.serviceDefinitionId);
-  const needsCredentials = currentDefinition?.authentication?.type !== 'none';
 
   // Effect to update the derived URL when dependencies change
   useEffect(() => {
@@ -94,17 +87,10 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ service, onClose }) => {
       return;
     }
 
-    // Check if credentials are required but not provided
-    if (needsCredentials && !formData.credentialId) {
-      toast.error(`${currentDefinition?.name} requires authentication. Please select a credential or create one in the Vault.`);
-      return;
-    }
-
     const servicePayload = {
       name: formData.name,
       ipType: formData.ipType,
       customUrl: formData.customUrl,
-      credentialId: formData.credentialId,
       enabled: formData.enabled,
     };
 
@@ -158,37 +144,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ service, onClose }) => {
             Select Local/Remote to use configured IPs. Select Custom/Cloud to enter a full URL manually.
         </div>
       </div>
-
-      {needsCredentials && (
-        <div>
-          <label htmlFor='credentialId' className='block text-sm font-medium text-slate-300'>
-            Authentication
-            <span className="text-red-400 ml-1">*</span>
-          </label>
-          <select 
-            id='credentialId' 
-            name='credentialId' 
-            value={formData.credentialId || ''} 
-            onChange={handleChange} 
-            className='mt-1 block w-full bg-slate-900 border-slate-700 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm text-white'
-          >
-            <option value=''>Select a credential...</option>
-            {credentials
-              .filter(cred => cred.type === currentDefinition?.authentication?.type)
-              .map(cred => (
-                <option key={cred.id} value={cred.id}>
-                  {cred.name} ({cred.type})
-                </option>
-              ))
-            }
-          </select>
-          <div className='mt-2 text-xs text-slate-400'>
-            {currentDefinition?.authentication?.help || `This service requires ${currentDefinition?.authentication?.type} authentication.`}
-            <br />
-            <span className="text-cyan-400">Create credentials in the Vault if none are available.</span>
-          </div>
-        </div>
-      )}
       
       <div className='flex items-center'>
         <input id='enabled' name='enabled' type='checkbox' checked={formData.enabled} onChange={handleChange} className='h-4 w-4 rounded border-slate-700 bg-slate-800 text-cyan-600 focus:ring-cyan-500' />
@@ -203,4 +158,4 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ service, onClose }) => {
   );
 };
 
-export default ServiceForm;
+export default ServiceForm; 

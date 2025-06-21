@@ -101,5 +101,8 @@ export const openWebUIDefinition: ServiceDefinition = {
   // Note: Open WebUI also has a RAG API for file uploads and knowledge bases
   // which could be mapped to a future 'RAGCapability'.
   // Endpoints: POST /api/v1/files/ for upload.
-  capabilities: [llmChatCapability, modelManagementCapability, storageCapability, healthCapability],
+  authentication: {
+    type: 'bearer_token',
+    help: 'Get the JWT token from your browser after logging into Open WebUI (see Developer Tools > Network > Authorization header)'
+  },  capabilities: [llmChatCapability, modelManagementCapability, storageCapability, healthCapability],
 }; 

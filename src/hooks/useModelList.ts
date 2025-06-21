@@ -96,7 +96,7 @@ export const useModelList = (serviceId: string | null, activeView: 'chat' | 'ima
                     setError(err.message || 'An unknown error occurred.');
                     setModels([]);
                 } finally {
-                    /* no-op */
+                    setIsLoading(false);
                 }
             };
 

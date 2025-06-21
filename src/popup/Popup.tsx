@@ -15,7 +15,7 @@ import { INITIAL_TAB_VIEW_KEY } from '../config/constants';
 import type { TabView } from '../store/viewStateStore';
 
 const Popup: React.FC = () => {
-  const { services, selectedServiceId } = useServiceStore();
+  const { services, selectedServiceId, setSelectedServiceId } = useServiceStore();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   // Check panel status on component mount
@@ -57,6 +57,11 @@ const Popup: React.FC = () => {
       await chrome.sidePanel.open({ tabId: currentTab.id });
       setIsPanelOpen(!isPanelOpen);
     }
+  };
+
+  const handleServiceSelect = (serviceId: string) => {
+    setSelectedServiceId(serviceId);
+    console.log(`[Popup] Service selected: ${serviceId}`);
   };
 
   return (
@@ -117,10 +122,11 @@ const Popup: React.FC = () => {
             {services.filter(s => s.enabled && !s.archived).map(service => (
               <div
                 key={service.id}
-                className={`bg-background-secondary rounded-lg p-4 shadow-md hover:shadow-lg transition-all border-2 ${
+                onClick={() => handleServiceSelect(service.id)}
+                className={`bg-background-secondary rounded-lg p-4 shadow-md hover:shadow-lg transition-all border-2 cursor-pointer ${
                   selectedServiceId === service.id
-                    ? 'border-accent-primary'
-                    : 'border-transparent'
+                    ? 'border-accent-primary bg-accent-primary bg-opacity-10'
+                    : 'border-transparent hover:border-accent-primary hover:border-opacity-50'
                 }`}
               >
                 <div className="flex justify-between items-start gap-3">
@@ -131,6 +137,11 @@ const Popup: React.FC = () => {
                     <p className="text-xs text-text-secondary capitalize">
                       {service.type.replace(/_/g, ' ')}
                     </p>
+                    {selectedServiceId === service.id && (
+                      <p className="text-xs text-accent-primary font-medium mt-1">
+                        ✓ Selected
+                      </p>
+                    )}
                   </div>
                   <div className="flex gap-2 shrink-0">
                     <button

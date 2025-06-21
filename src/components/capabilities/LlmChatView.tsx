@@ -98,14 +98,23 @@ const LlmChatView: React.FC<LlmChatViewProps> = ({ service, capability }) => {
 
       const apiHistory = [...(service.history || []), userMessage].map(({ role, content }) => ({ role, content }));
       
+      // Ensure we have proper parameters with defaults
+      const finalParams = { ...chatParameters };
+      if (!finalParams.model) {
+        finalParams.model = activeModel;
+      }
+      
       const payload = { 
-        ...chatParameters, 
+        ...finalParams, 
         model: activeModel,
         messages: apiHistory, 
         stream: true 
       };
       
       logger.debug('[LlmChatView] PRE-API-CALL: Sending payload:', { serviceId: service.id, payload: payload });
+      console.log('[LlmChatView] Chat Parameters:', chatParameters);
+      console.log('[LlmChatView] Active Model:', activeModel);
+      console.log('[LlmChatView] Final Payload:', payload);
 
       const stream = apiClient.postStream(
         service.id,

@@ -191,6 +191,7 @@ const Tab: React.FC = () => {
               services={services}
               selectedServiceId={activeServiceId}
               onSelectService={setActiveServiceId}
+              activeView={activeView}
             />
           </div>
         </header>

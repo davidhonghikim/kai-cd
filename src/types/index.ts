@@ -257,7 +257,7 @@ export type Service = ServiceDefinition & {
   lastUsedModel?: string;
   // For chat services, to store conversation history
   history?: ChatMessage[];
-  archived?: boolean;
+  imageHistory?: GeneratedImage[];  archived?: boolean;
   createdAt: number;
   updatedAt: number;
 };

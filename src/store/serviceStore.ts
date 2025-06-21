@@ -3,7 +3,7 @@ import { persist, createJSONStorage, type StateStorage } from 'zustand/middlewar
 import { v4 as uuidv4 } from 'uuid';
 import { allServiceDefinitions } from '../connectors/definitions/all';
 import { config } from '../config/env';
-import type { Service, NewService } from '../types';
+import type { Service, NewService, HealthCapability } from '../types';
 import { apiClient } from '../utils/apiClient';
 import { ollamaDefinition } from '../connectors/definitions/ollama';
 import { openWebUIDefinition } from '../connectors/definitions/open-webui';

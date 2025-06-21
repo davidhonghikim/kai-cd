@@ -1,14 +1,21 @@
 import React, { useRef } from 'react';
-import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
+import { PaperAirplaneIcon, StopIcon } from '@heroicons/react/24/solid';
 
 interface ChatInputFormProps {
   input: string;
   setInput: React.Dispatch<React.SetStateAction<string>>;
   isLoading: boolean;
   handleSubmit: (e: React.FormEvent) => void;
+  stopRequest?: () => void;
 }
 
-const ChatInputForm: React.FC<ChatInputFormProps> = ({ input, setInput, isLoading, handleSubmit }) => {
+const ChatInputForm: React.FC<ChatInputFormProps> = ({ 
+  input, 
+  setInput, 
+  isLoading, 
+  handleSubmit, 
+  stopRequest 
+}) => {
   const _inputRef = useRef<HTMLTextAreaElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -23,29 +30,47 @@ const ChatInputForm: React.FC<ChatInputFormProps> = ({ input, setInput, isLoadin
     handleSubmit(e);
   };
 
+  const handleStop = () => {
+    if (stopRequest) {
+      stopRequest();
+    }
+  };
+
   return (
-    <form
-      onSubmit={handleFormSubmit}
-      className="p-3 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
-    >
-      <div className="relative">
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type your message... (Shift+Enter for new line)"
-          className="w-full h-24 p-3 pr-12 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-shadow resize-none"
-          disabled={isLoading}
-        />
-        <button
-          type="submit"
-          className="absolute right-3 bottom-3 p-2 rounded-full bg-cyan-600 text-white hover:bg-cyan-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
-          disabled={isLoading || !input.trim()}
-        >
-          <PaperAirplaneIcon className="w-5 h-5" />
-        </button>
-      </div>
-    </form>
+    <div className="flex-shrink-0 p-4 border-t border-slate-700 bg-slate-900">
+      <form onSubmit={handleFormSubmit} className="relative">
+        <div className="relative">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Type your message... (Shift+Enter for new line)"
+            className="w-full h-20 p-4 pr-16 bg-slate-800 border border-slate-600 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all resize-none"
+            disabled={isLoading}
+          />
+          <div className="absolute right-2 bottom-2 flex items-center space-x-2">
+            {isLoading && stopRequest && (
+              <button
+                type="button"
+                onClick={handleStop}
+                className="p-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
+                title="Stop generation"
+              >
+                <StopIcon className="w-4 h-4" />
+              </button>
+            )}
+            <button
+              type="submit"
+              className="p-2 rounded-lg bg-cyan-600 text-white hover:bg-cyan-700 disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors"
+              disabled={isLoading || !input.trim()}
+              title={isLoading ? "Generating response..." : "Send message"}
+            >
+              <PaperAirplaneIcon className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
   );
 };
 

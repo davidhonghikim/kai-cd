@@ -138,7 +138,7 @@ const ImageGenerationView: React.FC<CapabilityViewProps<ImageGenerationCapabilit
           <h3 className="text-lg font-semibold mb-4">Image Parameters</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             {activeParameters.map((param: ParameterDefinition) => (
-                <ParameterControl service={service} 
+                <ParameterControl 
                 key={param.key}
                 param={param}
                 value={params[param.key]}
@@ -199,4 +199,4 @@ const ImageGenerationView: React.FC<CapabilityViewProps<ImageGenerationCapabilit
   );
 };
 
-export default ImageGenerationView;
+export default ImageGenerationView; 

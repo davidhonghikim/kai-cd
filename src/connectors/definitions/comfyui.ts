@@ -4,7 +4,8 @@ import type {
 	ModelManagementCapability,
 	GraphExecutionCapability,
 	ImageGenerationCapability,
-	ComfyWorkflow
+	ComfyWorkflow,
+	HealthCapability
 } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
 import { config } from '../../config/env';
@@ -150,6 +151,12 @@ const imageGeneration: ImageGenerationCapability = {
 	}
 }
 
+const healthCapability: HealthCapability = {
+	capability: 'health',
+	endpoints: {
+		health: { path: '/system_stats', method: 'GET' }
+	}
+};
 const models: ModelManagementCapability = {
 	capability: 'model_management',
 	endpoints: {
@@ -164,6 +171,7 @@ const models: ModelManagementCapability = {
 		getVAEs: { path: 'input.required.vae_name.0', valueKey: '', labelKey: '' },
 	}
 };
+
 
 export const comfyuiDefinition: ServiceDefinition = {
 	type: 'comfyui',
@@ -183,5 +191,5 @@ export const comfyuiDefinition: ServiceDefinition = {
 	authentication: {
 		type: 'none'
 	},
-	capabilities: [models, graphExecution, imageGeneration]
+	capabilities: [models, graphExecution, imageGeneration, healthCapability]
 }; 

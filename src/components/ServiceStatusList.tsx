@@ -10,7 +10,7 @@ const ServiceStatusList: React.FC = () => {
       {services.map(service => (
         <button 
             key={service.id} 
-            onClick={() => checkServiceStatus(service.id)}
+            onClick={() => checkServiceStatus(service)}
             className="group relative"
             title={`Click to refresh status. Current: ${service.status}`}
         >

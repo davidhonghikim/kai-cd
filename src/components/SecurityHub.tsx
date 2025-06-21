@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheckIcon, 
   KeyIcon, 
@@ -7,6 +7,8 @@ import {
 import PasswordGenerator from './security/PasswordGenerator';
 import PasswordAnalyzer from './security/PasswordAnalyzer';
 import CryptoToolkit from './security/CryptoToolkit';
+import useSecurityStateStore from '../store/securityStateStore';
+import toast from 'react-hot-toast';
 
 type SecurityTool = 'passwords' | 'analyzer' | 'crypto';
 
@@ -20,6 +22,28 @@ interface SecurityToolTab {
 
 const SecurityHub: React.FC = () => {
   const [activeTool, setActiveTool] = useState<SecurityTool>('passwords');
+  const [isInitialized, setIsInitialized] = useState(false);
+  const { initialize, isReady } = useSecurityStateStore();
+
+  // Initialize security state store
+  useEffect(() => {
+    const initializeSecurityState = async () => {
+      try {
+        if (!isReady()) {
+          console.log('[SecurityHub] Initializing security state store...');
+          await initialize();
+          console.log('[SecurityHub] Security state store initialized successfully');
+        }
+        setIsInitialized(true);
+      } catch (error) {
+        console.error('[SecurityHub] Failed to initialize security state store:', error);
+        toast.error('Failed to initialize security tools');
+        setIsInitialized(true); // Still allow usage with default state
+      }
+    };
+
+    initializeSecurityState();
+  }, [initialize, isReady]);
 
   const securityTools: SecurityToolTab[] = [
     {
@@ -47,10 +71,24 @@ const SecurityHub: React.FC = () => {
 
   const ActiveComponent = securityTools.find(tool => tool.id === activeTool)?.component || PasswordGenerator;
 
+  // Show loading state while initializing
+  if (!isInitialized) {
+    return (
+      <div className="h-full flex flex-col bg-slate-950 text-white min-h-screen">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <ShieldCheckIcon className="h-12 w-12 text-cyan-400 mx-auto mb-4 animate-pulse" />
+            <p className="text-slate-300">Initializing Security Tools...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="h-full bg-slate-950">
+    <div className="h-full flex flex-col bg-slate-950 text-white min-h-screen">
       {/* Header */}
-      <div className="bg-slate-900 border-b border-slate-800 p-6">
+      <div className="bg-slate-900 border-b border-slate-800 p-6 flex-shrink-0">
         <div className="flex items-center space-x-3 mb-4">
           <ShieldCheckIcon className="h-8 w-8 text-cyan-400" />
           <div>
@@ -80,11 +118,13 @@ const SecurityHub: React.FC = () => {
       </div>
 
       {/* Tool Content */}
-      <div className="p-6 overflow-y-auto" style={{ height: 'calc(100% - 140px)' }}>
-        <ActiveComponent />
+      <div className="flex-1 p-6 overflow-y-auto bg-slate-950 min-h-0">
+        <div className="h-full w-full">
+          <ActiveComponent />
+        </div>
       </div>
     </div>
   );
 };
 
-export default SecurityHub; 
+export default SecurityHub;

@@ -1,4 +1,4 @@
-import type { ServiceDefinition, ImageGenerationCapability, ParameterDefinition } from '../../types';
+import type { ServiceDefinition, ImageGenerationCapability, ParameterDefinition, HealthCapability } from '../../types';
 import { SERVICE_CATEGORIES } from '../../config/constants';
 import { config } from '../../config/env';
 
@@ -182,6 +182,13 @@ const imageGenerationCapability: ImageGenerationCapability = {
 	}
 };
 
+const healthCapability: HealthCapability = {
+	capability: 'health',
+	endpoints: {
+		health: { path: '/sdapi/v1/memory', method: 'GET' }
+	}
+};
+
 export const a1111Definition: ServiceDefinition = {
 	type: 'a1111',
 	name: 'A1111 WebUI',
@@ -212,5 +219,5 @@ export const a1111Definition: ServiceDefinition = {
 	authentication: {
 		type: 'none'
 	},
-	capabilities: [imageGenerationCapability]
+	capabilities: [imageGenerationCapability, healthCapability]
 }; 
