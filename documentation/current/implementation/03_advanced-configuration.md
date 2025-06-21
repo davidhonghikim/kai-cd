@@ -1,17 +1,33 @@
 ---
 title: "Advanced Configuration Management"
 description: "Multi-tier configuration system evolution from Kai-CD to kOS distributed configuration"
-implementation_status: "current_partial"
-priority: "high"
-last_updated: "2025-01-27"
-related_docs: ["current/implementation/02_configuration-management.md", "current/architecture/02_state-management.md"]
-code_references: ["src/config/", "src/core/config/", "src/features/themes/"]
+category: "implementation"
+subcategory: "configuration"
+context: "current_implementation"
+implementation_status: "partial"
+decision_scope: "high"
+complexity: "high"
+last_updated: "2025-01-20"
+code_references:
+  - "src/config/"
+  - "src/core/config/"
+  - "src/features/themes/"
+related_documents:
+  - "./02_configuration-management.md"
+  - "../architecture/02_state-management.md"
+dependencies: ["TypeScript", "YAML", "JSON5", "Hot Reloading", "Schema Validation"]
+breaking_changes: false
+agent_notes: "Advanced configuration patterns - essential for scalable multi-tier configuration systems"
 ---
 
 # Advanced Configuration Management
 
-## Agent Context
-This document describes the evolution from current three-tier configuration management in Kai-CD to the sophisticated distributed configuration system planned for kOS. Agents should understand both current patterns and future architecture for implementing scalable configuration systems.
+> **Agent Context**: Multi-tier configuration system evolution from simple to distributed architecture  
+> **Implementation**: 🔄 Partial - Three-tier working, multi-layer system planned  
+> **Use When**: Implementing advanced configuration, planning distributed systems, managing complex settings
+
+## Quick Summary
+Evolution from current three-tier configuration management in Kai-CD to sophisticated distributed configuration system planned for kOS with multi-layer architecture, hot reloading, and governance policies.
 
 ## Current Configuration Architecture
 

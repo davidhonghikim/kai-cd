@@ -1,16 +1,31 @@
 ---
 title: "Vector Database System"
 description: "Comprehensive vector database architecture for kOS multi-agent memory and semantic search"
-implementation_status: "future_vision"
-priority: "high"
-last_updated: "2025-01-27"
-related_docs: ["future/services/01_prompt-management.md", "current/architecture/04_memory-architecture.md"]
+category: "future"
+subcategory: "services"
+context: "kos_vision"
+implementation_status: "design"
+decision_scope: "critical"
+complexity: "very_high"
+last_updated: "2025-01-20"
+code_references:
+  - "future vector database implementation"
+related_documents:
+  - "./01_prompt-management.md"
+  - "../../current/architecture/04_memory-architecture.md"
+dependencies: ["Qdrant", "Weaviate", "Chroma", "FAISS", "Pinecone", "Vector Embeddings"]
+breaking_changes: false
+agent_notes: "Comprehensive vector database system - foundation for semantic memory and intelligent retrieval"
 ---
 
 # Vector Database System
 
-## Agent Context
-This document defines the comprehensive vector database architecture for the future kOS system. Agents should understand the multi-backend approach, intelligent routing, and advanced memory management capabilities that will enable sophisticated semantic search, memory graphs, and contextual intelligence across the distributed agent ecosystem.
+> **Agent Context**: Comprehensive vector database architecture for kOS semantic memory backbone  
+> **Implementation**: 🎯 Future vision - Multi-backend system with intelligent routing  
+> **Use When**: Planning semantic search, implementing memory systems, understanding vector storage
+
+## Quick Summary
+Comprehensive vector database architecture serving as the semantic memory backbone for kOS ecosystem, providing unified access to multiple vector storage backends with intelligent routing, advanced indexing, and federated memory management.
 
 ## Overview
 

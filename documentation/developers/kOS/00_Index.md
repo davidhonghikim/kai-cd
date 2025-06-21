@@ -10,7 +10,7 @@ This directory contains the migrated and organized kOS (Kind Operating System) d
 - [Integration Analysis](01_Integration_Analysis.md) - Current integration status
 - [Service Roadmap](02_Service_Roadmap.md) - Service development roadmap
 - [Completion Review](03_Completion_Review.md) - Gap analysis and requirements
-- [Migration Index](04_MIGRATION_INDEX.md) - Document migration tracking
+- [Migration Index](04_Migration_Index.md) - Document migration tracking
 
 ### 🏗️ Architecture
 - [System Overview](architecture/01_System_Overview.md) - High-level system description

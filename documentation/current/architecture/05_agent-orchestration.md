@@ -1,24 +1,35 @@
 ---
 title: "Agent Orchestration Architecture"
 description: "Complete orchestration system from current service management to future kOS agent mesh"
-category: architecture
+category: "architecture"
+subcategory: "orchestration"
+context: "current_implementation"
 implementation_status: "partial"
-last_updated: "2025-01-27"
-related_docs:
-  - current/services/01_service-architecture.md
-  - current/services/02_orchestration-architecture.md  
-  - future/agents/01_agent-hierarchy.md
-  - bridge/05_service-migration.md
+decision_scope: "high"
+complexity: "very_high"
+last_updated: "2025-01-20"
 code_references:
-  - src/store/serviceStore.ts
-  - src/core/config/
-  - src/connectors/definitions/
+  - "src/store/serviceStore.ts"
+  - "src/core/config/"
+  - "src/connectors/definitions/"
+related_documents:
+  - "../services/01_service-architecture.md"
+  - "../services/02_orchestration-architecture.md"
+  - "../../future/agents/01_agent-hierarchy.md"
+  - "../../bridge/05_service-migration.md"
+dependencies: ["Zustand", "Docker", "Kind Link Protocol", "Ed25519"]
+breaking_changes: false
+agent_notes: "Agent orchestration system - foundation for multi-agent coordination and lifecycle management"
 ---
 
 # Agent Orchestration Architecture
 
-## Agent Context
-This document provides the complete orchestration blueprint for AI agents working on the system. It covers the evolution from current service coordination to sophisticated agent mesh orchestration. Focus on understanding the lifecycle management, deployment patterns, and communication protocols that will enable autonomous agent operation.
+> **Agent Context**: Complete orchestration system from service management to agent mesh  
+> **Implementation**: 🔄 Partial - Service orchestration working, agent mesh planned  
+> **Use When**: Understanding agent lifecycle, planning multi-agent coordination, implementing orchestration
+
+## Quick Summary
+Complete orchestration blueprint covering evolution from current service coordination to sophisticated agent mesh orchestration with lifecycle management, deployment patterns, and communication protocols.
 
 ## Overview
 

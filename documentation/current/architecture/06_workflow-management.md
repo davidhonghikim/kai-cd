@@ -1,24 +1,35 @@
 ---
 title: "Workflow Management Architecture"
 description: "Complete workflow system from current task coordination to future multi-agent orchestration"
-category: architecture
-implementation_status: "foundational"
-last_updated: "2025-01-27"
-related_docs:
-  - current/architecture/05_agent-orchestration.md
-  - current/services/02_orchestration-architecture.md
-  - future/agents/01_agent-hierarchy.md
-  - bridge/03_decision-framework.md
+category: "architecture"
+subcategory: "workflow"
+context: "current_implementation"
+implementation_status: "partial"
+decision_scope: "high"
+complexity: "very_high"
+last_updated: "2025-01-20"
 code_references:
-  - src/components/capabilities/
-  - src/store/serviceStore.ts
-  - src/utils/apiClient.ts
+  - "src/components/capabilities/"
+  - "src/store/serviceStore.ts"
+  - "src/utils/apiClient.ts"
+related_documents:
+  - "./05_agent-orchestration.md"
+  - "../services/02_orchestration-architecture.md"
+  - "../../future/agents/01_agent-hierarchy.md"
+  - "../../bridge/03_decision-framework.md"
+dependencies: ["YAML", "TypeScript", "Agent Framework", "KLP Protocol"]
+breaking_changes: false
+agent_notes: "Workflow management system - foundation for complex multi-agent task coordination"
 ---
 
 # Workflow Management Architecture
 
-## Agent Context
-This document defines the complete workflow management system for AI agents. It covers the evolution from current simple task coordination to sophisticated multi-agent workflow orchestration. Focus on understanding task decomposition, execution patterns, and coordination mechanisms that enable complex autonomous workflows.
+> **Agent Context**: Complete workflow system from task coordination to multi-agent orchestration  
+> **Implementation**: 🔄 Partial - Basic task coordination working, workflow engine planned  
+> **Use When**: Planning complex workflows, understanding task coordination, implementing workflow systems
+
+## Quick Summary
+Complete workflow management system covering evolution from current simple task coordination to sophisticated multi-agent workflow orchestration with task decomposition, execution patterns, and coordination mechanisms.
 
 ## Overview
 

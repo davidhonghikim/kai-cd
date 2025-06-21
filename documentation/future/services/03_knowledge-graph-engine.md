@@ -1,16 +1,31 @@
 ---
 title: "Knowledge Graph Engine"
 description: "Comprehensive knowledge graph architecture for kOS semantic reasoning and contextual intelligence"
-implementation_status: "future_vision"
-priority: "high"
-last_updated: "2025-01-27"
-related_docs: ["future/services/02_vector-database-system.md", "future/agents/01_agent-hierarchy.md"]
+category: "future"
+subcategory: "services"
+context: "kos_vision"
+implementation_status: "design"
+decision_scope: "critical"
+complexity: "very_high"
+last_updated: "2025-01-20"
+code_references:
+  - "future knowledge graph implementation"
+related_documents:
+  - "./02_vector-database-system.md"
+  - "../agents/01_agent-hierarchy.md"
+dependencies: ["Neo4j", "Dgraph", "Ontologies", "Semantic Reasoning", "Vector Integration"]
+breaking_changes: false
+agent_notes: "Knowledge graph engine - foundation for semantic reasoning and contextual intelligence"
 ---
 
 # Knowledge Graph Engine
 
-## Agent Context
-This document defines the comprehensive Knowledge Graph Engine for the future kOS system. Agents should understand the semantic reasoning capabilities, ontological foundations, and contextual intelligence features that will enable sophisticated knowledge modeling, inference, and graph-based memory retrieval across the distributed agent ecosystem.
+> **Agent Context**: Comprehensive knowledge graph architecture for semantic reasoning and contextual intelligence  
+> **Implementation**: 🎯 Future vision - Semantic reasoning backbone for kOS agent ecosystem  
+> **Use When**: Planning knowledge systems, implementing semantic reasoning, understanding graph-based intelligence
+
+## Quick Summary
+Comprehensive Knowledge Graph Engine providing semantic reasoning backbone for kOS with dynamic knowledge modeling, contextual awareness, and intelligent inference across all agent interactions and system operations.
 
 ## Overview
 

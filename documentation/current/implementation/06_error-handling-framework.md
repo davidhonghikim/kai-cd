@@ -1,19 +1,35 @@
 ---
 title: "Error Handling Framework"
-version: "1.0.0"
-last_updated: "2025-01-27"
-status: "implemented"
-tags: ["error-handling", "debugging", "logging", "resilience", "agents"]
-related_docs:
-  - "05_testing-and-validation.md"
+description: "Comprehensive error handling system for classification, recovery, logging, and prevention"
+category: "implementation"
+subcategory: "error-handling"
+context: "current_implementation"
+implementation_status: "complete"
+decision_scope: "high"
+complexity: "medium"
+last_updated: "2025-01-20"
+code_references:
+  - "src/shared/types/errors.ts"
+  - "src/shared/utils/errorHandler.ts"
+  - "src/services/base/ErrorBoundary.ts"
+  - "src/utils/logger.ts"
+related_documents:
+  - "./05_testing-and-validation.md"
   - "../architecture/03_core-system-design.md"
   - "../services/04_memory-architecture.md"
+dependencies: ["TypeScript", "Error Boundaries", "Logging System", "Recovery Strategies"]
+breaking_changes: false
+agent_notes: "Comprehensive error handling framework - essential for robust agent and service error management"
 ---
 
 # Error Handling Framework
 
-## Agent Context
-**For AI Agents**: This document describes the error handling framework for Kai-CD and future kOS systems. Use this to understand error classification, recovery strategies, debugging tools, and resilience patterns when implementing error handling or troubleshooting issues.
+> **Agent Context**: Comprehensive error handling system for classification, recovery, and resilience  
+> **Implementation**: ✅ Complete - Error boundaries, recovery strategies, logging system  
+> **Use When**: Implementing error handling, debugging issues, planning resilience patterns
+
+## Quick Summary
+Comprehensive error handling framework providing error classification, recovery strategies, logging, and prevention across current Kai-CD functionality and future kOS agent mesh capabilities.
 
 ## Overview
 

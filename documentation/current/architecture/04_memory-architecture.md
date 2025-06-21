@@ -1,17 +1,34 @@
 ---
 title: "Memory Architecture"
 description: "Current Kai-CD memory system with evolution path to kOS distributed memory"
-implementation_status: "current_partial"
-priority: "high"
-last_updated: "2025-01-27"
-related_docs: ["current/architecture/02_state-management.md", "future/services/01_prompt-management.md"]
-code_references: ["src/store/", "src/utils/crypto.ts", "src/components/VaultManager.tsx"]
+category: "architecture"
+subcategory: "memory"
+context: "current_implementation"
+implementation_status: "partial"
+decision_scope: "high"
+complexity: "high"
+last_updated: "2025-01-20"
+code_references:
+  - "src/store/"
+  - "src/utils/crypto.ts"
+  - "src/components/VaultManager.tsx"
+related_documents:
+  - "./02_state-management.md"
+  - "../../future/services/01_prompt-management.md"
+  - "../../future/agents/02_memory-architecture.md"
+dependencies: ["Chrome Storage API", "Zustand", "WebCrypto", "IndexedDB"]
+breaking_changes: false
+agent_notes: "Memory system architecture - understand current limitations and future multi-tier vision"
 ---
 
 # Memory Architecture
 
-## Agent Context
-This document describes the current Chrome storage-based memory system in Kai-CD and the evolution path to the sophisticated multi-tier memory architecture planned for kOS. Agents should understand both the current limitations and the future vision for implementing distributed memory systems.
+> **Agent Context**: Current Chrome storage system with evolution to multi-tier distributed memory  
+> **Implementation**: 🔄 Partial - Chrome storage working, vector database planned  
+> **Use When**: Understanding memory patterns, planning data persistence, implementing memory features
+
+## Quick Summary
+Current Chrome storage-based memory system with evolution path to sophisticated multi-tier memory architecture including short-term, long-term, and global federated memory for kOS.
 
 ## Current Implementation (Kai-CD)
 

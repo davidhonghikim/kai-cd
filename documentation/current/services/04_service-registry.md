@@ -1,24 +1,35 @@
 ---
 title: "Service Registry Architecture"
 description: "Complete service registration and plugin framework from current definitions to future kOS registry"
-category: services
+category: "services"
+subcategory: "registry"
+context: "current_implementation"
 implementation_status: "partial"
-last_updated: "2025-01-27"
-related_docs:
-  - current/services/01_service-architecture.md
-  - current/services/02_orchestration-architecture.md
-  - future/services/01_prompt-management.md
-  - bridge/05_service-migration.md
+decision_scope: "high"
+complexity: "high"
+last_updated: "2025-01-20"
 code_references:
-  - src/connectors/definitions/
-  - src/store/serviceStore.ts
-  - src/components/ServiceManagement.tsx
+  - "src/connectors/definitions/"
+  - "src/store/serviceStore.ts"
+  - "src/components/ServiceManagement.tsx"
+related_documents:
+  - "./01_service-architecture.md"
+  - "./02_orchestration-architecture.md"
+  - "../../future/services/01_prompt-management.md"
+  - "../../bridge/05_service-migration.md"
+dependencies: ["TypeScript", "YAML", "ServiceDefinition", "Plugin System"]
+breaking_changes: false
+agent_notes: "Service registry and plugin framework - foundation for extensible service ecosystem"
 ---
 
 # Service Registry Architecture
 
-## Agent Context
-This document provides the complete service registry framework for AI agents. It covers the evolution from current static service definitions to sophisticated plugin-based registration system. Focus on the declarative configuration system, plugin lifecycle management, and trust-based verification protocols that enable secure service integration.
+> **Agent Context**: Complete service registry and plugin framework for extensible service ecosystem  
+> **Implementation**: 🔄 Partial - Static definitions working, plugin system planned  
+> **Use When**: Adding services, managing plugins, understanding service lifecycle
+
+## Quick Summary
+Complete service registry framework covering evolution from current static service definitions to sophisticated plugin-based registration system with declarative configuration, plugin lifecycle management, and trust-based verification protocols.
 
 ## Current Implementation
 

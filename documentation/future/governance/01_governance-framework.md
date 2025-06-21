@@ -1,16 +1,31 @@
 ---
 title: "kOS Governance Framework"
 description: "Comprehensive governance, trust, and consensus mechanisms for distributed kOS ecosystem"
-implementation_status: "future_vision"
-priority: "high"
-last_updated: "2025-01-27"
-related_docs: ["future/protocols/01_klp-specification.md", "bridge/03_decision-framework.md"]
+category: "future"
+subcategory: "governance"
+context: "kos_vision"
+implementation_status: "design"
+decision_scope: "critical"
+complexity: "very_high"
+last_updated: "2025-01-20"
+code_references:
+  - "future governance implementation"
+related_documents:
+  - "../protocols/01_klp-specification.md"
+  - "../../bridge/03_decision-framework.md"
+dependencies: ["KLP Protocol", "Ed25519", "Trust Systems", "Consensus Mechanisms"]
+breaking_changes: false
+agent_notes: "kOS governance framework - critical for distributed system coordination and decision-making"
 ---
 
 # kOS Governance Framework
 
-## Agent Context
-This document defines the complete governance architecture for the future kOS distributed system. Agents working on governance features should understand the hybrid decentralized model, trust scoring mechanisms, and consensus protocols. This is critical for implementing federated decision-making and agent coordination.
+> **Agent Context**: Complete governance architecture for distributed kOS system  
+> **Implementation**: 🎯 Future vision - Hybrid decentralized governance with trust scoring  
+> **Use When**: Planning governance systems, implementing consensus, understanding distributed coordination
+
+## Quick Summary
+Complete governance architecture for future kOS distributed system with Hybrid Decentralized Governance model combining local autonomy with federated trust and global consensus protocols.
 
 ## Overview
 

@@ -1,19 +1,34 @@
 ---
 title: "Deployment Profiles"
-version: "1.0.0"
-last_updated: "2025-01-27"
-status: "implemented"
-tags: ["deployment", "configuration", "environments", "infrastructure"]
-related_docs:
-  - "01_deployment-architecture.md"
-  - "02_installation-and-setup.md"
+description: "Standardized deployment configurations for different environments and use cases"
+category: "deployment"
+subcategory: "configuration"
+context: "current_implementation"
+implementation_status: "complete"
+decision_scope: "medium"
+complexity: "medium"
+last_updated: "2025-01-20"
+code_references:
+  - "config/profiles/"
+  - "public/manifest.json"
+  - "background.js"
+related_documents:
+  - "./01_deployment-architecture.md"
+  - "./02_installation-and-setup.md"
   - "../implementation/02_configuration-management.md"
+dependencies: ["YAML", "JSON", "Chrome Extension APIs", "Firefox Add-on APIs"]
+breaking_changes: false
+agent_notes: "Deployment profiles define environment-specific configurations - use for different deployment scenarios"
 ---
 
 # Deployment Profiles
 
-## Agent Context
-**For AI Agents**: This document describes deployment profiles for Kai-CD and future kOS environments. Use this to understand deployment options, configuration strategies, and infrastructure requirements when setting up or managing deployments.
+> **Agent Context**: Standardized deployment configurations for different environments and use cases  
+> **Implementation**: ✅ Complete - Development, production, testing, and browser extension profiles  
+> **Use When**: Setting up deployments, configuring environments, managing infrastructure
+
+## Quick Summary
+Deployment profiles define standardized configurations for deploying Kai-CD across different environments and use cases, from simple browser extension installation to complex distributed kOS mesh deployments.
 
 ## Overview
 

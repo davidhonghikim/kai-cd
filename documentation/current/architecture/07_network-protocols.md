@@ -1,24 +1,35 @@
 ---
 title: "Network Protocols and Discovery Architecture"
 description: "Complete network communication system from current service connectivity to future kOS mesh protocols"
-category: architecture
-implementation_status: "foundational"
-last_updated: "2025-01-27"
-related_docs:
-  - current/services/01_service-architecture.md
-  - current/security/01_security-framework.md
-  - future/protocols/01_klp-specification.md
-  - bridge/03_decision-framework.md
+category: "architecture"
+subcategory: "networking"
+context: "current_implementation"
+implementation_status: "partial"
+decision_scope: "high"
+complexity: "very_high"
+last_updated: "2025-01-20"
 code_references:
-  - src/utils/apiClient.ts
-  - src/connectors/definitions/
-  - src/config/env.ts
+  - "src/utils/apiClient.ts"
+  - "src/connectors/definitions/"
+  - "src/config/env.ts"
+related_documents:
+  - "../services/01_service-architecture.md"
+  - "../security/01_security-framework.md"
+  - "../../future/protocols/01_klp-specification.md"
+  - "../../bridge/03_decision-framework.md"
+dependencies: ["HTTP", "WebSocket", "mDNS", "WebRTC", "KLP Protocol"]
+breaking_changes: false
+agent_notes: "Network communication and discovery system - foundation for distributed agent mesh networking"
 ---
 
 # Network Protocols and Discovery Architecture
 
-## Agent Context
-This document provides the complete network communication and discovery framework for AI agents. It covers the evolution from current HTTP-based service communication to sophisticated mesh networking protocols including agent discovery, secure communication, and federated networking. Focus on the protocol specifications, security measures, and discovery mechanisms that enable distributed agent coordination.
+> **Agent Context**: Complete network communication and discovery framework for distributed agents  
+> **Implementation**: 🔄 Partial - HTTP/WebSocket working, mesh protocols planned  
+> **Use When**: Understanding network architecture, implementing communication protocols, planning distributed systems
+
+## Quick Summary
+Complete network communication and discovery framework covering evolution from current HTTP-based service communication to sophisticated mesh networking protocols with agent discovery, secure communication, and federated networking.
 
 ## Current Network Architecture
 
