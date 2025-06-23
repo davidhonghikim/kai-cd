@@ -1,0 +1,46 @@
+# --- Databases ---
+postgres:
+  enabled: "${POSTGRES_ENABLED}"  # 1/0 or true/false - Env: POSTGRES_ENABLED
+  host: "${POSTGRES_HOST}"  # - Env: POSTGRES_HOST
+  port: "${POSTGRES_PORT}"  # - Env: POSTGRES_PORT
+  user: "${POSTGRES_USER}"  # - Env: POSTGRES_USER
+  password: "${POSTGRES_PASSWORD}"  # - Env: POSTGRES_PASSWORD
+  db: "${POSTGRES_DB}"  # - Env: POSTGRES_DB
+  ssl_enabled: "${POSTGRES_SSL_ENABLED}" # - Env: POSTGRES_SSL_ENABLED
+  ssl_ca_file: "${POSTGRES_SSL_CA_FILE}"  # - Env: POSTGRES_SSL_CA_FILE
+  pool_size: "${POSTGRES_POOL_SIZE}" #Setup Max Sizes - Env: POSTGRES_POOL_SIZE
+
+redis:
+  enabled: "${REDIS_ENABLED}"  # 1/0 or true/false - Env: REDIS_ENABLED
+  host: "${REDIS_HOST}"  # - Env: REDIS_HOST
+  port: "${REDIS_PORT}"  # - Env: REDIS_PORT
+  password: "${REDIS_PASSWORD}" #  - Env: REDIS_PASSWORD
+  db: "${REDIS_DB}" # Set data to track - Env: REDIS_DB
+
+mongodb:
+  enabled: "${MONGODB_ENABLED}"  # 1/0 or true/false - Env: MONGODB_ENABLED
+  host: "${MONGODB_HOST}"  # - Env: MONGODB_HOST
+  port: "${MONGODB_PORT}"  # - Env: MONGODB_PORT
+  user: "${MONGODB_USER}" # - Env: MONGODB_USER
+  password: "${MONGODB_PASSWORD}"  # - Env: MONGODB_PASSWORD
+  db: "${MONGODB_DB}"  # The DB - Env: MONGODB_DB
+  replica_set: "${MONGODB_REPLICA_SET}"  #  - Env: MONGODB_REPLICA_SET
+  tls: "${MONGODB_TLS}" # For secure connections 1 or 0 - Env: MONGODB_TLS
+
+#---- Object Storage ----
+minio:
+  enabled: "${MINIO_ENABLED}" #Set 1 or 0 - Env: MINIO_ENABLED
+  host:  "${MINIO_HOST}"  # Minio Setup - Env: MINIO_HOST
+  port:  "${MINIO_PORT}"  # Port Setting - Env: MINIO_PORT
+  access_key:  "${MINIO_ACCESS_KEY}" # Key Set - Env: MINIO_ACCESS_KEY
+  secret_key:  "${MINIO_SECRET_KEY}" # Setup Secure Key - Env: MINIO_SECRET_KEY
+  bucket: "${MINIO_BUCKET}"  # Set your Bucket to use - Env: MINIO_BUCKET
+  secure: "${MINIO_SECURE}" # If Using SSL, Enable Secure  - Env: MINIO_SECURE # If Using SSL
+
+# -----  Amazon S3 -------
+aws_s3:
+  enabled: "${AWS_S3_ENABLED}" #1 or 0 setup - Env: AWS_S3_ENABLED
+  access_key_id: "${AWS_ACCESS_KEY_ID}"  #The key to use - Env: AWS_ACCESS_KEY_ID
+  secret_access_key: "${AWS_SECRET_ACCESS_KEY}" #Secure to check- Env: AWS_SECRET_ACCESS_KEY
+  region_name: "${AWS_REGION_NAME}" #Secure Reigon name- Env: AWS_REGION_NAME
+  bucket_name: "${AWS_BUCKET_NAME}" #Track Bucket from data- Env: AWS_BUCKET_NAME

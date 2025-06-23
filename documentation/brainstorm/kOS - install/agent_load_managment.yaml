@@ -1,0 +1,8 @@
+# --- Agent Loader Settings ---
+agent_loader:
+  manifest_path: "${AGENT_MANIFEST_PATH}"  # Path to the plugin manifest file - Env: AGENT_MANIFEST_PATH
+  validate_schemas: "${AGENT_VALIDATE_SCHEMAS}"  # Enforce JSON schema validation - Env: AGENT_VALIDATE_SCHEMAS, 1/0
+
+# --- Agents and Services ---
+agents: "${AGENTS}"  # Comma-separated list of active agents - Env: AGENTS
+services: "${SERVICES}"  # Comma-separated list of active services - Env: SERVICES

@@ -16,6 +16,15 @@ agent_notes: "Use this framework for ALL architectural decisions - it ensures kO
 
 # Architectural Decision Framework
 
+## Agent Context
+**For AI Agents**: Complete architectural decision framework for making design decisions that align current implementation with kOS vision. Use this when making architectural decisions, planning feature implementations, understanding decision criteria, or ensuring alignment between current and future systems. Critical guide for all architectural decision-making work.
+
+**Implementation Notes**: Contains decision-making framework, evaluation criteria, alignment strategies, and practical guidance for bridging current Kai-CD implementation with future kOS architecture. Includes decision matrices and evaluation patterns.
+**Quality Requirements**: Keep decision framework and evaluation criteria synchronized with actual architectural evolution. Maintain accuracy of alignment strategies and decision-making processes.
+**Integration Points**: Foundation for all architectural decisions, links to bridge strategy, system architecture, and future evolution planning for comprehensive decision guidance.
+
+---
+
 > **Agent Context**: Essential decision-making framework for maintaining kOS compatibility  
 > **Implementation**: ✅ Complete framework ready for immediate use  
 > **Use When**: Making any architectural, design, or implementation decision

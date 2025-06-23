@@ -10,6 +10,13 @@ agent_notes: "AI agent guidance for implementing build and deployment"
 
 # 7. Build and Deployment
 
+## Agent Context
+**For AI Agents**: Complete build and deployment documentation covering build processes, deployment strategies, and production workflows. Use this when implementing build systems, understanding deployment procedures, planning production releases, or configuring build pipelines. Essential foundation for all build and deployment work.
+
+**Implementation Notes**: Contains build system configuration, deployment procedures, production workflow strategies, and release management processes. Includes detailed build pipeline and deployment automation patterns.
+**Quality Requirements**: Keep build and deployment documentation synchronized with actual build processes and deployment procedures. Maintain accuracy of build configurations and deployment workflows.
+**Integration Points**: Foundation for production deployment, links to development workflows, configuration management, and release strategies for comprehensive build and deployment coverage.
+
 This document explains the build process for Kai-CD and how to load it for development and testing.
 
 ## Technology Stack

@@ -1,0 +1,31 @@
+# ==============================================
+# kOS Default Presets
+# ==============================================
+# Used by deploy.sh and init_agents.py
+# Defines which tools/services are launched for each mode
+# ==============================================
+
+presets:
+  basic:
+    description: "Minimal system with essential agents and UI."
+    agents: [agent_init, agent_ui, agent_comms]
+    services: [openwebui]
+    gpu_required: false
+
+  dev:
+    description: "Development environment with code and test agents."
+    agents: [agent_init, agent_ui, agent_dev, agent_ops, agent_comms]
+    services: [ollama, jupyterlab, n8n]
+    gpu_required: true
+
+  creator:
+    description: "Creative workspace for content generation."
+    agents: [agent_init, agent_ui, agent_creator, agent_comms]
+    services: [a1111, comfyui, n8n]
+    gpu_required: true
+
+  pro:
+    description: "Full stack for advanced users with everything enabled."
+    agents: [agent_init, agent_ui, agent_dev, agent_creator, agent_ops, agent_comms]
+    services: [ollama, vllm, jupyterlab, a1111, comfyui, n8n, tailscale]
+    gpu_required: true

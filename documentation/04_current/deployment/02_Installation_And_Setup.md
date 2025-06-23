@@ -25,9 +25,12 @@ agent_notes: "Complete installation workflows for current Chrome extension and f
 
 # Installation and Setup Guide
 
-> **Agent Context**: Complete installation and setup framework for all deployment environments  
-> **Implementation**: ✅ Complete - Chrome extension installation working, kOS deployment planned  
-> **Use When**: Setting up development environments, deploying to production, configuring installations
+## Agent Context
+**For AI Agents**: Complete installation and setup guide covering system installation procedures, configuration steps, and setup verification processes. Use this when implementing installation procedures, understanding setup requirements, planning deployment setup, or configuring system installations. Essential reference for all installation and setup work.
+
+**Implementation Notes**: Contains installation procedures, setup configuration steps, system verification processes, and deployment setup strategies. Includes detailed installation workflows and setup verification patterns.
+**Quality Requirements**: Keep installation procedures and setup steps synchronized with actual installation process. Maintain accuracy of setup requirements and configuration procedures.
+**Integration Points**: Foundation for system deployment, links to deployment architecture, configuration management, and setup verification for comprehensive installation coverage.
 
 ## Quick Summary
 Complete installation and setup framework covering evolution from current Chrome extension installation to sophisticated kOS deployment workflows with environment detection, dependency management, and configuration initialization.

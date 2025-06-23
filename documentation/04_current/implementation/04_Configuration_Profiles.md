@@ -24,6 +24,15 @@ agent_notes: "Configuration profile system - essential for environment-specific 
 
 # Configuration Profiles and Deployment Strategies
 
+## Agent Context
+**For AI Agents**: Complete configuration profile system for environment-specific deployments covering current environment configs and evolution to future kOS deployment profiles. Use this when implementing environment-specific configurations, planning deployment strategies, understanding profile systems, or scaling configuration management. Essential for all deployment configuration work.
+
+**Implementation Notes**: Contains configuration profile patterns for different deployment environments, environment detection, profile switching, and deployment strategies. Includes working TypeScript configuration patterns and profile management systems.
+**Quality Requirements**: Keep configuration profiles and deployment strategies synchronized with actual implementation. Maintain accuracy of environment-specific configurations and profile switching mechanisms.
+**Integration Points**: Foundation for deployment configuration, links to configuration management, deployment architecture, and future distributed profile systems for comprehensive environment management.
+
+---
+
 > **Agent Context**: Complete configuration profile system from environment configs to deployment profiles  
 > **Implementation**: 🔄 Partial - Three-tier config working, profile system planned  
 > **Use When**: Configuring environments, planning deployments, managing configuration profiles

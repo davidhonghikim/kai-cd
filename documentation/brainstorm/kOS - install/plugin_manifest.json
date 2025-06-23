@@ -1,0 +1,34 @@
+{
+  "plugins": [
+    {
+      "name": "agent_creator",
+      "description": "Multimodal content generation agent for image, audio, text, video",
+      "entry": "agents/agent_creator.py",
+      "requires": ["a1111", "comfyui"]
+    },
+    {
+      "name": "agent_dev",
+      "description": "AI developer agent with git, test, and deploy support",
+      "entry": "agents/agent_dev.py",
+      "requires": ["ollama", "postgres"]
+    },
+    {
+      "name": "agent_comms",
+      "description": "Agent for handling comms across Telegram, Slack, Email",
+      "entry": "agents/agent_comms.py",
+      "requires": []
+    },
+    {
+      "name": "agent_ops",
+      "description": "Deploys and monitors dockerized or remote services",
+      "entry": "agents/agent_ops.py",
+      "requires": ["docker_api_proxy"]
+    },
+    {
+      "name": "agent_pipeline",
+      "description": "Ingestion + embedding pipeline for RAG2",
+      "entry": "agents/agent_pipeline.py",
+      "requires": ["chromadb", "weaviate"]
+    }
+  ]
+}

@@ -1,14 +1,28 @@
 ---
 title: "User Interface Guide"
-description: "Technical specification for user interface guide"
+description: "Comprehensive guide to Kai-CD's user interface including navigation, themes, and feature access"
 type: "user-guide"
 status: "current"
-priority: "medium"
-last_updated: "2025-06-22"
-agent_notes: "AI agent guidance for implementing user interface guide"
+priority: "high"
+last_updated: "2025-01-27"
+related_docs: [
+  "00_Getting_Started.md",
+  "02_Managing_Services.md",
+  "03_Security_Features.md"
+]
+agent_notes: "Complete UI navigation guide - covers all interface elements, features, and customization options"
 ---
 
-# 2. User Interface Guide
+# User Interface Guide
+
+## Agent Context
+**For AI Agents**: This guide provides comprehensive documentation of Kai-CD's user interface elements and navigation patterns. Use this when helping users understand interface features, customize themes, or navigate between different functionality areas.
+
+**Implementation Notes**: Covers main navigation, theme system, service management UI, security features, and advanced configuration options. All interface elements described here reflect current implementation.
+**Quality Requirements**: Keep all UI element descriptions current with actual interface. Include accurate navigation paths and feature descriptions.
+**Integration Points**: Links to getting started guide, service management, security features, and other user guides for complete workflow understanding.
+
+---
 
 ## Overview
 

@@ -1,0 +1,7 @@
+ # ---- 3D ----
+three_js:
+    enables: "${THREE_JS_ENABLE}" # to setup 1 or 0 - Env: THREE_JS_ENABLE
+
+ # ---- React
+react_js:
+    enabled: "${REACT_JS_ENABLE}" # to setup 1 or 0 - Env: REACT_JS_ENABLE

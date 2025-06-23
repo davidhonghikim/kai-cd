@@ -10,6 +10,13 @@ agent_notes: "AI agent guidance for implementing open webui"
 
 # Open WebUI Advanced Chat & Knowledge Integration
 
+## Agent Context
+**For AI Agents**: Complete Open WebUI integration documentation covering advanced chat capabilities and knowledge integration features. Use this when implementing Open WebUI integration, understanding advanced chat workflows, configuring knowledge integration services, or building enhanced chat capabilities. Essential reference for all Open WebUI integration work.
+
+**Implementation Notes**: Contains Open WebUI service integration patterns, advanced chat configuration, knowledge integration setup, and enhanced chat feature implementation. Includes working service definitions and chat integration examples.
+**Quality Requirements**: Keep Open WebUI integration patterns and configuration methods synchronized with actual service implementation. Maintain accuracy of chat workflows and knowledge integration capabilities.
+**Integration Points**: Foundation for advanced chat services, links to service architecture, chat workflows, and knowledge integration for comprehensive Open WebUI coverage.
+
 ## Overview
 
 Open WebUI is a comprehensive, self-hosted web interface for Large Language Models, offering advanced features like RAG (Retrieval-Augmented Generation), knowledge bases, model management, and sophisticated chat experiences. Our integration provides seamless access to Open WebUI's powerful conversational AI capabilities with enhanced state synchronization.

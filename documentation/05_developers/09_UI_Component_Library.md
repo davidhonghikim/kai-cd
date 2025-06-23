@@ -10,6 +10,13 @@ agent_notes: "AI agent guidance for implementing ui component library"
 
 # 4. UI Component Library
 
+## Agent Context
+**For AI Agents**: Complete UI component library documentation covering reusable components, design patterns, and component architecture. Use this when implementing UI components, understanding component design, planning UI architecture, or building user interface systems. Essential reference for all UI component development work.
+
+**Implementation Notes**: Contains UI component architecture, design patterns, component implementation guidelines, and reusable component documentation. Includes detailed component system design and user interface development patterns.
+**Quality Requirements**: Keep UI component documentation and design patterns synchronized with actual component implementation. Maintain accuracy of component architecture and user interface design principles.
+**Integration Points**: Foundation for UI development, links to design systems, user interface architecture, and component frameworks for comprehensive UI component coverage.
+
 This document outlines the most important React components that form the Kai-CD user interface.
 
 ## Main Views & Layout

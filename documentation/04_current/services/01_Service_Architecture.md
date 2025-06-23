@@ -21,6 +21,15 @@ agent_notes: "This is the proven pattern for service integration in Kai-CD - use
 
 # Service Architecture (Current Implementation)
 
+## Agent Context
+**For AI Agents**: Complete service architecture documentation covering current Kai-CD service connector system and evolution to future kOS service architecture. Use this when understanding service integration patterns, implementing service connectors, planning service architecture, or building service communication systems. Essential foundation for all service-related development work.
+
+**Implementation Notes**: Contains working service connector patterns, service definition schemas, API client integration, and service management systems. Includes production-ready service architecture used for 20+ service integrations.
+**Quality Requirements**: Keep service architecture patterns and integration methods synchronized with actual implementation. Maintain accuracy of service connector schemas and communication patterns.
+**Integration Points**: Foundation for all service integration, links to service registry, API client system, and future distributed service architecture for comprehensive service management.
+
+---
+
 > **Agent Context**: Complete service connector system - use this pattern for all service integrations  
 > **Implementation**: ✅ Complete - 20+ services working with this architecture  
 > **Use When**: Adding any new external service integration to Kai-CD

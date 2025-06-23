@@ -1,0 +1,40 @@
+# ==============================================
+# ~/.kos/config.yaml
+# User-Specific Configuration for Kind OS
+# ==============================================
+# This file overrides the system defaults.yaml config
+# You can define custom presets, paths, secrets, models, and preferences
+# ==============================================
+
+presets:
+  mycustom:
+    description: "Creator mode + dev tools + cloud sync"
+    agents:
+      - agent_creator
+      - agent_dev
+      - agent_comms
+      - agent_ui
+    services:
+      - a1111
+      - comfyui
+      - n8n
+      - tailscale
+      - ollama
+      - chromadb
+    gpu_required: true
+
+paths:
+  models_dir: "/mnt/storage/kos/models"
+  workflows_dir: "/mnt/storage/kos/workflows"
+  sync_dir: "/mnt/storage/kos/sync"
+
+secrets:
+  huggingface_token: "hf_xxx"
+  openai_key: "sk-xxx"
+  telegram_bot_token: "123456789:ABCdefGHijKLMnopQRstuVWxyZ"
+
+preferences:
+  default_browser: "firefox"
+  timezone: "America/New_York"
+  editor: "vscode"
+  terminal: "tmux"

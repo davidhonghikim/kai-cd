@@ -1,0 +1,79 @@
+# 📁 Kind OS Project Structure
+
+This document describes the folder and file layout of a full Kind OS (kOS) installation.
+
+---
+
+## 🧱 Core Directories
+
+```
+kOS/
+├── agents/                 # All agent source files (creator, dev, ops, etc)
+├── assets/                 # Logos, icons, media assets
+├── configs/                # Default configuration profiles
+├── datasets/               # Example PDFs, text, training inputs
+├── docs/                   # Markdown docs for users and devs
+├── models/                 # LLMs, embeddings, SD models, etc.
+├── plugins/                # Optional tools, agents, extensions
+├── services/               # Service stubs and Docker configs
+├── workflows/              # ComfyUI, n8n workflows
+├── user_data/              # Welcome notes, user projects
+```
+
+---
+
+## ⚙️ Core Executables
+
+| File                  | Purpose |
+|-----------------------|---------|
+| `kos_install.sh`      | System bootstrapper for Linux/macOS |
+| `deploy.sh`           | Launch stack and agents |
+| `bootstrap_data.sh`   | Downloads models, workflows, datasets |
+| `iso_builder.sh`      | Builds bootable ISO image with stack |
+| `init_agents.py`      | Loads agent profile + starts services |
+| `agent_loader.py`     | Loads/validates plugins from manifest |
+| `config_loader.py`    | Loads base + user config profiles |
+| `welcome_agent.py`    | Displays welcome message and tutorial |
+
+---
+
+## 📦 Config + Manifest Files
+
+| File                     | Description |
+|--------------------------|-------------|
+| `defaults.yaml`          | Base system profiles (basic, dev, creator) |
+| `~/.kos/config.yaml`     | User override config (optional) |
+| `plugin_manifest.json`   | Agent/extension registry with metadata |
+
+---
+
+## 🌐 Web Interface (planned)
+
+| Path                    | Notes |
+|-------------------------|-------|
+| `/ui_server.py`         | FastAPI backend with WS support |
+| `/web/`                 | React UI frontend shell |
+| `/tui.sh`               | Terminal UI entrypoint |
+
+---
+
+## 🧪 Tests and CI (upcoming)
+
+| Path             | Purpose |
+|------------------|---------|
+| `.github/workflows/` | Automated deployment/test pipelines |
+| `tests/`          | Test suite for core modules and agents |
+
+---
+
+## 🔐 Secrets and Tokens
+
+> Stored securely by agents using `.env`, `.secrets.yaml`, or vaults. Never stored in git.
+
+---
+
+For full customization, see `~/.kos/config.yaml`. To contribute, fork and clone the GitHub repo.
+
+Welcome to your new OS.
+
+— Team kOS 🕊️

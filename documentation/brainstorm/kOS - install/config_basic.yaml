@@ -1,0 +1,38 @@
+# ==============================================
+# kOS Basic Configuration
+# ==============================================
+# A useful basic KOS installation
+# ==============================================
+ui_server:
+  host: "0.0.0.0"
+  port: 30436
+  https:
+    enabled: "0"
+  cors_origins: "http://localhost,http://localhost:3000"
+  access_token_expire_minutes: 30
+authentication:
+  enabled: "1"
+  method: "jwt"
+  jwt:
+    secret_key: "change_this_secret_key"
+    algorithm: "HS256"
+agent_memory:
+  backend: "chroma"
+  chroma:
+    persist_directory: "data/chroma"
+agents:
+  - agent_example
+services:
+  - ollama
+  - postgres
+ollama:
+  enabled: "1"
+  host: "localhost"
+  port: 11434
+postgres:
+  enabled: "1"
+  host: "localhost"
+  port: 5432
+  user: "kos"
+  password: "secret"
+  db: "kosdb"

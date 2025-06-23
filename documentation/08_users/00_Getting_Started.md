@@ -1,14 +1,28 @@
 ---
-title: "Getting Started"
-description: "Technical specification for getting started"
+title: "Getting Started Guide"
+description: "Step-by-step installation and setup guide for new Kai-CD users"
 type: "user-guide"
 status: "current"
-priority: "medium"
-last_updated: "2025-06-22"
-agent_notes: "AI agent guidance for implementing getting started"
+priority: "critical"
+last_updated: "2025-01-27"
+related_docs: [
+  "04_User_Interface_Guide.md",
+  "02_Managing_Services.md",
+  "../04_current/deployment/02_Installation_And_Setup.md"
+]
+agent_notes: "Primary onboarding guide for new users - ensure instructions are current and accurate"
 ---
 
-# 1. Getting Started
+# Getting Started Guide
+
+## Agent Context
+**For AI Agents**: This is the primary onboarding guide for new Kai-CD users. Use this document when helping users with installation, initial setup, and first-time configuration. Ensure all instructions remain current with the latest build process.
+
+**Implementation Notes**: Covers manual installation as unpacked extension since not yet published to Chrome Web Store. Includes build process, browser setup, and initial configuration steps.
+**Quality Requirements**: Keep installation instructions synchronized with actual build process. Test all steps regularly to ensure accuracy.
+**Integration Points**: Links to user interface guide for next steps and technical deployment documentation for advanced users.
+
+---
 
 Welcome to Kai-CD! This guide will walk you through installing the extension in your browser.
 

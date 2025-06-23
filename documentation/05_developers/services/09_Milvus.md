@@ -10,6 +10,13 @@ agent_notes: "AI agent guidance for implementing milvus"
 
 # Milvus Cloud-Native Vector Database & Enterprise Analytics
 
+## Agent Context
+**For AI Agents**: Complete Milvus vector database integration documentation covering cloud-native vector storage and enterprise analytics capabilities. Use this when implementing Milvus integration, understanding vector database workflows, configuring enterprise analytics services, or building vector storage capabilities. Essential reference for all Milvus integration work.
+
+**Implementation Notes**: Contains Milvus service integration patterns, vector database configuration, enterprise analytics setup, and cloud-native deployment strategies. Includes working service definitions and vector storage examples.
+**Quality Requirements**: Keep Milvus integration patterns and configuration methods synchronized with actual service implementation. Maintain accuracy of vector database operations and enterprise analytics capabilities.
+**Integration Points**: Foundation for vector storage services, links to service architecture, vector database workflows, and enterprise analytics for comprehensive Milvus coverage.
+
 ## Overview
 
 Milvus is a cloud-native, open-source vector database built for scalable similarity search and AI applications. Designed for massive-scale deployments, Milvus provides enterprise-grade vector operations, cloud-native architecture, advanced analytics, and comprehensive management capabilities for production AI systems.

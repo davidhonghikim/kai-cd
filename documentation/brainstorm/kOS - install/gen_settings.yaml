@@ -1,0 +1,5 @@
+# --- General Settings ---
+profile: "${KOS_PROFILE}"  # Default profile (basic, dev, creator) - Env: KOS_PROFILE
+agent_directory: "${AGENT_DIRECTORY}"  # Agent module directory - Env: AGENT_DIRECTORY
+log_level: "${LOG_LEVEL}"  # Logging level (DEBUG, INFO, WARNING, ERROR...) - Env: LOG_LEVEL
+timezone: "${TIMEZONE}" #Timezone, please use valid ones in system - Env: TIMEZONE

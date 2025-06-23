@@ -10,6 +10,13 @@ agent_notes: "AI agent guidance for implementing llama cpp"
 
 # Llama.cpp Efficient Local Inference & Cross-Platform Optimization
 
+## Agent Context
+**For AI Agents**: Complete Llama.cpp integration documentation covering efficient local inference and cross-platform optimization strategies. Use this when implementing Llama.cpp integration, understanding local inference workflows, configuring efficient inference services, or building optimized local AI capabilities. Essential reference for all Llama.cpp integration work.
+
+**Implementation Notes**: Contains Llama.cpp service integration patterns, local inference optimization, cross-platform configuration, and performance tuning strategies. Includes working service definitions and optimization examples.
+**Quality Requirements**: Keep Llama.cpp integration patterns and optimization methods synchronized with actual service implementation. Maintain accuracy of inference optimization and cross-platform configuration mechanisms.
+**Integration Points**: Foundation for local inference services, links to service architecture, inference optimization, and local AI capabilities for comprehensive Llama.cpp coverage.
+
 ## Overview
 
 Llama.cpp is a highly optimized C++ implementation for efficient local inference of Large Language Models, designed for maximum performance on consumer hardware. It provides advanced quantization techniques, cross-platform optimization, and memory-efficient inference capabilities, making it the premier choice for local LLM deployment on diverse hardware configurations.

@@ -1,0 +1,100 @@
+# 🚀 Welcome to kOS (Kind OS)
+
+**kOS** is a fully modular, intelligent agent-powered OS that works on any machine—USB, VM, cloud, or your own laptop. It’s designed to make AI accessible, automatic, and ridiculously useful.
+
+This guide will help you:
+- Install and run kOS
+- Understand its modes and interfaces
+- Launch your first agent
+
+---
+
+## 🔧 What You Need
+
+| Requirement | Recommended |
+|-------------|-------------|
+| System | Linux, macOS, Windows (WSL2), Cloud VM |
+| RAM | 8GB minimum (16GB+ for LLMs) |
+| Storage | 32GB+ for tools, models, and logs |
+| GPU (optional) | NVIDIA for Ollama/vLLM, or CPU-only mode |
+
+---
+
+## 🛠️ How to Install
+
+### Option 1: USB Boot (Recommended)
+1. Download the latest `kOS.iso`
+2. Flash with [Ventoy](https://www.ventoy.net) or Etcher
+3. Boot from USB and select `kOS`
+
+### Option 2: Docker
+```bash
+git clone https://github.com/kind-os/kOS.git
+cd kOS
+./deploy.sh --docker
+```
+
+### Option 3: Native Install
+```bash
+curl -s https://kindos.dev/install.sh | bash
+```
+
+---
+
+## 🧠 Operating Modes
+
+| Mode | Description |
+|------|-------------|
+| **Auto** | Full system detection and default agent install |
+| **Interactive** | Choose your stack, services, and agents step-by-step |
+| **Offline** | Run everything from USB/SSD with no internet needed |
+| **Expert** | Enable custom YAMLs, fine-tuning, agent extensions |
+
+---
+
+## 🖥️ Interfaces
+
+| Interface | How to Access |
+|----------|----------------|
+| **Web** | Open http://localhost:3000 or assigned IP from LAN |
+| **CLI** | `kosctl` or navigate with `tui.sh` for terminal UI |
+| **Mobile** | Open mobile view in browser or install PWA from dashboard |
+| **API** | Use the `/api` endpoint or `remote_api.yaml` spec |
+
+---
+
+## 🤖 First Steps After Install
+
+```bash
+# Start default agent set
+./init_agents.py
+
+# Access web UI
+firefox http://localhost:3000 &
+
+# Or CLI
+./tui.sh
+```
+
+Then just talk to your agents. They’ll write code, design sites, automate your business, or generate content for you. You’re in control.
+
+---
+
+## 🔄 Want to Customize?
+
+Check out:
+- `/configs/defaults.yaml` to change your stack
+- `/agents/` to see what agents are available
+- `/services/` to toggle integrations like ComfyUI, Ollama, etc.
+
+---
+
+## 🧭 Need Help?
+
+- Open the built-in `?` help menu
+- Visit [docs.kosmos.dev](http://docs.kosmos.dev)
+- Or just ask your `agent_comms` to guide you!
+
+---
+
+Welcome to a more human future. Welcome to **kOS**.

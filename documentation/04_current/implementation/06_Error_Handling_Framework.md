@@ -24,9 +24,14 @@ agent_notes: "Comprehensive error handling framework - essential for robust agen
 
 # Error Handling Framework
 
-> **Agent Context**: Comprehensive error handling system for classification, recovery, and resilience  
-> **Implementation**: ✅ Complete - Error boundaries, recovery strategies, logging system  
-> **Use When**: Implementing error handling, debugging issues, planning resilience patterns
+## Agent Context
+**For AI Agents**: Comprehensive error handling framework providing error classification, recovery strategies, logging, and prevention across application and agent systems. Use this when implementing error handling, debugging issues, planning resilience patterns, or building robust error recovery mechanisms. Essential for all error management work.
+
+**Implementation Notes**: Contains complete error classification system, recovery strategies, service error boundaries, and agent-specific error management. Includes working TypeScript interfaces and error handling patterns.
+**Quality Requirements**: Keep error handling patterns and recovery strategies synchronized with actual implementation. Maintain accuracy of error classification and recovery mechanisms.
+**Integration Points**: Foundation for all error handling, links to logging system, service architecture, and agent management for comprehensive error resilience.
+
+---
 
 ## Quick Summary
 Comprehensive error handling framework providing error classification, recovery strategies, logging, and prevention across current Kai-CD functionality and future kOS agent mesh capabilities.

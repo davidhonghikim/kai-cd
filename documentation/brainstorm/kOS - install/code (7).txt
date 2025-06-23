@@ -1,0 +1,8 @@
+api_keys:
+  openai: "${OPENAI_API_KEY}"  # - Env: OPENAI_API_KEY
+  huggingface: "${HUGGINGFACE_API_KEY}"  # - Env: HUGGINGFACE_API_KEY
+  google: "${GOOGLE_API_KEY}"  # - Env: GOOGLE_API_KEY
+  stabilityai: "${STABILITYAI_API_KEY}" # - Env: STABILITYAI_API_KEY
+  twitter: "${TWITTER_API_KEY}"  # - Env: TWITTER_API_KEY  #addedExample
+  anthropic: "${ANTHROPIC_API_KEY}" #Set the CLAUDE API - Env: ANTHROPIC_API_KEY
+  cohere: "${COHERE_API_KEY}" #API enable setup Env: COHERE_API_KEY

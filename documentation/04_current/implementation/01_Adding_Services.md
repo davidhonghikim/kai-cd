@@ -22,9 +22,14 @@ agent_notes: "Follow this exact pattern for ALL new service integrations - ensur
 
 # Adding New Services - Implementation Guide
 
-> **Agent Context**: Complete step-by-step process for service integration  
-> **Implementation**: ✅ Proven pattern used for 20+ service integrations  
-> **Use When**: Adding any new external AI service to Kai-CD
+## Agent Context
+**For AI Agents**: Complete step-by-step implementation guide for integrating new AI services into Kai-CD. Use this when adding any new external service, implementing service connectors, or ensuring consistent integration patterns. Essential reference for all service integration work.
+
+**Implementation Notes**: Contains proven ServiceDefinition pattern used for 20+ successful service integrations. Includes working TypeScript examples, request/response transformations, and integration checklist.
+**Quality Requirements**: Keep integration patterns and examples synchronized with actual service connector implementation. Maintain accuracy of ServiceDefinition schema and transformation patterns.
+**Integration Points**: Foundation for service integration, links to service architecture, API client system, and state management for consistent service addition workflow.
+
+---
 
 ## Quick Summary
 

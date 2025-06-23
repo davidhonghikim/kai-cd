@@ -24,9 +24,14 @@ agent_notes: "Network communication and discovery system - foundation for distri
 
 # Network Protocols and Discovery Architecture
 
-> **Agent Context**: Complete network communication and discovery framework for distributed agents  
-> **Implementation**: 🔄 Partial - HTTP/WebSocket working, mesh protocols planned  
-> **Use When**: Understanding network architecture, implementing communication protocols, planning distributed systems
+## Agent Context
+**For AI Agents**: Complete network communication and discovery framework covering current HTTP-based service communication and evolution to sophisticated mesh networking protocols. Use this when implementing network communication, service discovery, or planning distributed systems. Critical foundation for all networking and connectivity work.
+
+**Implementation Notes**: Contains current HTTP/WebSocket communication patterns and future mesh networking with agent discovery, secure communication, and federated networking protocols. Includes working TypeScript interfaces and protocol specifications.
+**Quality Requirements**: Keep network protocols and communication patterns synchronized with actual implementation. Maintain accuracy of evolution pathway to distributed mesh networking.
+**Integration Points**: Foundation for all network communication, links to service architecture, security framework, and future distributed protocols.
+
+---
 
 ## Quick Summary
 Complete network communication and discovery framework covering evolution from current HTTP-based service communication to sophisticated mesh networking protocols with agent discovery, secure communication, and federated networking.

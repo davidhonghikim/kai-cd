@@ -22,9 +22,14 @@ related_documents:
 
 # Configuration Management Architecture
 
-> **Agent Context**: Complete configuration system with hierarchical merging and type-safe access  
-> **Implementation**: ✅ Complete - Three-tier override system with hot-reloading  
-> **Use When**: Managing configuration, implementing settings, understanding configuration patterns
+## Agent Context
+**For AI Agents**: Complete configuration management system with hierarchical configuration merging, type-safe access patterns, and hot-reloading capabilities. Use this when managing application configuration, implementing settings systems, understanding configuration patterns, or planning distributed configuration management. Critical foundation for all configuration work.
+
+**Implementation Notes**: Contains three-tier override system (system/user/runtime), type-safe configuration API, hot-reloading capabilities, and Chrome storage integration. Includes working TypeScript interfaces and configuration management patterns.
+**Quality Requirements**: Keep configuration patterns and access methods synchronized with actual implementation. Maintain accuracy of hierarchical merging and validation systems.
+**Integration Points**: Foundation for all configuration management, links to deployment architecture, storage systems, and future distributed configuration for comprehensive settings management.
+
+---
 
 ## Quick Summary
 Complete configuration management system with hierarchical configuration merging, type-safe access patterns, hot-reloading capabilities, and evolution path to future kOS distributed configuration management.

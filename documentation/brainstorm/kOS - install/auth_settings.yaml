@@ -1,0 +1,79 @@
+# --- Authentication Settings ---
+authentication:
+  enabled: "${AUTH_ENABLED}"  # 1/0 or true/false - Env: AUTH_ENABLED
+  method: "${AUTH_METHOD}" # jwt, ldap, oauth2, openid, api_key - Env: AUTH_METHOD
+  api_key:
+    header_name: "${API_KEY_HEADER_NAME}" # The Header set to use Key - Env: API_KEY_HEADER_NAME
+    valid_keys: "${API_KEY_VALID_KEYS}" #Add keys to secure - Env: API_KEY_VALID_KEYS
+  jwt:
+    secret_key: "${JWT_SECRET_KEY}" #  - Env: JWT_SECRET_KEY
+    algorithm: "${JWT_ALGORITHM}" # e.g., HS256, RS256 - Env: JWT_ALGORITHM
+    access_token_lifetime_minutes: "${JWT_ACCESS_TOKEN_LIFETIME_MINUTES}"  # - Env: JWT_ACCESS_TOKEN_LIFETIME_MINUTES
+    refresh_token_lifetime_days: "${JWT_REFRESH_TOKEN_LIFETIME_DAYS}" #Set for refresh.
+  ldap:
+    server: "${LDAP_SERVER}"  # LDAP server address - Env: LDAP_SERVER
+    base_dn: "${LDAP_BASE_DN}" # Base DN for searches - Env: LDAP_BASE_DN
+    bind_dn: "${LDAP_BIND_DN}" #  - Env: LDAP_BIND_DN
+    bind_password: "${LDAP_BIND_PASSWORD}" #Set Secure Key - Env: LDAP_BIND_PASSWORD
+    start_tls: "${LDAP_START_TLS}"  # T or F 1 or 0 to enable- Env: LDAP_START_TLS
+  oauth2:
+    client_id: "${OAUTH2_CLIENT_ID}" # The ClientID - Env: OAUTH2_CLIENT_ID
+    client_secret: "${OAUTH2_CLIENT_SECRET}" #the password set - Env: OAUTH2_CLIENT_SECRET
+    scopes: "${OAUTH2_SCOPES}"  # Comma-separated list - Env: OAUTH2_SCOPES
+    callback_url: "${OAUTH2_CALLBACK_URL}" # - Env: OAUTH2_CALLBACK_URL
+    auth_url: "${OAUTH2_AUTH_URL}" # the Login Route - Env: OAUTH2_AUTH_URL
+    token_url: "${OAUTH2_TOKEN_URL}" #What does the token do - Env: OAUTH2_TOKEN_URL
+  openid:
+    discovery_url: "${OPENID_DISCOVERY_URL}"  # - Env: OPENID_DISCOVERY_URL
+    client_id: "${OPENID_CLIENT_ID}" #The clientid to use- Env: OPENID_CLIENT_ID
+    client_secret: "${OPENID_CLIENT_SECRET}"#Secure Key to use- Env: OPENID_CLIENT_SECRET
+    scopes: "${OPENID_SCOPES}"  # A List - Env: OPENID_SCOPES
+
+#---- Session Management ----
+session:
+ enabled: "${SESSION_ENABLED}" #To track 1 or 0 T or F - Env: SESSION_ENABLED
+ backend: "${SESSION_BACKEND}" #What to use for tracking the Sessions - Env: SESSION_BACKEND
+ cookie_name: "${SESSION_COOKIE_NAME}"  #To set the code that stores cookies- Env: SESSION_COOKIE_NAME
+ cookie_domain: "${SESSION_COOKIE_DOMAIN}"#Set cookie DOMAIN - Env: SESSION_COOKIE_DOMAIN
+ cookie_lifetime_seconds: "${SESSION_COOKIE_LIFETIME_SECONDS}"  # How long do people live - Env: SESSION_COOKIE_LIFETIME_SECONDS
+ cookie_secure: "${SESSION_COOKIE_SECURE}" #To use what is needed - Env: SESSION_COOKIE_SECURE #Secure cookie 1 or 0
+ cookie_httponly: "${SESSION_COOKIE_HTTPONLY}"  # Set the API used   - Env: SESSION_COOKIE_HTTPONLY
+ redis:
+  host: "${REDIS_HOST}" # If used Reddis, this is where to get access - Env: REDIS_HOST
+  port: "${REDIS_PORT}"  # Get the access from numbers - Env: REDIS_PORT
+ memcached:
+  host: "${MEMCACHED_HOST}"# What settings is on - Env: MEMCACHED_HOST
+  port: "${MEMCACHED_PORT}"# Number Set up Port- Env: MEMCACHED_PORT
+
+# IV. Agent Memory
+```yaml
+# --- Agent Memory Settings ---
+agent_memory:
+  backend: "${MEMORY_BACKEND}"  # chroma, weaviate, postgres, faiss, lancedb, qdrant - Env: MEMORY_BACKEND
+  chroma:
+    persist_directory: "${CHROMA_PERSIST_DIRECTORY}"  #  - Env: CHROMA_PERSIST_DIRECTORY
+    embedding_function: "${CHROMA_EMBEDDING_FUNCTION}"  # Embeddings To Use - Env: CHROMA_EMBEDDING_FUNCTION
+  weaviate:
+    url: "${WEAVIATE_URL}"  # - Env: WEAVIATE_URL
+    api_key: "${WEAVIATE_API_KEY}"  # - Env: WEAVIATE_API_KEY
+    class_prefix: "${WEAVIATE_CLASS_PREFIX}"  # - Env: WEAVIATE_CLASS_PREFIX
+    default_vectorizer: "${WEAVIATE_DEFAULT_VECTORIZER}"#To setup - Env: WEAVIATE_DEFAULT_VECTORIZER #Use something like text2vec-openai
+  postgres:
+    db_name: "${POSTGRES_DB}" # - Env: POSTGRES_DB
+    user: "${POSTGRES_USER}" # - Env: POSTGRES_USER
+    password: "${POSTGRES_PASSWORD}" # - Env: POSTGRES_PASSWORD
+    host: "${POSTGRES_HOST}" # - Env: POSTGRES_HOST
+    port: "${POSTGRES_PORT}" # - Env: POSTGRES_PORT
+    ssl_enabled: "${POSTGRES_SSL_ENABLED}" # - Env: POSTGRES_SSL_ENABLED
+    ssl_ca_file: "${POSTGRES_SSL_CA_FILE}"  # - Env: POSTGRES_SSL_CA_FILE
+  faiss:
+    index_path: "${FAISS_INDEX_PATH}" #Set up - Env: FAISS_INDEX_PATH
+    metric: "${FAISS_METRIC}" # Set metric, IP, L2 - Env: FAISS_METRIC
+  lancedb:
+   uri:  "${LANCEDB_URI}" # For lance DB, a new system - Env: LANCEDB_URI
+   table_name: "${LANCEDB_TABLE_NAME}"# To set up name - Env: LANCEDB_TABLE_NAME
+  qdrant:
+   host: "${QDRANT_HOST}"# a system Qdrant - Env: QDRANT_HOST
+   port: "${QDRANT_PORT}" # A point in Qdrant - Env: QDRANT_PORT
+   api_key: "${QDRANT_API_KEY}"  # Secure APi  - Env: QDRANT_API_KEY
+   collection_name: "${QDRANT_COLLECTION_NAME}" #Collection Name - Env: QDRANT_COLLECTION_NAME

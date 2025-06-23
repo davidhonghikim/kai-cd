@@ -1,0 +1,24 @@
+# --- UI Server Settings ---
+ui_server:
+  host: "${UI_SERVER_HOST}" # IP address to bind to - Env: UI_SERVER_HOST
+  port: "${UI_SERVER_PORT}" # Port for the UI - Env: UI_SERVER_PORT
+  https:
+    enabled: "${UI_SERVER_HTTPS_ENABLED}" # 1/0 or true/false - Env: UI_SERVER_HTTPS_ENABLED
+    certificate: "${UI_SERVER_HTTPS_CERTIFICATE}"  # Path to SSL certificate - Env: UI_SERVER_HTTPS_CERTIFICATE
+    private_key: "${UI_SERVER_HTTPS_PRIVATE_KEY}" # Path to SSL private key - Env: UI_SERVER_HTTPS_PRIVATE_KEY
+    force_https: "${UI_SERVER_HTTPS_FORCE}" #To use only Https - Env: UI_SERVER_HTTPS_FORCE #enable With SSL
+  cors_origins: "${CORS_ORIGINS}"  # Comma-separated list - Env: CORS_ORIGINS
+  access_token_expire_minutes: "${ACCESS_TOKEN_EXPIRE_MINUTES}" # JWT Expiry - Env: ACCESS_TOKEN_EXPIRE_MINUTES
+  refresh_token_expire_days: "${REFRESH_TOKEN_EXPIRE_DAYS}" # refresh expire - Env: REFRESH_TOKEN_EXPIRE_DAYS
+  rate_limit: "${UI_SERVER_RATE_LIMIT}" # e.g., "60/minute" - Env: UI_SERVER_RATE_LIMIT
+  base_url: "${UI_SERVER_BASE_URL}" #Base URL - Env: UI_SERVER_BASE_URL
+
+  #--- WebSockets Settings ---
+  websocket_ping_interval: "${UI_SERVER_WEBSOCKET_PING_INTERVAL}" #To use Pings- Env: UI_SERVER_WEBSOCKET_PING_INTERVAL
+  websocket_ping_timeout: "${UI_SERVER_WEBSOCKET_PING_TIMEOUT}" #The timeout setup - Env: UI_SERVER_WEBSOCKET_PING_TIMEOUT
+  websocket_max_message_size: "${UI_SERVER_WEBSOCKET_MAX_MESSAGE_SIZE}" # Maximum Limit - Env: UI_SERVER_WEBSOCKET_MAX_MESSAGE_SIZE
+  enable_gzip: "${UI_SERVER_ENABLE_GZIP}" #To Use Gzip - Env: UI_SERVER_ENABLE_GZIP
+
+  # --- Static File Serving (If Used) ---
+  static_files_path: "${UI_SERVER_STATIC_FILES_PATH}" # the Path To use  - Env: UI_SERVER_STATIC_FILES_PATH
+  static_files_url: "${UI_SERVER_STATIC_FILES_URL}"  # What URL path will be visible - Env: UI_SERVER_STATIC_FILES_URL

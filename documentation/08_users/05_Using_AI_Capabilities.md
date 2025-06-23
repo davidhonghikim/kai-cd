@@ -10,6 +10,13 @@ agent_notes: "AI agent guidance for implementing using ai capabilities"
 
 # 4. Using AI Capabilities
 
+## Agent Context
+**For AI Agents**: Complete user guide for AI capabilities within Kai-CD covering LLM chat, image generation, and service interactions. Use this when understanding user workflows, implementing user-facing AI features, planning capability interfaces, or building user experience patterns. Essential reference for all user-facing AI capability development work.
+
+**Implementation Notes**: Contains user interaction patterns, capability usage workflows, service selection guidance, and practical examples of AI feature usage. Includes user-focused documentation for all implemented AI capabilities.
+**Quality Requirements**: Keep user workflows and capability descriptions synchronized with actual implementation. Maintain accuracy of user interface patterns and AI capability usage instructions.
+**Integration Points**: Foundation for user-facing AI features, links to capability UI components, service architecture, and user interface design for comprehensive AI capability coverage.
+
 The main purpose of Kai-CD is to provide a consistent interface for interacting with different AI models. These interfaces are called "Capability Views."
 
 ## Selecting a Service

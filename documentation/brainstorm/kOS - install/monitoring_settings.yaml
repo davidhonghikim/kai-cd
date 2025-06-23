@@ -1,0 +1,29 @@
+# --- Monitoring ---
+
+# ---- Prometheus ----
+prometheus:
+  enabled: "${PROMETHEUS_ENABLED}" #enable 1 or 0 - Env: PROMETHEUS_ENABLED
+  host: "${PROMETHEUS_HOST}" #Set up the Host to monitor  - Env: PROMETHEUS_HOST
+  port: "${PROMETHEUS_PORT}"  #set up port to report - Env: PROMETHEUS_PORT
+  scrape_interval: "${PROMETHEUS_SCRAPE_INTERVAL}" #Set the Scrap time - Env: PROMETHEUS_SCRAPE_INTERVAL
+  pushgateway_url: "${PROMETHEUS_PUSHGATEWAY_URL}" #Set an Access for scrapes - Env: PROMETHEUS_PUSHGATEWAY_URL
+  alertmanager_url: "${PROMETHEUS_ALERTMANAGER_URL}" #Setup access point - Env: PROMETHEUS_ALERTMANAGER_URL
+
+# ---- Grafana ----
+grafana:
+  enabled: "${GRAFANA_ENABLED}" # enable to setup 1 or 0 - Env: GRAFANA_ENABLED
+  host: "${GRAFANA_HOST}" #set a location - Env: GRAFANA_HOST
+  port: "${GRAFANA_PORT}"  #Setup local port- Env: GRAFANA_PORT
+  admin_user: "${GRAFANA_ADMIN_USER}" #For setting Users, if Enabled - Env: GRAFANA_ADMIN_USER
+  admin_password: "${GRAFANA_ADMIN_PASSWORD}"#set secure area - Env: GRAFANA_ADMIN_PASSWORD
+  dashboard_provider_url: "${GRAFANA_DASHBOARD_PROVIDER_URL}" #URL DASH - Env: GRAFANA_DASHBOARD_PROVIDER_URL
+
+#----- ELK -----
+elk:
+  enabled: "${ELK_ENABLED}" #Enable 1 or 0 T or F  - Env: ELK_ENABLED
+  elasticsearch_host: "${ELK_ELASTICSEARCH_HOST}" #The host For ELK- Env: ELK_ELASTICSEARCH_HOST
+  elasticsearch_port: "${ELK_ELASTICSEARCH_PORT}" #Port to set - Env: ELK_ELASTICSEARCH_PORT
+  kibana_host: "${ELK_KIBANA_HOST}"  #Set base - Env: ELK_KIBANA_HOST
+  kibana_port: "${ELK_KIBANA_PORT}" #Access from any location - Env: ELK_KIBANA_PORT
+  logstash_host: "${ELK_LOGSTASH_HOST}"#Where The Logs Is - Env: ELK_LOGSTASH_HOST
+  logstash_port: "${ELK_LOGSTASH_PORT}" #Set where will be ported through  - Env: ELK_LOGSTASH_PORT

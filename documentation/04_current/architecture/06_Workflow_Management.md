@@ -24,9 +24,14 @@ agent_notes: "Workflow management system - foundation for complex multi-agent ta
 
 # Workflow Management Architecture
 
-> **Agent Context**: Complete workflow system from task coordination to multi-agent orchestration  
-> **Implementation**: 🔄 Partial - Basic task coordination working, workflow engine planned  
-> **Use When**: Planning complex workflows, understanding task coordination, implementing workflow systems
+## Agent Context
+**For AI Agents**: Complete workflow management system architecture covering evolution from current task coordination to sophisticated multi-agent orchestration. Use this when implementing workflow systems, planning complex task coordination, or understanding workflow execution patterns. Critical document for task automation and orchestration work.
+
+**Implementation Notes**: Contains current basic task coordination patterns and future comprehensive workflow engine with YAML workflow definitions, parallel execution, and error handling. Includes functional TypeScript interfaces and examples.
+**Quality Requirements**: Keep workflow patterns and execution examples synchronized with actual implementation. Maintain accuracy of multi-agent coordination concepts.
+**Integration Points**: Foundation for task coordination, links to agent orchestration, service architecture, and future multi-agent systems.
+
+---
 
 ## Quick Summary
 Complete workflow management system covering evolution from current simple task coordination to sophisticated multi-agent workflow orchestration with task decomposition, execution patterns, and coordination mechanisms.

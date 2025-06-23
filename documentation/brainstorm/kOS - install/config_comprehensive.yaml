@@ -1,0 +1,169 @@
+# --- Ollama Settings with Access --------
+ollama:
+  enabled: "${OLLAMA_ENABLED}"  # enable the use from 1 to 0 setup - Env: OLLAMA_ENABLED #Boolen Access is Authenticated
+  host: "${OLLAMA_HOST}"  # Track host - Env: OLLAMA_HOST #String
+  port: "${OLLAMA_PORT}"  # the Setup Port For Authentication what access code  - Env: OLLAMA_PORT #String
+  models_path: "${OLLAMA_MODELS_PATH}"  # Path To models and use with what code from  - Env: OLLAMA_MODELS_PATH #String
+  gpu_layers: "${OLLAMA_GPU_LAYERS}"  # Tracking what GPU Access use.  - Env: OLLAMA_GPU_LAYERS #Track numbers for code
+  model: "${OLLAMA_DEFAULT_MODEL}"  # track use code Authenticate  and setup  to track what defaults model use  - Env: OLLAMA_DEFAULT_MODEL #Use as String
+  context_window: "${OLLAMA_CONTEXT_WINDOW}" #Tracked access codesetup to see what code  - Env: OLLAMA_CONTEXT_WINDOW #IntNumber What to track
+  temperature: "${OLLAMA_TEMPERATURE}"  #Set Code for Model Authentication access enable by numbers  - Env: OLLAMA_TEMPERATURE #Float setup for function.
+
+#---- vLLM Access set ---------#
+vllm:
+  enabled: "${VLLM_ENABLED}" # For track code Active enable code access to function - Env: VLLM_ENABLED #Boolean Set the Auth
+  host: "${VLLM_HOST}" # The Auth enable access tracked where- Env: VLLM_HOST # String
+  port: "${VLLM_PORT}" #Set What Track code access this Port  - Env: VLLM_PORT #Interger
+  model: "${VLLM_MODEL}"  # Setup access track code Model- Env: VLLM_MODEL
+  download_dir: "${VLLM_DOWNLOAD_DIR}"  #Track Authenticated Code to download from setup   - Env: VLLM_DOWNLOAD_DIR
+  tokenizer: "${VLLM_TOKENIZER}"  # Authenticating code that is Access setup - Env: VLLM_TOKENIZER
+  gpu_memory_utilization: "${VLLM_GPU_MEMORY_UTILIZATION}" #To use setup GPU track point  with function number  - Env: VLLM_GPU_MEMORY_UTILIZATION
+  max_num_seqs: "${VLLM_MAX_NUM_SEQS}"  #Track Authenticated enable  with code key for number point access set  - Env: VLLM_MAX_NUM_SEQS
+  max_model_len: "${VLLM_MAX_MODEL_LEN}" # Enable Number Code set for auth - Env: VLLM_MAX_MODEL_LEN
+
+# --- Hugging Face Inference setup what Authentication Access----------
+huggingface_api:
+  enabled: "${HUGGINGFACE_API_ENABLED}"  # The Use Enable Tracking function has to be Authenticated  - Env: HUGGINGFACE_API_ENABLED # Bool
+  api_key: "${HUGGINGFACE_API_KEY}"  # Authenticating API setup used track access code. - Env: HUGGINGFACE_API_KEY #Track and Used Key To authenticate function access
+  default_model: "${HUGGINGFACE_DEFAULT_MODEL}"  # Enable and Set Authentication Track code enable model setup - Env: HUGGINGFACE_DEFAULT_MODEL #To point access
+  task: "${HUGGINGFACE_TASK}"  # set What  track Code To Used access and what will be used - Env: HUGGINGFACE_TASK # String authentication of Code Function
+  device: "${HUGGINGFACE_DEVICE}"  # To access and Code what access will authenticate by code - Env: HUGGINGFACE_DEVICE #What access code will use.
+
+# --- OpenAI API with what authenticate Access ------
+openai_api:
+  enabled: "${OPENAI_API_ENABLED}" #To use and access is set the Authenticate Enable- Env: OPENAI_API_ENABLED #Setup Bool 0, 1 For Use
+  api_key: "${OPENAI_API_KEY}"  # Authentication  Secure code get access authentication code- Env: OPENAI_API_KEY # To set API track function access.
+  default_model: "${OPENAI_DEFAULT_MODEL}"  #Authenticate Code Used and Track Model Code - Env: OPENAI_DEFAULT_MODEL #Code Model the Use for code
+  organization: "${OPENAI_ORGANIZATION}"  #Point Authenticated and get Access Code from Org use - Env: OPENAI_ORGANIZATION #Access to Point Origanization
+  max_tokens: "${OPENAI_MAX_TOKENS}"  # Code,Authenticate Set points and how much Use with code. - Env: OPENAI_MAX_TOKENS # Authentication Points access and Authentication range
+  temperature: "${OPENAI_TEMPERATURE}"  # To Track the Temp points and set this by Authentication setup  - Env: OPENAI_TEMPERATURE # The setup Numbers.
+
+# --- Google Cloud AI the setup  Use----------
+google_cloud_ai:
+  enabled: "${GOOGLE_CLOUD_AI_ENABLED}" # With the points to be Enable and Used - Env: GOOGLE_CLOUD_AI_ENABLED #Bol Access Code 1/0 to use
+  project_id: "${GOOGLE_CLOUD_PROJECT_ID}" # Access authenticated and use what projects get - Env: GOOGLE_CLOUD_PROJECT_ID # For Access Code set
+  location: "${GOOGLE_CLOUD_LOCATION}"  # To code What location access and use Function track - Env: GOOGLE_CLOUD_LOCATION #Set location code Authentication
+  api_key: "${GOOGLE_CLOUD_API_KEY}"  #Code what will Track Access with Authentication Key - Env: GOOGLE_CLOUD_API_KEY #Use with code Authentication Secure
+  model_name: "${GOOGLE_CLOUD_MODEL_NAME}" # Track and What Authentication base key access, Setup Name here- Env: GOOGLE_CLOUD_MODEL_NAME # Track and View What codes Authentication Model function
+  max_output_tokens: "${GOOGLE_CLOUD_MAX_OUTPUT_TOKENS}"  # To track key Authentication Length of what point access - Env: GOOGLE_CLOUD_MAX_OUTPUT_TOKENS # Use Number points To Track with setup range code for this access what Track and authentication.
+
+# --- Anthropic Claude ----- What Secure Key is authentication and used-------
+anthropic_api:
+  enabled: "${ANTHROPIC_API_ENABLED}"  #Setup is with Function - Env: ANTHROPIC_API_ENABLED #Bool For track
+  api_key: "${ANTHROPIC_API_KEY}"  # Enable Key points Function Secure- Env: ANTHROPIC_API_KEY #String Key
+  default_model: "${ANTHROPIC_DEFAULT_MODEL}"  # Function authentication, access Set - Env: ANTHROPIC_DEFAULT_MODEL #Setup what to run
+  max_tokens_to_sample: "${ANTHROPIC_MAX_TOKENS_TO_SAMPLE}"  # Setup Authenticate and Track setup - Env: ANTHROPIC_MAX_TOKENS_TO_SAMPLE #Integer
+
+#---- Cohere API Setup code function --------#
+cohere_api:
+  enabled: "${COHERE_API_ENABLED}" # Use With key - Env: COHERE_API_ENABLED # Code use authentication for Function what is the call and points setup
+  api_key: "${COHERE_API_KEY}"  # Authentication Key with Code  Setup setup- Env: COHERE_API_KEY #Key the points
+  default_model: "${COHERE_DEFAULT_MODEL}" #To Run Setup What access Point code access - Env: COHERE_DEFAULT_MODEL #What use the Code
+  max_tokens: "${COHERE_MAX_TOKENS}"  # Code Point Authenticate Setup what track limit Access has Function has  - Env: COHERE_MAX_TOKENS # code Setup length
+  temperature: "${COHERE_TEMPERATURE}" # What does it Track to- Env: COHERE_TEMPERATURE # Float to view how use is the Code Access code track access.
+
+#-------AI21 Labs Setup code To Authenticate the function -----Set what authenticate points is--------#
+ai21_api:
+  enabled: "${AI21_API_ENABLED}"  # Set Access 1 / 0 To access track Use set and Enable- Env: AI21_API_ENABLED #Bool authentication Code
+  api_key: "${AI21_API_KEY}"  # Set Authentication access Authenticated The Point- Env: AI21_API_KEY #String
+  default_model: "${AI21_DEFAULT_MODEL}" # Tracking base model what access functions to enable and use authentication code, the Model track- Env: AI21_DEFAULT_MODEL #String Setup Code track Code
+  max_tokens: "${AI21_MAX_TOKENS}"  # Authentication Track the Point With what Length and Code Access - Env: AI21_MAX_TOKENS #Integers to find function
+  num_results: "${AI21_NUM_RESULTS}" #Setup with what range The code Number should use with Set code- Env: AI21_NUM_RESULTS #Set number with Access points with Auth.
+
+# ---- Text Embedding Model and authentication Code -------
+embedding_model:
+  enabled: "${EMBEDDING_MODEL_ENABLED}" # Code  with enable authenticate  to Use functions Track- Env: EMBEDDING_MODEL_ENABLED #Bool
+  provider: "${EMBEDDING_MODEL_PROVIDER}"  # To access enable Setup The Authentication  track what point to - Env: EMBEDDING_MODEL_PROVIDER # Use the Set String for code access and Track code, for authentication
+  model_name: "${EMBEDDING_MODEL_NAME}" # Set what Code function is with that  authentication Model track what key is authenticated - Env: EMBEDDING_MODEL_NAME # code is Access Function
+  api_key: "${EMBEDDING_MODEL_API_KEY}"  # Authentication code has the Access what code to authentication Set point here- Env: EMBEDDING_MODEL_API_KEY #Track Use Code String authentication
+  dimensions: "${EMBEDDING_MODEL_DIMENSIONS}" # Track Dimension function for that code, what access function code track - Env: EMBEDDING_MODEL_DIMENSIONS # The Integers to use. for dimension
+  max_length: "${EMBEDDING_MODEL_MAX_LENGTH}" # What Code has for Length Tracked Setup , what Authenticated Code use for that - Env: EMBEDDING_MODEL_MAX_LENGTH # The Numbers code Access what function that Setup
+
+#------ Local LLM access Options Set The Authentication and Use -Code-------
+localai:
+  enabled: "${LOCALAI_ENABLED}" # Authentication for Code With access Code - Env: LOCALAI_ENABLED #Bool what access
+  host: "${LOCALAI_HOST}"  # track Access host through Authenticated what use the Function to point- Env: LOCALAI_HOST # String Code to access
+  port: "${LOCALAI_PORT}"  #Enable track and the use that point with code - Env: LOCALAI_PORT #Interger
+  model: "${LOCALAI_MODEL}"  #The Code Model function access the code points - Env: LOCALAI_MODEL # the Model what Authentication Used String Code Here.
+  context_size: "${LOCALAI_CONTEXT_SIZE}" # Code The number for access use and authentication - Env: LOCALAI_CONTEXT_SIZE # Use Integers point
+  threads: "${LOCALAI_THREADS}" # Setup Authentication what threads will set code- Env: LOCALAI_THREADS # Track and set code, with how much the Integers Code
+  f16: "${LOCALAI_F16}" # Secure Function Track and Authentication with code - Env: LOCALAI_F16 #Bool what code access enable, with Authentication Boolen
+  temperature: "${LOCALAI_TEMPERATURE}" # Track what access code enable to use heat and authentication codes - Env: LOCALAI_TEMPERATURE # To track with what Float
+
+#-----MLflow Local Access the Track what code--------#
+mlflow:
+  enabled: "${MLFLOW_ENABLED}" # For Authentication with use by Enable- Env: MLFLOW_ENABLED #Set with Bool the points setup
+  tracking_uri: "${MLFLOW_TRACKING_URI}"  # For access authenticate and use what point access codes - Env: MLFLOW_TRACKING_URI #For Track String function access
+  experiment_name: "${MLFLOW_EXPERIMENT_NAME}" # Code, track what is use, enable with authentication Code name , Access is Function- Env: MLFLOW_EXPERIMENT_NAME #To access String code for point
+  registry_uri: "${MLFLOW_REGISTRY_URI}"  # Code track is and What, Access with points Function, What, is With, Set- Env: MLFLOW_REGISTRY_URI #Code to point to access and authenticate String the Function access.
+  artifacts_location: "${MLFLOW_ARTIFACTS_LOCATION}"  #What location With access Track Authenticate what- Env: MLFLOW_ARTIFACTS_LOCATION #Access set with Code location and used to authenticate String what used function point to what, function Authenticated
+  model_name: "${MLFLOW_MODEL_NAME}" # What code model is with authentication enable point- Env: MLFLOW_MODEL_NAME # Track access String for code and authentication Function setup
+
+#Track each Model
+
+# --- Media Generation ---
+
+# ---- Stable Diffusion WebUI (AUTOMATIC1111) ----
+a1111:
+  enabled: "${A1111_ENABLED}"  #1/0, T or F- Env: A1111_ENABLED
+  host: "${A1111_HOST}"  # - Env: A1111_HOST
+  port: "${A1111_PORT}"  # - Env: A1111_PORT
+  api_url: "${A1111_API_URL}"  # - Env: A1111_API_URL
+  auth_enabled: "${A1111_AUTH_ENABLED}"  # - Env: A1111_AUTH_ENABLED
+  username: "${A1111_USERNAME}" # - Env: A1111_USERNAME
+  password: "${A1111_PASSWORD}"  # - Env: A1111_PASSWORD
+  sampler: "${A1111_SAMPLER}"  # - Env: A1111_SAMPLER
+  lora:  "${A1111_LORA}" # what Lora- Env: A1111_LORA
+  vae: "${A1111_VAE}"  # - Env: A1111_VAE
+  sd_model: "${A1111_SD_MODEL}"  #  - Env: A1111_SD_MODEL
+  clip_skip: "${A1111_CLIP_SKIP}"  # - Env: A1111_CLIP_SKIP
+  width: "${A1111_WIDTH}" # - Env: A1111_WIDTH
+  height: "${A1111_HEIGHT}"  # - Env: A1111_HEIGHT
+  num_outputs: "${A1111_NUM_OUTPUTS}" # - Env: A1111_NUM_OUTPUTS
+  steps: "${A1111_STEPS}" # - Env: A1111_STEPS
+  cfg_scale: "${A1111_CFG_SCALE}"  # - Env: A1111_CFG_SCALE
+  negative_prompt: "${A1111_NEGATIVE_PROMPT}"  # - Env: A1111_NEGATIVE_PROMPT
+  enable_hr: "${A1111_ENABLE_HR}"  # - Env: A1111_ENABLE_HR
+  hr_scale: "${A1111_HR_SCALE}"  # - Env: A1111_HR_SCALE
+  hr_upscaler: "${A1111_HR_UPSCALER}"  # - Env: A1111_HR_UPSCALER
+
+# ---- ComfyUI Service config -----
+comfyui:
+  enabled: "${COMFYUI_ENABLED}"  # - Env: COMFYUI_ENABLED
+  host: "${COMFYUI_HOST}"  # - Env: COMFYUI_HOST
+  port: "${COMFYUI_PORT}"  # - Env: COMFYUI_PORT
+  api_url: "${COMFYUI_API_URL}"  # - Env: COMFYUI_API_URL
+  workflows_path: "${COMFYUI_WORKFLOWS_PATH}"  #  - Env: COMFUI_WORKFLOWS_PATH
+  auth_enabled: "${COMFYUI_AUTH_ENABLED}"  # - Env: COMFUI_AUTH_ENABLED
+  username: "${COMFYUI_USERNAME}" # - Env: COMFYUI_USERNAME
+  password: "${COMFYUI_PASSWORD}"  # - Env: COMFUI_PASSWORD
+  cuda_device: "${COMFYUI_CUDA_DEVICE}"  # - Env: COMFUI_CUDA_DEVICE
+  websocket_url: "${COMFYUI_WEBSOCKET_URL}" # Set location used by code to connect to websockets - Env: COMFUI_WEBSOCKET_URL
+
+# ----- Dalle 3 Code Setup-----
+dalle3:
+  enabled: "${DALLE3_ENABLED}"  # - Env: DALLE3_ENABLED
+  quality: "${DALLE3_QUALITY}"  # - Env: DALLE3_QUALITY standard OR hd
+  size: "${DALLE3_SIZE}"  # To set size code for M/L/S- Env: DALLE3_SIZE
+  style: "${DALLE3_STYLE}" # Use with code to setup  style with what 3 code- Env: DALLE3_STYLE use or access.
+
+# -----RunwayML Service Code --------
+runwayml:
+  enabled: "${RUNWAYML_ENABLED}"  # Enable  With access  - Env: RUNWAYML_ENABLED
+  api_key: "${RUNWAYML_API_KEY}" #Secure with what Code access- Env: RUNWAYML_API_KEY
+  model: "${RUNWAYML_MODEL}"  # to secure authentication access  The Model, - Env: RUNWAYML_MODEL
+  frames: "${RUNWAYML_FRAMES}"  # Secure With all codes that are tracked - Env: RUNWAYML_FRAMES
+  upscale: "${RUNWAYML_UPSCALE}"  # Track Point and function Code for that - Env: RUNWAYML_UPSCALE
+  init_image: "${RUNWAYML_INIT_IMAGE}" # With What Track the setup Image- Env: RUNWAYML_INIT_IMAGE
+  motion_bucket_id: "${RUNWAYML_MOTION_BUCKET_ID}" # code used To authenticate points and access - Env: RUNWAYML_MOTION_BUCKET_ID
+  seed: "${RUNWAYML_SEED}" # Secure to set what seed is code- Env: RUNWAYML_SEED
+
+#------ Pika Labs setup and function ---------
+pika_labs:
+  enabled: "${PIKA_LABS_ENABLED}"  #track enabled- Env: PIKA_LABS_ENABLED
+  api_key: "${PIKA_LABS_API_KEY}"  # - Env: PIKA_LABS_API_KEY
+  server: "${PIKA_LABS_SERVER}"  # Set Where get access  - Env: PIKA_LABS_SERVER
+  seed: "${PIKA_LABS_SEED}"  #Point setup what to track - Env: PIKA_LABS_SEED
+  guidance: "${PIKA_LABS_GUIDANCE}"  #what Points use to setup codes, Access the enable - Env: PIKA_LABS_GUIDANCE
+  zoom_speed: "${PIKA_LABS_ZOOM_SPEED}" # Function that access Authenticated code - Env: PIKA_LABS_ZOOM_SPEED
+  motion_bucket_id: "${PIKA_LABS_MOTION_BUCKET_ID}" #Secure the Code that is function to setup With code setup - Env: PIKA_LABS_MOTION_BUCKET_ID

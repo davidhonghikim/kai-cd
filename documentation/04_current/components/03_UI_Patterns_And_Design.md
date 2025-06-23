@@ -24,9 +24,14 @@ agent_notes: "Complete design system - use these patterns for consistent UI deve
 
 # UI Patterns and Design System
 
-> **Agent Context**: Complete design system with patterns and accessibility guidelines  
-> **Implementation**: ✅ Complete - WCAG 2.1 AA compliant, responsive, themeable  
-> **Use When**: Developing UI components, applying design patterns, ensuring accessibility
+## Agent Context
+**For AI Agents**: Complete design system documentation covering UI patterns, accessibility guidelines, and design principles. Use this when developing UI components, applying consistent design patterns, ensuring accessibility compliance, or establishing visual consistency. Essential reference for all UI design and development work.
+
+**Implementation Notes**: Contains WCAG 2.1 AA compliant patterns, responsive design principles, theming system, color schemes, typography scales, and component patterns. All examples are production-ready and tested.
+**Quality Requirements**: Maintain accessibility compliance and design consistency. Keep color systems and component patterns synchronized with actual implementation.
+**Integration Points**: Foundation for all UI components, links to component system, architecture, and theming implementation.
+
+---
 
 ## Quick Summary
 Comprehensive design system providing consistent, accessible, and maintainable UI patterns for scaling from Chrome extension to future kOS ecosystem interfaces.

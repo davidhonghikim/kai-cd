@@ -37,9 +37,14 @@ agent_notes: [
 
 # Kai-CD (kAI) Browser Extension - UI/UX Overview
 
-> **Agent Context**: Complete UI/UX specification for creating mockups and frontend development  
-> **Implementation**: ✅ Active - Multi-context browser extension with dynamic capability rendering  
-> **Use When**: Creating mockups, implementing UI components, understanding interface design patterns
+## Agent Context
+**For AI Agents**: Complete UI/UX specification and design guide for creating mockups and implementing frontend components. Use this when designing interface mockups, understanding layout patterns, implementing UI components, or planning user experience flows. Comprehensive guide for all interface design work.
+
+**Implementation Notes**: Covers multi-context architecture (tab, popup, sidepanel), chat-centric design philosophy, component specifications, and visual design patterns. All layouts and components described are actively implemented.
+**Quality Requirements**: Keep layout descriptions and component specifications synchronized with actual UI implementation. Maintain accuracy of interface patterns and user flows.
+**Integration Points**: Connects UI architecture, component system, and design patterns for complete interface understanding.
+
+---
 
 ## Quick Summary
 Comprehensive UI/UX overview of the Kai-CD browser extension covering interface patterns, component specifications, visual design system, and implementation priorities for creating detailed mockups and guiding frontend development.

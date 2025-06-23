@@ -1,0 +1,65 @@
+# --- Ollama Settings ---
+ollama:
+  enabled: "${OLLAMA_ENABLED}"  #1/0 or true/false - Env: OLLAMA_ENABLED
+  host: "${OLLAMA_HOST}"  # - Env: OLLAMA_HOST
+  port: "${OLLAMA_PORT}"  # - Env: OLLAMA_PORT
+  models_path: "${OLLAMA_MODELS_PATH}"  # - Env: OLLAMA_MODELS_PATH
+  gpu_layers: "${OLLAMA_GPU_LAYERS}"  # - Env: OLLAMA_GPU_LAYERS
+  model: "${OLLAMA_DEFAULT_MODEL}"  # The model to Load to Run  - Env: OLLAMA_DEFAULT_MODEL
+  context_window: "${OLLAMA_CONTEXT_WINDOW}" #  - Env: OLLAMA_CONTEXT_WINDOW
+  temperature: "${OLLAMA_TEMPERATURE}"  # - Env: OLLAMA_TEMPERATURE
+
+#---- vLLM - Very Large Language Model Serving
+vllm:
+  enabled: "${VLLM_ENABLED}" # set if its active - Env: VLLM_ENABLED
+  host: "${VLLM_HOST}" # Where the Host is on - Env: VLLM_HOST
+  port: "${VLLM_PORT}" # Set up Port - Env: VLLM_PORT
+  model: "${VLLM_MODEL}"  # The Model - Env: VLLM_MODEL
+  download_dir: "${VLLM_DOWNLOAD_DIR}"  # Where to hold The Model - Env: VLLM_DOWNLOAD_DIR
+  tokenizer: "${VLLM_TOKENIZER}"  # To Use the Token - Env: VLLM_TOKENIZER
+  gpu_memory_utilization: "${VLLM_GPU_MEMORY_UTILIZATION}"  #GPU Setup - Env: VLLM_GPU_MEMORY_UTILIZATION
+
+# --- Hugging Face Inference API ---
+huggingface_api:
+  enabled: "${HUGGINGFACE_API_ENABLED}"  # - Env: HUGGINGFACE_API_ENABLED
+  api_key: "${HUGGINGFACE_API_KEY}" #  - Env: HUGGINGFACE_API_KEY
+  default_model: "${HUGGINGFACE_DEFAULT_MODEL}"  # - Env: HUGGINGFACE_DEFAULT_MODEL
+
+# --- OpenAI API ---
+openai_api:
+  enabled: "${OPENAI_API_ENABLED}" #enable use to set 1 or 0 - Env: OPENAI_API_ENABLED
+  api_key: "${OPENAI_API_KEY}" # for credentials  - Env: OPENAI_API_KEY
+  default_model: "${OPENAI_DEFAULT_MODEL}" #The model by openai to use - Env: OPENAI_DEFAULT_MODEL
+  organization: "${OPENAI_ORGANIZATION}"  # set the Organization  - Env: OPENAI_ORGANIZATION
+
+# --- Google Cloud AI ---
+google_cloud_ai:
+  enabled: "${GOOGLE_CLOUD_AI_ENABLED}" #Enable or disable - Env: GOOGLE_CLOUD_AI_ENABLED
+  project_id: "${GOOGLE_CLOUD_PROJECT_ID}" #What access use - Env: GOOGLE_CLOUD_PROJECT_ID
+  location: "${GOOGLE_CLOUD_LOCATION}" #Set location to allow acess - Env: GOOGLE_CLOUD_LOCATION
+  api_key: "${GOOGLE_CLOUD_API_KEY}" #Ensure Secure access with this Key - Env: GOOGLE_CLOUD_API_KEY
+
+# --- Anthropic Claude ---
+anthropic_api:
+  enabled: "${ANTHROPIC_API_ENABLED}" # To Enable  - Env: ANTHROPIC_API_ENABLED
+  api_key: "${ANTHROPIC_API_KEY}"  # For Authentication Key- Env: ANTHROPIC_API_KEY
+  default_model: "${ANTHROPIC_DEFAULT_MODEL}" #to enable the key. - Env: ANTHROPIC_DEFAULT_MODEL
+
+#---- Cohere API ----
+cohere_api:
+  enabled: "${COHERE_API_ENABLED}" # To use and be active - Env: COHERE_API_ENABLED
+  api_key: "${COHERE_API_KEY}"  # secure API - Env: COHERE_API_KEY
+  default_model: "${COHERE_DEFAULT_MODEL}" #model to enable API- Env: COHERE_DEFAULT_MODEL
+
+#-------AI21 Labs API Setup------------
+ai21_api:
+  enabled: "${AI21_API_ENABLED}" # To use and be active - Env: AI21_API_ENABLED
+  api_key: "${AI21_API_KEY}"  # secure API - Env: AI21_API_KEY
+  default_model: "${AI21_DEFAULT_MODEL}" #model to enable API- Env: AI21_DEFAULT_MODEL
+
+# ---- Text Embedding Model Configuration (Used for RAG) ---
+embedding_model:
+    enabled: "${EMBEDDING_MODEL_ENABLED}" #To Track is enabled - Env: EMBEDDING_MODEL_ENABLED
+    provider: "${EMBEDDING_MODEL_PROVIDER}"  # OpenAI, Hugging Face, etc. - Env: EMBEDDING_MODEL_PROVIDER
+    model_name: "${EMBEDDING_MODEL_NAME}" #the model to call  - Env: EMBEDDING_MODEL_NAME
+    api_key: "${EMBEDDING_MODEL_API_KEY}"  #Secure the api access  - Env: EMBEDDING_MODEL_API_KEY

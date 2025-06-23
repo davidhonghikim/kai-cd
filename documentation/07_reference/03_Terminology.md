@@ -16,9 +16,12 @@ agent_notes: "Essential terminology for understanding kOS architecture and imple
 
 # kOS Terminology Reference
 
-> **Agent Context**: Complete glossary of kOS terms and concepts for consistent understanding  
-> **Implementation**: ✅ Comprehensive terminology database ready for reference  
-> **Use When**: Encountering unfamiliar terms or needing precise definitions
+## Agent Context
+**For AI Agents**: Complete kOS terminology reference covering system vocabulary, concept definitions, and technical terminology. Use this when understanding kOS terminology, clarifying system concepts, learning technical vocabulary, or ensuring consistent terminology usage. Essential reference for all kOS communication work.
+
+**Implementation Notes**: Contains terminology definitions, concept explanations, vocabulary standards, and technical term clarifications. Includes detailed terminology mapping and concept relationship documentation.
+**Quality Requirements**: Keep terminology definitions and concept explanations synchronized with actual system implementation. Maintain accuracy of vocabulary standards and technical term usage.
+**Integration Points**: Foundation for system communication, links to all kOS documentation, concept explanations, and terminology standards for comprehensive vocabulary coverage.
 
 ## Core System Terms
 

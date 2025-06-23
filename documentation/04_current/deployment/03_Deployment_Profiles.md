@@ -23,9 +23,12 @@ agent_notes: "Deployment profiles define environment-specific configurations - u
 
 # Deployment Profiles
 
-> **Agent Context**: Standardized deployment configurations for different environments and use cases  
-> **Implementation**: ✅ Complete - Development, production, testing, and browser extension profiles  
-> **Use When**: Setting up deployments, configuring environments, managing infrastructure
+## Agent Context
+**For AI Agents**: Complete deployment profiles documentation covering environment-specific deployment configurations and profile management strategies. Use this when implementing deployment profiles, understanding environment configuration, planning deployment strategies, or configuring environment-specific deployments. Essential reference for all deployment profile work.
+
+**Implementation Notes**: Contains deployment profile patterns, environment configuration strategies, profile management systems, and deployment customization approaches. Includes detailed profile configuration and environment-specific deployment patterns.
+**Quality Requirements**: Keep deployment profiles and environment configurations synchronized with actual deployment processes. Maintain accuracy of profile management and environment-specific deployment strategies.
+**Integration Points**: Foundation for environment deployment, links to deployment architecture, configuration management, and environment strategies for comprehensive deployment profile coverage.
 
 ## Quick Summary
 Deployment profiles define standardized configurations for deploying Kai-CD across different environments and use cases, from simple browser extension installation to complex distributed kOS mesh deployments.

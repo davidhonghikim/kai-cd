@@ -1,0 +1,10 @@
+# ---- Deployment Settings ----
+deployment:
+    type: "${DEPLOYMENT_TYPE}"  # docker, native, cloud  - Env: DEPLOYMENT_TYPE
+    environment: "${DEPLOYMENT_ENVIRONMENT}" # dev, prod, staging - Env: DEPLOYMENT_ENVIRONMENT
+
+# ---- Docker Compose specific settings ----
+docker_compose:
+    version: "${DOCKER_COMPOSE_VERSION}"  # Compose file version - Env: DOCKER_COMPOSE_VERSION
+    project_name: "${DOCKER_COMPOSE_PROJECT_NAME}" #Project setup - Env: DOCKER_COMPOSE_PROJECT_NAME
+    network_name: "${DOCKER_COMPOSE_NETWORK_NAME}" #Set Network For setup - Env: DOCKER_COMPOSE_

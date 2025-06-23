@@ -22,6 +22,13 @@ agent_notes: "Critical evolution path - current ServiceDefinition pattern provid
 
 # Service Migration Strategy - Kai-CD to kOS
 
+## Agent Context
+**For AI Agents**: Complete service migration strategy covering transition from Kai-CD to kOS architecture and service evolution planning. Use this when planning service migrations, understanding architectural evolution, implementing migration strategies, or coordinating system transitions. Essential reference for all service migration work.
+
+**Implementation Notes**: Contains service migration methodology, architectural transition strategies, evolution planning frameworks, and migration coordination approaches. Includes detailed migration workflows and transition strategies.
+**Quality Requirements**: Keep service migration strategies and transition plans synchronized with actual migration progress. Maintain accuracy of migration approaches and architectural evolution planning.
+**Integration Points**: Foundation for system evolution, links to service architecture, migration planning, and architectural transition for comprehensive service migration coverage.
+
 > **Agent Context**: Strategic evolution from service connectors to agent mesh  
 > **Implementation**: 📋 Planning phase with clear migration path defined  
 > **Decision Impact**: Critical - determines kOS architecture compatibility

@@ -1,0 +1,43 @@
+# 📚 kOS Documentation Overview
+
+This folder holds all user and agent documentation for **kOS (Kind OS)**.
+
+---
+
+## 📖 Contents
+
+### 🧑‍💻 1. User Docs (`/docs/user/`)
+| File | Purpose |
+|------|---------|
+| `00_start_here.md` | Quick start guide for non-technical users |
+| `01_installation_guide.md` | Step-by-step install (USB, Docker, PXE, Cloud) |
+| `02_using_the_dashboard.md` | How to use the web UI + mobile access |
+| `03_customizing_your_stack.md` | Swap agents, tools, services |
+| `04_backup_and_sync.md` | How to export/import configs and data |
+| `05_remote_access.md` | Use Tailscale/SSH/API access securely |
+| `06_faq.md` | Answers to common setup & usage questions |
+
+### 🤖 2. Agent Docs (`/docs/agents/`)
+| File | Purpose |
+|------|--------|
+| `00_agent_overview.md` | Overview of agent types and architecture |
+| `01_agent_init.md` | Hardware detection, environment bootstrapping |
+| `02_agent_dev.md` | Code gen, git mgmt, CI/CD tasks |
+| `03_agent_creator.md` | Multimedia, publishing, post-processing flows |
+| `04_agent_ops.md` | Install & monitor services, logs, metrics |
+| `05_agent_comms.md` | Messaging bot integration (Slack, Discord, SMS) |
+| `06_agent_ui.md` | Build/modify UI, web/mobile dashboards |
+| `99_custom_agents.md` | Guide to create your own agent modules |
+
+### 🛠 3. Developer Docs (`/docs/dev/`)
+| File | Purpose |
+|------|--------|
+| `00_build_guide.md` | Build the full system from source or ISO |
+| `01_plugin_system.md` | How to build and register new tools/services |
+| `02_api_reference.md` | REST, WebSocket, and GraphQL API documentation |
+| `03_contributing.md` | How to contribute to the project |
+| `04_license.md` | MIT or AGPL with community clauses |
+
+---
+
+Would you like to auto-generate the actual contents of any of these now?

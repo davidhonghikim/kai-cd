@@ -1,0 +1,137 @@
+# ==============================================
+# kOS Docker Core Stack
+# ==============================================
+# Optional services for LLMs, creators, automators
+# Can be run locally or remotely controlled by kOS agents
+# Includes vector databases and memory layers for RAG 2 systems
+# ==============================================
+
+version: '3.9'
+services:
+
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: kos_openwebui
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama
+    container_name: kos_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    restart: unless-stopped
+
+  a1111:
+    image: ghcr.io/hlky/stable-diffusion-webui:latest
+    container_name: kos_a1111
+    ports:
+      - "7860:7860"
+    volumes:
+      - a1111_data:/data
+    restart: unless-stopped
+
+  comfyui:
+    image: ghcr.io/ltdrdata/comfyui:latest
+    container_name: kos_comfyui
+    ports:
+      - "8188:8188"
+    volumes:
+      - comfyui_data:/workspace
+    restart: unless-stopped
+
+  n8n:
+    image: n8nio/n8n
+    container_name: kos_n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - GENERIC_TIMEZONE=America/New_York
+      - DB_SQLITE_MODE=1
+    volumes:
+      - n8n_data:/home/node/.n8n
+    restart: unless-stopped
+
+  tailscale:
+    image: tailscale/tailscale
+    container_name: kos_tailscale
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - TS_AUTH_KEY=${TS_AUTH_KEY:-your-auth-key-here}
+    volumes:
+      - tailscale_data:/var/lib/tailscale
+    restart: unless-stopped
+
+  docker_api_proxy:
+    image: tecnativa/docker-socket-proxy
+    container_name: kos_docker_proxy
+    ports:
+      - "2375:2375"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - CONTAINERS=1
+      - SERVICES=1
+      - TASKS=1
+      - IMAGES=1
+    restart: unless-stopped
+
+  k8s_dashboard:
+    image: kubernetesui/dashboard
+    container_name: kos_k8s_dashboard
+    ports:
+      - "8001:8443"
+    restart: unless-stopped
+
+  chromadb:
+    image: chromadb/chroma
+    container_name: kos_chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma
+    restart: unless-stopped
+
+  weaviate:
+    image: semitechnologies/weaviate:latest
+    container_name: kos_weaviate
+    ports:
+      - "8080:8080"
+    environment:
+      - QUERY_DEFAULTS_LIMIT=25
+      - AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED=true
+      - PERSISTENCE_DATA_PATH=/var/lib/weaviate
+      - DEFAULT_VECTORIZER_MODULE=text2vec-transformers
+      - ENABLE_MODULES=text2vec-transformers
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    container_name: kos_postgres
+    environment:
+      POSTGRES_DB: kosdb
+      POSTGRES_USER: kos
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  ollama_models:
+  a1111_data:
+  comfyui_data:
+  n8n_data:
+  tailscale_data:
+  chroma_data:
+  weaviate_data:
+  pg_data:

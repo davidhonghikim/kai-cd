@@ -1,14 +1,28 @@
 ---
-title: "Managing Services"
-description: "Technical specification for managing services"
+title: "Managing Services User Guide"
+description: "User guide for configuring and managing AI service connections in Kai-CD"
 type: "user-guide"
 status: "current"
-priority: "medium"
-last_updated: "2025-06-22"
-agent_notes: "AI agent guidance for implementing managing services"
+priority: "high"
+last_updated: "2025-01-27"
+related_docs: [
+  "00_Getting_Started.md",
+  "04_User_Interface_Guide.md",
+  "../04_current/services/01_Service_Architecture.md"
+]
+agent_notes: "User-facing service management guide - focus on clear step-by-step instructions for service configuration"
 ---
 
-# 3. Managing Services
+# Managing Services User Guide
+
+## Agent Context
+**For AI Agents**: This guide provides user-facing instructions for managing AI service connections in Kai-CD. Use this when helping users configure services, troubleshoot connections, or understand service management workflows.
+
+**Implementation Notes**: Covers adding new services, testing connections, authentication setup, and service management operations. All procedures described here reflect current UI implementation.
+**Quality Requirements**: Keep instructions synchronized with actual UI elements and service configuration process. Test all steps to ensure accuracy.
+**Integration Points**: Links to getting started guide, UI documentation, and technical service architecture for advanced users.
+
+---
 
 The Service Management view is where you configure the connections to your local or remote AI services. To access it, open the Main Tab and click the "plug" icon in the navigation rail.
 

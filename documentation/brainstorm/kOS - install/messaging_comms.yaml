@@ -1,0 +1,43 @@
+# --- Messaging and Communication ---
+#-- Agent Communications uses ----
+
+# ----- TeleGram -------
+telegram:
+  enabled: "${TELEGRAM_ENABLED}"  # enable  - Env: TELEGRAM_ENABLED
+  bot_token: "${TELEGRAM_BOT_TOKEN}"  # - Env: TELEGRAM_BOT_TOKEN
+  chat_id: "${TELEGRAM_CHAT_ID}"#Set to communicate with- Env: TELEGRAM_CHAT_ID
+  api_id: "${TELEGRAM_API_ID}" # Secure API access - Env: TELEGRAM_API_ID
+  api_hash: "${TELEGRAM_API_HASH}" #Secure API Hash Value- Env: TELEGRAM_API_HASH
+
+#------- Slack------
+slack:
+  enabled: "${SLACK_ENABLED}"  # If enable with bool - Env: SLACK_ENABLED
+  bot_token: "${SLACK_BOT_TOKEN}"  #  - Env: SLACK_BOT_TOKEN
+  signing_secret: "${SLACK_SIGNING_SECRET}" # - Env: SLACK_SIGNING_SECRET
+  channel: "${SLACK_CHANNEL}"#To use and chat  - Env: SLACK_CHANNEL
+
+#------- Discord -------
+discord:
+  enabled: "${DISCORD_ENABLED}"  # To use bot must enable - Env: DISCORD_ENABLED
+  bot_token: "${DISCORD_BOT_TOKEN}"  # Set for authentication  - Env: DISCORD_BOT_TOKEN
+  channel_id: "${DISCORD_CHANNEL_ID}" #Use the proper Chat - Env: DISCORD_CHANNEL_ID
+  application_id: "${DISCORD_APPLICATION_ID}"#The base Application - Env: DISCORD_APPLICATION_ID
+
+#-------- Email -------------
+email:
+  enabled: "${EMAIL_ENABLED}"  # To turn what email is enable- Env: EMAIL_ENABLED
+  smtp_server: "${EMAIL_SMTP_SERVER}" #For configuration base - Env: EMAIL_SMTP_SERVER
+  smtp_port: "${EMAIL_SMTP_PORT}"  #The Port to transmit over- Env: EMAIL_SMTP_PORT
+  smtp_user: "${EMAIL_SMTP_USER}"  #What user to email - Env: EMAIL_SMTP_USER
+  smtp_password: "${EMAIL_SMTP_PASSWORD}"  # For Admin to enable - Env: EMAIL_SMTP_PASSWORD
+  sender_email: "${EMAIL_SENDER_EMAIL}"  # For the bot - Env: EMAIL_SENDER_EMAIL
+  recipient_email: "${EMAIL_RECIPIENT_EMAIL}"  # For the user/Admin  - Env: EMAIL_RECIPIENT_EMAIL
+
+#----- TWITTER Setup Bot -----
+twitter:
+  enabled: "${TWITTER_ENABLED}"  # To enable 1-0  - Env: TWITTER_ENABLED
+  api_key: "${TWITTER_API_KEY}"  #To Set up Secure API KEYs - Env: TWITTER_API_KEY
+  api_secret: "${TWITTER_API_SECRET}"#More secure keys - Env: TWITTER_API_SECRET
+  access_token: "${TWITTER_ACCESS_TOKEN}"  #Authentication to get access - Env: TWITTER_ACCESS_TOKEN
+  access_token_secret: "${TWITTER_ACCESS_TOKEN_SECRET}"#The Secret to enable access - Env: TWITTER_ACCESS_TOKEN_SECRET
+  bearer_token: "${TWITTER_BEARER_TOKEN}"  # Secure set the bot  - Env: TWITTER_BEARER_TOKEN

@@ -10,6 +10,13 @@ agent_notes: "AI agent guidance for implementing project structure"
 
 # 2. Project Structure
 
+## Agent Context
+**For AI Agents**: Complete project structure documentation covering directory organization, file conventions, and architectural organization patterns. Use this when understanding project layout, navigating codebase structure, planning file organization, or implementing architectural patterns. Essential foundation for all project structure work.
+
+**Implementation Notes**: Contains project organization patterns, directory structure guidelines, file naming conventions, and architectural organization principles. Includes detailed project layout and organization strategies.
+**Quality Requirements**: Keep project structure documentation and organization patterns synchronized with actual codebase layout. Maintain accuracy of directory structure and file organization principles.
+**Integration Points**: Foundation for codebase navigation, links to architectural patterns, development guidelines, and project organization for comprehensive structure understanding.
+
 This document provides a map of the Kai-CD repository, explaining the purpose of each key file and directory.
 
 ```

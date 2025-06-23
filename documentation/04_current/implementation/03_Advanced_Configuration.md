@@ -22,7 +22,14 @@ agent_notes: "Advanced configuration patterns - essential for scalable multi-tie
 
 # Advanced Configuration Management
 
-> **Agent Context**: Multi-tier configuration system evolution from simple to distributed architecture  
+## Agent Context
+**For AI Agents**: Advanced multi-tier configuration management system covering evolution from current simple configuration to sophisticated distributed architecture. Use this when implementing advanced configuration patterns, planning scalable configuration systems, understanding multi-tier configuration management, or building distributed configuration systems. Critical for all advanced configuration work.
+
+**Implementation Notes**: Contains advanced configuration patterns including hot-reloading, schema validation, distributed configuration management, and multi-tier configuration systems. Includes working TypeScript interfaces and advanced configuration management patterns.
+**Quality Requirements**: Keep advanced configuration patterns and scalable systems synchronized with actual implementation. Maintain accuracy of multi-tier configuration and distributed systems evolution.
+**Integration Points**: Foundation for advanced configuration management, links to configuration management, state management, and future distributed configuration for comprehensive advanced configuration coverage.
+
+---  
 > **Implementation**: 🔄 Partial - Three-tier working, multi-layer system planned  
 > **Use When**: Implementing advanced configuration, planning distributed systems, managing complex settings
 

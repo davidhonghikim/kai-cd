@@ -10,6 +10,13 @@ agent_notes: "AI agent guidance for implementing credential and vault management
 
 # 08: Credential & Vault Management
 
+## Agent Context
+**For AI Agents**: Complete credential and vault management documentation covering secure storage, authentication systems, and credential handling patterns. Use this when implementing secure storage, understanding authentication flows, planning credential management, or building secure credential systems. Essential foundation for all security and credential work.
+
+**Implementation Notes**: Contains credential management patterns, secure vault implementation, authentication system design, and security best practices. Includes detailed security architecture and credential handling mechanisms.
+**Quality Requirements**: Keep credential management and security patterns synchronized with actual implementation. Maintain accuracy of security mechanisms and credential handling procedures.
+**Integration Points**: Foundation for security systems, links to authentication flows, secure storage, and security frameworks for comprehensive credential management coverage.
+
 ## 1. Introduction
 
 As the application's capabilities expand, managing sensitive information like API keys and bearer tokens becomes a critical security challenge. The initial approach of storing these secrets in the configuration system, while better than hardcoding, is neither scalable nor sufficiently secure.

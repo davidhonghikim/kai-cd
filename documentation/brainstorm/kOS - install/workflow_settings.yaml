@@ -1,0 +1,24 @@
+# --- Workflow Automation ---
+
+# ---- n8n ----
+n8n:
+  enabled: "${N8N_ENABLED}"  # 1/0 or true/false - Env: N8N_ENABLED
+  host: "${N8N_HOST}"  # - Env: N8N_HOST
+  port: "${N8N_PORT}"  # - Env: N8N_PORT
+  protocol: "${N8N_PROTOCOL}"  # http or https - Env: N8N_PROTOCOL
+  base_url: "${N8N_BASE_URL}"  #  - Env: N8N_BASE_URL
+  webhook_url: "${N8N_WEBHOOK_URL}"  #  - Env: N8N_WEBHOOK_URL
+  api_key: "${N8N_API_KEY}"  # Secure Key - Env: N8N_API_KEY
+  auth_enabled: "${N8N_AUTH_ENABLED}"  #  - Env: N8N_AUTH_ENABLED
+  user_management_mode: "${N8N_USER_MANAGEMENT_MODE}"  # - Env: N8N_USER_MANAGEMENT_MODE
+  queue_mode: "${N8N_QUEUE_MODE}" # set Queue if used - Env: N8N_QUEUE_MODE
+
+# ---- Zapier ----
+zapier:
+  enabled: "${ZAPIER_ENABLED}"  # Env: ZAPIER_ENABLED, To be on Setup to use the Function
+  api_key: "${ZAPIER_API_KEY}"  # Secure the api connection  - Env: ZAPIER_API_KEY
+
+# ---- IFTTT ----
+ifttt:
+  enabled: "${IFTTT_ENABLED}"  # Setup the area to turn on enable- Env: IFTTT_ENABLED
+  api_key: "${IFTTT_API_KEY}"  # Set the Auth  - Env: IFTTT_API_KEY

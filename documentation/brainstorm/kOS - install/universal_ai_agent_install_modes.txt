@@ -1,0 +1,110 @@
+# 🧩 Universal AI Agent System — Full Installation Modes & Strategies
+
+This document outlines **every supported method** for installing and deploying the AI Agent system. It's designed to be **fully flexible**, supporting all users, devices, and platforms — from minimalist USB boots to advanced GPU-powered container orchestration.
+
+---
+
+## 🔌 1. USB Bootable ISO (Live + Persistent)
+
+| Method       | Description |
+|--------------|-------------|
+| **Ventoy**   | Drop ISO and boot with menu selection. Supports multiple ISOs. |
+| **Etcher/DD** | Flash the ISO with `dd`, Etcher, or Rufus for single-boot environments. |
+| **Persistence** | Loopback persistent partition included or external overlay mount. |
+
+---
+
+## 🌐 2. PXE / Network Boot
+
+| Use Case      | Description |
+|---------------|-------------|
+| **PXE Boot**  | Provision bare-metal via PXE server running dnsmasq/syslinux. |
+| **Autoinstall** | Uses `user-data` + `meta-data` cloud-init compatible YAML. |
+| **NAS/Mirror** | Pull agents and models from networked drive or cloud during provisioning. |
+
+---
+
+## 💻 3. Native Install (Disk / HDD / SSD)
+
+| Mode          | Description |
+|---------------|-------------|
+| **Full Install** | Runs AI Agent ISO installer or autoinstall script. |
+| **Dual Boot** | Custom bootloader config allows coexistence with Windows/macOS/Linux. |
+| **Encrypted** | Supports LUKS, ZFS, or BTRFS if full-disk encryption is enabled. |
+
+---
+
+## 📦 4. Docker Container Mode
+
+| Mode              | Description |
+|-------------------|-------------|
+| **Dev Agent Stack** | Launch multi-agent framework in Docker Compose. |
+| **Ollama + Web UI** | Run local model server + chat UI in portable container. |
+| **GPU Containers** | Leverage `nvidia-docker` or `--gpus all` for LLM workloads. |
+| **Persistent Volume** | Shared config, models, and logs mounted to volume or NAS. |
+
+---
+
+## 🪟 5. Windows Systems
+
+| Support Method | Description |
+|----------------|-------------|
+| **WSL2 + Docker** | Run full agent stack inside WSL2 with GPU passthrough (if supported). |
+| **Ventoy USB** | Boot from USB into a fully Linux-based live agent system. |
+| **VirtualBox / VMWare** | Import as VM or run ISO inside hypervisor. |
+
+---
+
+## 🍎 6. macOS Systems
+
+| Support Method | Description |
+|----------------|-------------|
+| **Docker Desktop** | Fully supports agent system using Mac-native Docker. |
+| **Multipass / Vagrant** | Launch Ubuntu-based VM with preloaded agent stack. |
+| **Boot from USB** | Intel Macs can boot agent ISO via EFI. M1/M2 not supported for direct USB boot. |
+
+---
+
+## 🧪 7. Virtualization / Emulation
+
+| Platform     | Description |
+|--------------|-------------|
+| **QEMU/KVM** | Run ISO or image in full emulation mode with optional GPU passthrough. |
+| **Proxmox**  | Add ISO to node, deploy as LXC/VM with GPU mapping. |
+| **VirtualBox** | Simple test environment for isolated agents. |
+| **ESXi / vSphere** | Deploy at scale in enterprise setting. |
+
+---
+
+## 🚀 8. Cloud Deployments (Optional Layer)
+
+| Platform     | Description |
+|--------------|-------------|
+| **AWS / GCP / Azure** | Provision Ubuntu VM and run deploy script with cloud-init. |
+| **Oracle Cloud (Free Tier)** | Works well for metadata agents or low-power tasks. |
+| **Colab / Paperspace** | Temporarily launch agents for dev/testing. |
+
+---
+
+## 🔄 9. Portable Environments
+
+| Platform         | Description |
+|------------------|-------------|
+| **AppImage**     | Package system as portable `.AppImage` for Linux. |
+| **Docker Image** | Create single `.tar` or `.img` container for import/export. |
+| **Flash Drive**  | Full OS + persistent agents run from SSD or USB drive. |
+
+---
+
+## 🛠️ 10. Build Tools / Bootstrap Scripts
+
+| Tool            | Purpose |
+|------------------|---------|
+| `deploy.sh`      | Install full stack with all dependencies + autodetection. |
+| `aiagent_iso_builder.sh` | Custom ISO builder with autoinstall injected. |
+| `bootable_ai_agent_setup.sh` | Creates PXE server, bootable media, etc. |
+| `init_agents.py` | Starts all agents with config loading and tool registration. |
+
+---
+
+Would you like to generate platform-specific install menus, launchers, or companion UIs next?

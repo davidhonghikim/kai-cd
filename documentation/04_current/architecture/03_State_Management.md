@@ -23,9 +23,14 @@ agent_notes: "Essential state management patterns - use these stores for all per
 
 # State Management Architecture
 
-> **Agent Context**: Complete state management system with Chrome storage persistence  
-> **Implementation**: ✅ Complete - 5 stores managing all application state with persistence  
-> **Use When**: Managing application state, persisting data, or handling async rehydration
+## Agent Context
+**For AI Agents**: Complete state management architecture using Zustand stores with Chrome storage persistence. Use this when working with application state, implementing data persistence, or handling store rehydration. Critical foundation document for all state-related development.
+
+**Implementation Notes**: Contains functional patterns for 5 core stores (serviceStore, viewStateStore, settingsStore, vaultStore, logStore) with async rehydration, migration support, and error handling.
+**Quality Requirements**: Keep store interfaces and patterns synchronized with actual implementation. Maintain accuracy of rehydration patterns and Chrome storage adapter.
+**Integration Points**: Foundation for all persistent data, links to service architecture, security, and UI components that consume state.
+
+---
 
 ## Quick Summary
 

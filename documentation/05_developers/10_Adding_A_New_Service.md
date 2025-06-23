@@ -10,6 +10,13 @@ agent_notes: "AI agent guidance for implementing adding a new service"
 
 # 6. Adding a New Service
 
+## Agent Context
+**For AI Agents**: Complete guide for adding new services to the Kai-CD platform covering step-by-step integration procedures and service implementation patterns. Use this when implementing new service integrations, understanding service addition workflows, planning service extensions, or building service connectors. Essential reference for all new service development work.
+
+**Implementation Notes**: Contains step-by-step service integration procedures, service implementation patterns, integration workflows, and development best practices. Includes detailed service addition methodology and implementation frameworks.
+**Quality Requirements**: Keep service addition procedures and implementation patterns synchronized with actual integration process. Maintain accuracy of service integration workflows and development best practices.
+**Integration Points**: Foundation for service expansion, links to service architecture, integration frameworks, and development guidelines for comprehensive service addition coverage.
+
 This guide provides a step-by-step tutorial for adding support for a new service to Kai-CD. The process mostly involves creating a single new file: a service definition.
 
 Let's imagine we want to add support for a fictional new LLM service called "MegaChat."

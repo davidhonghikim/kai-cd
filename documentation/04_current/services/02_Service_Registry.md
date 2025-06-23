@@ -24,6 +24,15 @@ agent_notes: "Service registry and plugin framework - foundation for extensible 
 
 # Service Registry Architecture
 
+## Agent Context
+**For AI Agents**: Complete service registration and plugin framework covering current service definitions and evolution to future kOS registry system. Use this when implementing service registration, understanding plugin architecture, planning service discovery, or building service management systems. Essential foundation for all service registry work.
+
+**Implementation Notes**: Contains service registration patterns, plugin framework architecture, service discovery mechanisms, and evolution to distributed service registry. Includes working service definition patterns and registration systems.
+**Quality Requirements**: Keep service registry patterns and registration methods synchronized with actual implementation. Maintain accuracy of service discovery and plugin architecture systems.
+**Integration Points**: Foundation for service discovery, links to service architecture, plugin systems, and future distributed service registry for comprehensive service management.
+
+---
+
 > **Agent Context**: Complete service registry and plugin framework for extensible service ecosystem  
 > **Implementation**: 🔄 Partial - Static definitions working, plugin system planned  
 > **Use When**: Adding services, managing plugins, understanding service lifecycle

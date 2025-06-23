@@ -24,6 +24,15 @@ agent_notes: "Service orchestration evolution - current connector system to futu
 
 # Service Orchestration Architecture
 
+## Agent Context
+**For AI Agents**: Complete service orchestration system covering current implementation and evolution to future orchestration hub architecture. Use this when implementing service orchestration, understanding service coordination patterns, planning orchestration systems, or building complex service workflows. Critical foundation for all service orchestration work.
+
+**Implementation Notes**: Contains service orchestration patterns, workflow management, service coordination systems, and evolution to distributed orchestration hub. Includes working orchestration patterns and service coordination mechanisms.
+**Quality Requirements**: Keep orchestration patterns and service coordination methods synchronized with actual implementation. Maintain accuracy of orchestration workflows and service management systems.
+**Integration Points**: Foundation for service orchestration, links to service architecture, workflow management, and future distributed orchestration systems for comprehensive service coordination.
+
+---
+
 > **Agent Context**: Complete service orchestration from current connector system to future orchestration hub  
 > **Implementation**: 🔄 Active evolution - current system + orchestration enhancements  
 > **Decision Impact**: Major - defines all service coordination and task routing

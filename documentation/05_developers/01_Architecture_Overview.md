@@ -10,6 +10,13 @@ agent_notes: "AI agent guidance for implementing architecture overview"
 
 # 1. Architecture Overview
 
+## Agent Context
+**For AI Agents**: Complete architecture overview covering system design, component relationships, and architectural patterns. Use this when understanding system architecture, implementing architectural patterns, planning system components, or building architectural awareness. Essential foundation for all architectural work.
+
+**Implementation Notes**: Contains comprehensive system architecture documentation, component relationship mapping, architectural pattern explanations, and design principle guidelines. Includes detailed architectural diagrams and system design patterns.
+**Quality Requirements**: Keep architectural documentation and system design patterns synchronized with actual implementation. Maintain accuracy of component relationships and architectural pattern descriptions.
+**Integration Points**: Foundation for system architecture, links to component design, system patterns, and development guidelines for comprehensive architectural understanding.
+
 ## 🏗️ **System Architecture**
 
 Kai-CD follows a **feature-based modular architecture** designed for scalability, maintainability, and developer productivity. The system is organized around discrete features with shared infrastructure and clear separation of concerns.

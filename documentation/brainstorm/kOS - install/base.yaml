@@ -1,0 +1,27 @@
+presets:
+  basic:
+    agents:
+      - agent_example
+    services:
+      - postgres
+      - ollama
+      - telegram
+  dev:
+    agents:
+      - agent_dev
+      - agent_example
+    services:
+      - postgres
+      - ollama
+      - a1111
+      - redis
+      - rabbitmq # Added Example
+      - three_js
+  creator:
+    agents:
+      - agent_creator
+    services:
+      - a1111
+      - comfyui
+      - minio
+      - runwayml

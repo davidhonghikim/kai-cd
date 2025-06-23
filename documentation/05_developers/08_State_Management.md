@@ -10,6 +10,13 @@ agent_notes: "AI agent guidance for implementing state management"
 
 # 3. State Management
 
+## Agent Context
+**For AI Agents**: Complete state management documentation covering Zustand implementation, persistent storage, and state coordination patterns. Use this when implementing state management, understanding data flow, planning state architecture, or building state coordination systems. Essential foundation for all state management work.
+
+**Implementation Notes**: Contains state management patterns, Zustand store implementations, persistence strategies, and state coordination mechanisms. Includes detailed state architecture and data flow patterns.
+**Quality Requirements**: Keep state management patterns and data flow documentation synchronized with actual implementation. Maintain accuracy of state coordination and persistence mechanisms.
+**Integration Points**: Foundation for data management, links to storage systems, component state, and persistence layers for comprehensive state management coverage.
+
 Kai-CD uses [Zustand](https://github.com/pmndrs/zustand) for global state management. It provides a simple, unopinionated, and performant way to manage state across the entire application. The state is divided into several "stores," each with a specific domain of responsibility.
 
 A key feature of the state management is its persistence layer, which uses a custom middleware to save and retrieve data from the `chrome.storage.local` API. This ensures that user-configured services and settings are preserved between browser sessions.

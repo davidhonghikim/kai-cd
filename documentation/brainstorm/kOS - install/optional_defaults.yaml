@@ -1,0 +1,247 @@
+# ==============================================
+# kOS Default Configuration (Comprehensive)
+# ==============================================
+# Provides default configurations and lists all configurable services.
+# Overrides are possible with ~/.kos/config.yaml or environment variables.
+# ==============================================
+
+# --- General Settings ---
+profile: "${KOS_PROFILE}"  # basic, dev, creator - Env: KOS_PROFILE
+agent_directory: "${AGENT_DIRECTORY}"  # Path to agent modules - Env: AGENT_DIRECTORY
+log_level: "${LOG_LEVEL}"  # DEBUG, INFO, WARNING, ERROR, CRITICAL - Env: LOG_LEVEL
+
+# --- UI Server Settings ---
+ui_server:
+  host: "${UI_SERVER_HOST}" # IP address to bind to - Env: UI_SERVER_HOST
+  port: "${UI_SERVER_PORT}" # Port for the UI - Env: UI_SERVER_PORT
+  https:
+    enabled: "${UI_SERVER_HTTPS_ENABLED}" # 1/0 or true/false - Env: UI_SERVER_HTTPS_ENABLED
+    certificate: "${UI_SERVER_HTTPS_CERTIFICATE}"  # Path to SSL certificate - Env: UI_SERVER_HTTPS_CERTIFICATE
+    private_key: "${UI_SERVER_HTTPS_PRIVATE_KEY}" # Path to SSL private key - Env: UI_SERVER_HTTPS_PRIVATE_KEY
+  cors_origins: "${CORS_ORIGINS}" # Comma-separated list of origins - Env: CORS_ORIGINS
+  access_token_expire_minutes: "${ACCESS_TOKEN_EXPIRE_MINUTES}" # JWT Expiry - Env: ACCESS_TOKEN_EXPIRE_MINUTES
+  rate_limit: "${UI_SERVER_RATE_LIMIT}" # e.g., "60/minute" - Env: UI_SERVER_RATE_LIMIT
+  base_url: "${UI_SERVER_BASE_URL}" # Base URL for the app - Env: UI_SERVER_BASE_URL
+
+# --- Authentication Settings ---
+authentication:
+  enabled: "${AUTH_ENABLED}"  # 1/0 or true/false - Env: AUTH_ENABLED
+  method: "${AUTH_METHOD}" # jwt, ldap, oauth2, openid - Env: AUTH_METHOD
+  jwt:
+    secret_key: "${JWT_SECRET_KEY}" # JWT secret key - Env: JWT_SECRET_KEY
+    algorithm: "${JWT_ALGORITHM}" # JWT algorithm (HS256, RS256, etc.) - Env: JWT_ALGORITHM
+  ldap:
+    server: "${LDAP_SERVER}" # LDAP server address - Env: LDAP_SERVER
+    base_dn: "${LDAP_BASE_DN}"  # Base DN for user searches - Env: LDAP_BASE_DN
+    bind_dn: "${LDAP_BIND_DN}" # Bind DN for authentication - Env: LDAP_BIND_DN
+    bind_password: "${LDAP_BIND_PASSWORD}"  # Bind password - Env: LDAP_BIND_PASSWORD
+  oauth2:
+    client_id: "${OAUTH2_CLIENT_ID}"
+    client_secret: "${OAUTH2_CLIENT_SECRET}"
+    scopes: "${OAUTH2_SCOPES}" # Comma-separated list of scopes - Env: OAUTH2_SCOPES
+    callback_url: "${OAUTH2_CALLBACK_URL}"  # Redirect URI - Env: OAUTH2_CALLBACK_URL
+    auth_url: "${OAUTH2_AUTH_URL}" # Auth Endpoint - Env: OAUTH2_AUTH_URL
+    token_url: "${OAUTH2_TOKEN_URL}" # set Token - Env: OAUTH2_TOKEN_URL
+  openid:
+    discovery_url: "${OPENID_DISCOVERY_URL}"  # OpenID Connect Discovery URL - Env: OPENID_DISCOVERY_URL
+    client_id: "${OPENID_CLIENT_ID}" #Set the Client - Env: OPENID_CLIENT_ID
+    client_secret: "${OPENID_CLIENT_SECRET}" # Securing secret - Env: OPENID_CLIENT_SECRET
+
+# --- Agent Memory Settings ---
+agent_memory:
+  backend: "${MEMORY_BACKEND}" # chroma, weaviate, postgres, faiss - Env: MEMORY_BACKEND
+  chroma:
+    persist_directory: "${CHROMA_PERSIST_DIRECTORY}" #  - Env: CHROMA_PERSIST_DIRECTORY
+    embedding_function: "${CHROMA_EMBEDDING_FUNCTION}" # Embeddings To Use - Env: CHROMA_EMBEDDING_FUNCTION
+  weaviate:
+    url: "${WEAVIATE_URL}"  # - Env: WEAVIATE_URL
+    api_key: "${WEAVIATE_API_KEY}" # - Env: WEAVIATE_API_KEY
+    class_prefix: "${WEAVIATE_CLASS_PREFIX}" # Name of class- Env: WEAVIATE_CLASS_PREFIX
+  postgres:
+    db_name: "${POSTGRES_DB}" # - Env: POSTGRES_DB
+    user: "${POSTGRES_USER}" # - Env: POSTGRES_USER
+    password: "${POSTGRES_PASSWORD}" # - Env: POSTGRES_PASSWORD
+    host: "${POSTGRES_HOST}" # - Env: POSTGRES_HOST
+    port: "${POSTGRES_PORT}" # - Env: POSTGRES_PORT
+    ssl_enabled: "${POSTGRES_SSL_ENABLED}" # - Env: POSTGRES_SSL_ENABLED
+    ssl_ca_file: "${POSTGRES_SSL_CA_FILE}"  # set the Certificate here - Env: POSTGRES_SSL_CA_FILE
+  faiss:
+    index_path: "${FAISS_INDEX_PATH}" # Path to Index for set up - Env: FAISS_INDEX_PATH
+
+# --- Agent Loader Settings ---
+agent_loader:
+  manifest_path: "${AGENT_MANIFEST_PATH}"  # Path to the plugin manifest file - Env: AGENT_MANIFEST_PATH
+
+# --- Agents and Services ---
+agents: "${AGENTS}" # Comma-separated list of active agents - Env: AGENTS
+services: "${SERVICES}" # Comma-separated list of active services - Env: SERVICES
+
+# --- Services Configuration ---
+
+# ---- Databases ----
+postgres:
+  enabled: "${POSTGRES_ENABLED}"  # 1/0 or true/false - Env: POSTGRES_ENABLED
+  host: "${POSTGRES_HOST}" # - Env: POSTGRES_HOST
+  port: "${POSTGRES_PORT}" # - Env: POSTGRES_PORT
+  user: "${POSTGRES_USER}" # - Env: POSTGRES_USER
+  password: "${POSTGRES_PASSWORD}" # - Env: POSTGRES_PASSWORD
+  db: "${POSTGRES_DB}" # - Env: POSTGRES_DB
+  ssl_enabled: "${POSTGRES_SSL_ENABLED}" # - Env: POSTGRES_SSL_ENABLED
+  ssl_ca_file: "${POSTGRES_SSL_CA_FILE}"  # - Env: POSTGRES_SSL_CA_FILE
+
+redis:
+  enabled: "${REDIS_ENABLED}" # 1/0 or true/false - Env: REDIS_ENABLED
+  host: "${REDIS_HOST}"  # - Env: REDIS_HOST
+  port: "${REDIS_PORT}"  # - Env: REDIS_PORT
+  password: "${REDIS_PASSWORD}" # - Env: REDIS_PASSWORD
+  db: "${REDIS_DB}"  # - Env: REDIS_DB
+
+mongodb:
+  enabled: "${MONGODB_ENABLED}" # 1/0 or true/false - Env: MONGODB_ENABLED
+  host: "${MONGODB_HOST}"  # - Env: MONGODB_HOST
+  port: "${MONGODB_PORT}"  # - Env: MONGODB_PORT
+  user: "${MONGODB_USER}"  # - Env: MONGODB_USER
+  password: "${MONGODB_PASSWORD}" # - Env: MONGODB_PASSWORD
+  db: "${MONGODB_DB}" # The DB - Env: MONGODB_DB
+  replica_set: "${MONGODB_REPLICA_SET}"  # Set the replicate - Env: MONGODB_REPLICA_SET
+
+# ---- LLMs ----
+ollama:
+  enabled: "${OLLAMA_ENABLED}"  # 1/0 or true/false - Env: OLLAMA_ENABLED
+  host: "${OLLAMA_HOST}"  # - Env: OLLAMA_HOST
+  port: "${OLLAMA_PORT}"  # - Env: OLLAMA_PORT
+  models_path: "${OLLAMA_MODELS_PATH}"  #  - Env: OLLAMA_MODELS_PATH
+  gpu_layers: "${OLLAMA_GPU_LAYERS}" #  - Env: OLLAMA_GPU_LAYERS
+  model: "${OLLAMA_DEFAULT_MODEL}" # To Enable loading the Agent to Run  - Env: OLLAMA_DEFAULT_MODEL
+  context_window: "${OLLAMA_CONTEXT_WINDOW}" #To change the window Size - Env: OLLAMA_CONTEXT_WINDOW
+  temperature: "${OLLAMA_TEMPERATURE}"  # How the Temp changes - Env: OLLAMA_TEMPERATURE
+
+vllm:
+  enabled: "${VLLM_ENABLED}" # set if its active - Env: VLLM_ENABLED
+  host: "${VLLM_HOST}" # Where the Host is on - Env: VLLM_HOST
+  port: "${VLLM_PORT}" # Set up Port - Env: VLLM_PORT
+  model: "${VLLM_MODEL}" # Set up The model- Env: VLLM_MODEL
+  gpu_memory_utilization: "${VLLM_GPU_MEMORY_UTILIZATION}"# Use More GPU Memory - Env: VLLM_GPU_MEMORY_UTILIZATION
+
+# ---- Media Generation ----
+a1111:
+  enabled: "${A1111_ENABLED}" # set 1 or 0 to active - Env: A1111_ENABLED
+  host: "${A1111_HOST}"  # - Env: A1111_HOST
+  port: "${A1111_PORT}"  # - Env: A1111_PORT
+  api_url: "${A1111_API_URL}" # set Up URL of api - Env: A1111_API_URL
+  auth_enabled: "${A1111_AUTH_ENABLED}" # set Auth, Enable if you use It - Env: A1111_AUTH_ENABLED
+  username: "${A1111_USERNAME}" # The user name - Env: A1111_USERNAME
+  password: "${A1111_PASSWORD}"  # The Password - Env: A1111_PASSWORD
+  sampler: "${A1111_SAMPLER}" # what Sampler will be set - Env: A1111_SAMPLER
+
+comfyui:
+  enabled: "${COMFYUI_ENABLED}" # set 1 or 0 to active - Env: COMFYUI_ENABLED
+  host: "${COMFYUI_HOST}"  # - Env: COMFYUI_HOST
+  port: "${COMFYUI_PORT}"  # - Env: COMFUI_PORT
+  api_url: "${COMFYUI_API_URL}"  # - Env: COMFYUI_API_URL
+  workflows_path: "${COMFYUI_WORKFLOWS_PATH}"  # - Env: COMFUI_WORKFLOWS_PATH
+  auth_enabled: "${COMFYUI_AUTH_ENABLED}" # set Auth, Enable if you use It - Env: COMFYUI_AUTH_ENABLED
+  username: "${COMFYUI_USERNAME}" # The user name - Env: COMFYUI_USERNAME
+  password: "${COMFYUI_PASSWORD}" # The Password - Env: COMFYUI_PASSWORD
+  cuda_device: "${COMFYUI_CUDA_DEVICE}" #cuda Setting - Env: COMFYUI_CUDA_DEVICE
+
+# ---- Workflow Automation ----
+n8n:
+  enabled: "${N8N_ENABLED}"  # 1/0 or true/false - Env: N8N_ENABLED
+  host: "${N8N_HOST}"  # - Env: N8N_HOST
+  port: "${N8N_PORT}"  # - Env: N8N_PORT
+  protocol: "${N8N_PROTOCOL}"  # http or https - Env: N8N_PROTOCOL
+  base_url: "${N8N_BASE_URL}"  #  - Env: N8N_BASE_URL
+  webhook_url: "${N8N_WEBHOOK_URL}"  #  - Env: N8N_WEBHOOK_URL
+  api_key: "${N8N_API_KEY}" #Set Security Key- Env: N8N_API_KEY
+  auth_enabled: "${N8N_AUTH_ENABLED}"  # set True or False - Env: N8N_AUTH_ENABLED
+  user_management_mode: "${N8N_USER_MANAGEMENT_MODE}" #Set Auth to run  - Env: N8N_USER_MANAGEMENT_MODE
+
+# ---- Object Storage ----
+minio:
+  enabled: "${MINIO_ENABLED}"  # 1/0 or true/false - Env: MINIO_ENABLED
+  host: "${MINIO_HOST}"  #  - Env: MINIO_HOST
+  port: "${MINIO_PORT}"  #  - Env: MINIO_PORT
+  access_key: "${MINIO_ACCESS_KEY}" #Secure the Access - Env: MINIO_ACCESS_KEY
+  secret_key: "${MINIO_SECRET_KEY}"  #Secure the Key  - Env: MINIO_SECRET_KEY
+  bucket: "${MINIO_BUCKET}"  # Set up Your bucket- Env: MINIO_BUCKET
+  secure: "${MINIO_SECURE}"  #1 or 0 , True or False - Env: MINIO_SECURE #If using SSL
+
+# ---- Monitoring ----
+prometheus:
+  enabled: "${PROMETHEUS_ENABLED}" #enable 1 or 0 - Env: PROMETHEUS_ENABLED
+  host: "${PROMETHEUS_HOST}" #Set up the Host to monitor  - Env: PROMETHEUS_HOST
+  port: "${PROMETHEUS_PORT}"  #set up port to report - Env: PROMETHEUS_PORT
+  scrape_interval: "${PROMETHEUS_SCRAPE_INTERVAL}" #Set the Scrap time - Env: PROMETHEUS_SCRAPE_INTERVAL
+
+grafana:
+  enabled: "${GRAFANA_ENABLED}" # enable to setup 1 or 0 - Env: GRAFANA_ENABLED
+  host: "${GRAFANA_HOST}" #set a location - Env: GRAFANA_HOST
+  port: "${GRAFANA_PORT}"  #Setting a local area- Env: GRAFANA_PORT
+  admin_user: "${GRAFANA_ADMIN_USER}" #For setting Users, if Enabled - Env: GRAFANA_ADMIN_USER
+  admin_password: "${GRAFANA_ADMIN_PASSWORD}"#set secure area - Env: GRAFANA_ADMIN_PASSWORD
+
+# ---- Queueing ----
+rabbitmq:
+  enabled: "${RABBITMQ_ENABLED}" #1 or 0 , T OR F - Env: RABBITMQ_ENABLED
+  host: "${RABBITMQ_HOST}" # setup the Hostname - Env: RABBITMQ_HOST
+  port: "${RABBITMQ_PORT}" # The Host Number - Env: RABBITMQ_PORT
+  user: "${RABBITMQ_USER}" # Setup Secure credentials - Env: RABBITMQ_USER
+  password: "${RABBITMQ_PASSWORD}" # Ensure creds are set - Env: RABBITMQ_PASSWORD
+  vhost: "${RABBITMQ_VHOST}"# Set Up A Secure Server - Env: RABBITMQ_VHOST
+
+# ---- Caching ----
+memcached:
+  enabled: "${MEMCACHED_ENABLED}" #enable or disable T OR F  - Env: MEMCACHED_ENABLED
+  host: "${MEMCACHED_HOST}" #The IP that sets is all - Env: MEMCACHED_HOST
+  port: "${MEMCACHED_PORT}" #what config do you enable- Env: MEMCACHED_PORT
+  user: "${MEMCACHED_USER}" #Set the AdminUser - Env: MEMCACHED_USER
+  password: "${MEMCACHED_PASSWORD}" #If needed - Env: MEMCACHED_PASSWORD
+
+# ---- Reverse Proxy ----
+nginx:
+  enabled: "${NGINX_ENABLED}" # To Active enable - Env: NGINX_ENABLED
+  host: "${NGINX_HOST}" #set host - Env: NGINX_HOST
+  port: "${NGINX_PORT}" # Set Number Port - Env: NGINX_PORT
+  ssl_enabled: "${NGINX_SSL_ENABLED}" #To Run Securely set enable or disable - Env: NGINX_SSL_ENABLED
+  ssl_certificate: "${NGINX_SSL_CERTIFICATE}" #Set if used certificate - Env: NGINX_SSL_CERTIFICATE
+  ssl_private_key: "${NGINX_SSL_PRIVATE_KEY}" #Sec setup Keys - Env: NGINX_SSL_PRIVATE_KEY
+  proxy_pass: "${NGINX_PROXY_PASS}" #To set proxy - Env: NGINX_PROXY_PASS
+
+# ---- More databases and other agents can be added here: Follow template ----
+
+# --- Presets (Profiles) ---
+presets:
+  basic:
+    agents:
+      - agent_example
+    services:
+      - postgres
+      - ollama
+      - redis
+  dev:
+    agents:
+      - agent_dev
+      - agent_example
+    services:
+      - postgres
+      - ollama
+      - a1111
+      - redis
+      - rabbitmq # Added Example
+  creator:
+    agents:
+      - agent_creator
+    services:
+      - a1111
+      - comfyui
+      - minio
+
+# --- Third-Party Service API Keys ---
+# Store these securely using environment variables!
+api_keys:
+  openai: "${OPENAI_API_KEY}"  #  - Env: OPENAI_API_KEY
+  huggingface: "${HUGGINGFACE_API_KEY}"  #  - Env: HUGGINGFACE_API_KEY
+  google: "${GOOGLE_API_KEY}"  # - Env: GOOGLE_API_KEY
+  stabilityai: "${STABILITYAI_API_KEY}" # - Env: STABILITYAI_API_KEY
+  twitter: "${TWITTER_API_KEY}"  # - Env: TWITTER_API_KEY  #addedExample

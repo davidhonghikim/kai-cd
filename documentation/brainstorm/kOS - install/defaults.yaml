@@ -1,0 +1,167 @@
+# ==============================================
+# kOS Default Configuration
+# ==============================================
+# This file contains default configurations for all kOS components.
+# Users can override these settings by modifying the ~/.kos/config.yaml file
+# or by setting environment variables.
+# ==============================================
+
+# --- General Settings ---
+profile: "${KOS_PROFILE}"  # Default profile (basic, dev, creator) - Env: KOS_PROFILE
+agent_directory: "${AGENT_DIRECTORY}"  # Directory where agent modules are located - Env: AGENT_DIRECTORY
+log_level: "${LOG_LEVEL}"  # Default logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL) - Env: LOG_LEVEL
+
+# --- UI Server Settings ---
+ui_server:
+  host: "${UI_SERVER_HOST}" #IP Address - Env: UI_SERVER_HOST
+  port: "${UI_SERVER_PORT}" #Port Number - Env: UI_SERVER_PORT
+  https:
+    enabled: "${UI_SERVER_HTTPS_ENABLED}" # Use https - Env: UI_SERVER_HTTPS_ENABLED - use 1 or 0 for boolean
+    certificate: "${UI_SERVER_HTTPS_CERTIFICATE}" # - Env: UI_SERVER_HTTPS_CERTIFICATE
+    private_key: "${UI_SERVER_HTTPS_PRIVATE_KEY}" # - Env: UI_SERVER_HTTPS_PRIVATE_KEY
+  cors_origins: "${CORS_ORIGINS}"  # Comma-separated list of allowed origins - Env: CORS_ORIGINS
+  access_token_expire_minutes: "${ACCESS_TOKEN_EXPIRE_MINUTES}" # set Minutes to expire. Env: ACCESS_TOKEN_EXPIRE_MINUTES
+  rate_limit: "${UI_SERVER_RATE_LIMIT}"  # Rate limit per minute (e.g., "60/minute") - Env: UI_SERVER_RATE_LIMIT
+  base_url: "${UI_SERVER_BASE_URL}" #For setting base URL - Env: UI_SERVER_BASE_URL
+
+# --- Authentication Settings ---
+authentication:
+  enabled: "${AUTH_ENABLED}" #Enables or Disables Auth - Env: AUTH_ENABLED
+  method: "${AUTH_METHOD}" # auth Methods to use - Env: AUTH_METHOD can be jwt, ldap, oauth2.
+  jwt:
+    secret_key: "${JWT_SECRET_KEY}" # The Secrey Key - Env: JWT_SECRET_KEY
+    algorithm: "${JWT_ALGORITHM}" # The Algorithm - Env: JWT_ALGORITHM
+  ldap:
+   ldap_server: "${LDAP_SERVER}" #Ldap - Env: LDAP_SERVER
+   ldap_dn: "${LDAP_DN}" # the DN - Env: LDAP_DN
+   ldap_pass: "${LDAP_PASS}" # The ldap Pass - Env: LDAP_PASS
+  oauth2:
+    client_id: "${OAUTH2_CLIENT_ID}"
+    client_secret: "${OAUTH2_CLIENT_SECRET}"
+    scopes: "${OAUTH2_SCOPES}" # set up the Scopes - Env: OAUTH2_SCOPES
+    callback_url: "${OAUTH2_CALLBACK_URL}" #Callback Route - Env: OAUTH2_CALLBACK_URL
+    auth_url: "${OAUTH2_AUTH_URL}"
+    token_url: "${OAUTH2_TOKEN_URL}"
+    #In future, enable more - such as openIDConnect
+
+# --- Agent Memory Settings ---
+agent_memory:
+  backend: "${MEMORY_BACKEND}"  # Supported backends: chroma, weaviate, postgres - Env: MEMORY_BACKEND
+  chroma:
+    persist_directory: "${CHROMA_PERSIST_DIRECTORY}"  # Directory to persist ChromaDB data - Env: CHROMA_PERSIST_DIRECTORY
+  weaviate:
+    url: "${WEAVIATE_URL}"  # Weaviate URL - Env: WEAVIATE_URL
+    api_key: "${WEAVIATE_API_KEY}" #set API Key - Env: WEAVIATE_API_KEY
+  postgres:
+    db_name: "${POSTGRES_DB}" # - Env: POSTGRES_DB
+    user: "${POSTGRES_USER}" # - Env: POSTGRES_USER
+    password: "${POSTGRES_PASSWORD}" # - Env: POSTGRES_PASSWORD
+    host: "${POSTGRES_HOST}" # - Env: POSTGRES_HOST
+    port: "${POSTGRES_PORT}" # - Env: POSTGRES_PORT
+
+# --- Agent Loader Settings ---
+agent_loader:
+  manifest_path: "${AGENT_MANIFEST_PATH}"  # Path to the plugin manifest file  - Env: AGENT_MANIFEST_PATH
+
+# --- Agents and Services ---
+agents: "${AGENTS}" # List of active agents (comma-separated) - Env: AGENTS
+services: "${SERVICES}" # List of active services (comma-separated) - Env: SERVICES
+
+# --- Service Settings ---
+# Use environment variables for sensitive information
+# For boolean use 1/0 or true/false
+postgres:
+  enabled: "${POSTGRES_ENABLED}" #set 1 or 0 to active - Env: POSTGRES_ENABLED
+  host: "${POSTGRES_HOST}" # - Env: POSTGRES_HOST
+  port: "${POSTGRES_PORT}" # - Env: POSTGRES_PORT
+  user: "${POSTGRES_USER}" # - Env: POSTGRES_USER
+  password: "${POSTGRES_PASSWORD}" # - Env: POSTGRES_PASSWORD
+  db: "${POSTGRES_DB}" # - Env: POSTGRES_DB
+  ssl_enabled: "${POSTGRES_SSL_ENABLED}" # - Env: POSTGRES_SSL_ENABLED
+  ssl_ca_file: "${POSTGRES_SSL_CA_FILE}" # set Cert if Needed - Env: POSTGRES_SSL_CA_FILE
+
+ollama:
+  enabled: "${OLLAMA_ENABLED}"  # set 1 or 0 to active - Env: OLLAMA_ENABLED
+  host: "${OLLAMA_HOST}" # - Env: OLLAMA_HOST
+  port: "${OLLAMA_PORT}" # - Env: OLLAMA_PORT
+  models_path: "${OLLAMA_MODELS_PATH}" # set up model loading - Env: OLLAMA_MODELS_PATH
+  gpu_layers: "${OLLAMA_GPU_LAYERS}" # Set number of GPU's to Use - Env: OLLAMA_GPU_LAYERS
+  model: "${OLLAMA_DEFAULT_MODEL}" #The model to Load to Run - Env: OLLAMA_DEFAULT_MODEL
+
+a1111:
+  enabled: "${A1111_ENABLED}" #set 1 or 0 to active - Env: A1111_ENABLED
+  host: "${A1111_HOST}" # - Env: A1111_HOST
+  port: "${A1111_PORT}" # - Env: A1111_PORT
+  api_url: "${A1111_API_URL}" # set Up URL of api - Env: A1111_API_URL
+  auth_enabled: "${A1111_AUTH_ENABLED}" # set Auth, Enable if you use It - Env: A1111_AUTH_ENABLED
+  username: "${A1111_USERNAME}" # The user name - Env: A1111_USERNAME
+  password: "${A1111_PASSWORD}" # The Password - Env: A1111_PASSWORD
+
+comfyui:
+  enabled: "${COMFYUI_ENABLED}" #set 1 or 0 to active - Env: COMFYUI_ENABLED
+  host: "${COMFYUI_HOST}" # - Env: COMFUI_HOST
+  port: "${COMFYUI_PORT}" # - Env: COMFYUI_PORT
+  api_url: "${COMFYUI_API_URL}" # - Env: COMFUI_API_URL
+  workflows_path: "${COMFYUI_WORKFLOWS_PATH}" #Set the Path to workflows - Env: COMFUI_WORKFLOWS_PATH
+  auth_enabled: "${COMFYUI_AUTH_ENABLED}" # set Auth, Enable if you use It - Env: COMFYUI_AUTH_ENABLED
+  username: "${COMFYUI_USERNAME}" # The user name - Env: COMFYUI_USERNAME
+  password: "${COMFYUI_PASSWORD}" # The Password - Env: COMFYUI_PASSWORD
+
+n8n:
+  enabled: "${N8N_ENABLED}" #set 1 or 0 to active - Env: N8N_ENABLED
+  host: "${N8N_HOST}" # - Env: N8N_HOST
+  port: "${N8N_PORT}" # - Env: N8N_PORT
+  protocol: "${N8N_PROTOCOL}"  # e.g., http or https - Env: N8N_PROTOCOL
+  base_url: "${N8N_BASE_URL}"  # Base URL for n8n - Env: N8N_BASE_URL
+  webhook_url: "${N8N_WEBHOOK_URL}" #Example Set Hookup - Env: N8N_WEBHOOK_URL
+  api_key: "${N8N_API_KEY}" #Example to set up APi - Env: N8N_API_KEY
+  auth_enabled: "${N8N_AUTH_ENABLED}" # Set AUth for system - Env: N8N_AUTH_ENABLED
+
+redis:
+  enabled: "${REDIS_ENABLED}" #set 1 or 0 to active - Env: REDIS_ENABLED
+  host: "${REDIS_HOST}"  # - Env: REDIS_HOST
+  port: "${REDIS_PORT}"  # - Env: REDIS_PORT
+  password: "${REDIS_PASSWORD}" # To set up secure pass  - Env: REDIS_PASSWORD
+  db: "${REDIS_DB}"  # Number for DB - Env: REDIS_DB
+
+minio:
+  enabled: "${MINIO_ENABLED}" #Set 1 or 0 - Env: MINIO_ENABLED
+  host:  "${MINIO_HOST}"  # Minio Setup - Env: MINIO_HOST
+  port:  "${MINIO_PORT}"  # Port Setting - Env: MINIO_PORT
+  access_key:  "${MINIO_ACCESS_KEY}" # the Access Key Set - Env: MINIO_ACCESS_KEY
+  secret_key:  "${MINIO_SECRET_KEY}" # Secure Setup  - Env: MINIO_SECRET_KEY
+  bucket: "${MINIO_BUCKET}" # Set your Bucket to use - Env: MINIO_BUCKET
+  secure: "${MINIO_SECURE}" # Set Boolean  - Env: MINIO_SECURE # If Using SSL
+
+# --- Presets (Profiles) ---
+presets:
+  basic:
+    agents:
+      - agent_example
+    services:
+      - postgres
+      - ollama
+  dev:
+    agents:
+      - agent_dev
+      - agent_example
+    services:
+      - postgres
+      - ollama
+      - a1111
+      - redis
+  creator:
+    agents:
+      - agent_creator
+    services:
+      - a1111
+      - comfyui
+      - minio
+
+# --- Third-Party Service API Keys ---
+# Store these securely using environment variables!
+api_keys:
+  openai: "${OPENAI_API_KEY}" # - Env: OPENAI_API_KEY
+  huggingface: "${HUGGINGFACE_API_KEY}" # - Env: HUGGINGFACE_API_KEY
+  google: "${GOOGLE_API_KEY}" # set google Key - Env: GOOGLE_API_KEY
+  stabilityai: "${STABILITYAI_API_KEY}" # set stability Ai Key- Env: STABILITYAI_API_KEY

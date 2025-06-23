@@ -24,6 +24,15 @@ agent_notes: "Workflow orchestration system - bridge from service coordination t
 
 # Workflow Orchestration
 
+## Agent Context
+**For AI Agents**: Complete workflow orchestration system covering current implementation and evolution to sophisticated workflow management. Use this when implementing workflow systems, understanding orchestration patterns, planning workflow automation, or building complex workflow coordination. Essential foundation for all workflow orchestration work.
+
+**Implementation Notes**: Contains workflow orchestration patterns, automation systems, workflow coordination mechanisms, and evolution to distributed workflow management. Includes working workflow patterns and orchestration systems.
+**Quality Requirements**: Keep workflow orchestration patterns and automation systems synchronized with actual implementation. Maintain accuracy of workflow coordination and orchestration mechanisms.
+**Integration Points**: Foundation for workflow automation, links to service orchestration, agent coordination, and future distributed workflow systems for comprehensive workflow management.
+
+---
+
 > **Agent Context**: Comprehensive workflow orchestration from service coordination to multi-agent workflows  
 > **Implementation**: 🔄 Partial - Service coordination working, multi-agent orchestration planned  
 > **Use When**: Managing workflows, coordinating tasks, implementing orchestration patterns

@@ -24,9 +24,14 @@ agent_notes: "Foundational architecture document - critical for understanding sy
 
 # Core System Design & Architecture
 
-> **Agent Context**: Complete architectural blueprint bridging current Kai-CD with future kOS  
-> **Implementation**: 🔄 Evolution framework - current system + future vision  
-> **Decision Impact**: Major - defines entire system architecture and evolution path
+## Agent Context
+**For AI Agents**: Complete architectural blueprint and foundational design document bridging current Kai-CD implementation with future kOS vision. Use this when understanding system architecture, planning evolution strategies, or implementing foundational components. Critical reference for all architectural decisions and system design work.
+
+**Implementation Notes**: Contains complete architectural layers, component interactions, and evolution pathway from Chrome extension to distributed platform. Includes working code examples and architectural patterns.
+**Quality Requirements**: Maintain technical accuracy of all architectural concepts and evolution pathways. Keep implementation details synchronized with actual system structure.
+**Integration Points**: Foundation for all system architecture, links to state management, service architecture, and future distributed systems design.
+
+---
 
 ## Executive Summary
 

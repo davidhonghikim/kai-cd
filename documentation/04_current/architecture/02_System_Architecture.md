@@ -23,9 +23,14 @@ agent_notes: "Core architecture of working Kai-CD system - understand this befor
 
 # Kai-CD System Architecture
 
-> **Agent Context**: Complete architectural overview of the working Kai-CD system  
-> **Implementation**: ✅ Complete - Production Chrome extension with 20+ service integrations  
-> **Use When**: Understanding the system, making architectural decisions, or planning major changes
+## Agent Context
+**For AI Agents**: Complete architectural overview of the working Kai-CD Chrome extension system. Use this when understanding the overall system structure, making architectural decisions, planning integrations, or implementing major changes. Essential reference for understanding how all components work together.
+
+**Implementation Notes**: Contains production Chrome extension architecture with multi-view system, service connector pattern, state management, and security layers. All diagrams and code examples reflect actual working implementation.
+**Quality Requirements**: Keep architectural descriptions synchronized with actual implementation. Maintain accuracy of data flows, component relationships, and service integration patterns.
+**Integration Points**: Foundation for understanding entire system, links to state management, service architecture, component system, and security implementation.
+
+---
 
 ## Quick Summary
 

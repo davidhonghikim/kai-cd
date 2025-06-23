@@ -1,0 +1,45 @@
+# --- Media Generation ---
+
+# ---- Stable Diffusion WebUI (AUTOMATIC1111) ----
+a1111:
+  enabled: "${A1111_ENABLED}"  # 1/0 or true/false - Env: A1111_ENABLED
+  host: "${A1111_HOST}"  # - Env: A1111_HOST
+  port: "${A1111_PORT}"  # - Env: A1111_PORT
+  api_url: "${A1111_API_URL}"  # - Env: A1111_API_URL
+  auth_enabled: "${A1111_AUTH_ENABLED}"  # 1/0 - Env: A1111_AUTH_ENABLED
+  username: "${A1111_USERNAME}" # - Env: A1111_USERNAME
+  password: "${A1111_PASSWORD}"  # - Env: A1111_PASSWORD
+  sampler: "${A1111_SAMPLER}" #  - Env: A1111_SAMPLER, use different methods to set what's active
+  lora:  "${A1111_LORA}" #To set a lora setting - Env: A1111_LORA
+  vae: "${A1111_VAE}"  # what encoder to use - Env: A1111_VAE
+  sd_model: "${A1111_SD_MODEL}"# Base Model to set  - Env: A1111_SD_MODEL
+  clip_skip: "${A1111_CLIP_SKIP}" # Set Clip Skip - Env: A1111_CLIP_SKIP
+
+# ---- ComfyUI ----
+comfyui:
+  enabled: "${COMFYUI_ENABLED}"  # 1/0 or true/false - Env: COMFUI_ENABLED
+  host: "${COMFYUI_HOST}"  # - Env: COMFYUI_HOST
+  port: "${COMFYUI_PORT}"  # - Env: COMFYUI_PORT
+  api_url: "${COMFYUI_API_URL}"  # - Env: COMFYUI_API_URL
+  workflows_path: "${COMFYUI_WORKFLOWS_PATH}"  # Path to workflows  - Env: COMFYUI_WORKFLOWS_PATH
+  auth_enabled: "${COMFYUI_AUTH_ENABLED}"  # - Env: COMFUI_AUTH_ENABLED
+  username: "${COMFYUI_USERNAME}" # - Env: COMFYUI_USERNAME
+  password: "${COMFYUI_PASSWORD}"  # - Env: COMFUI_PASSWORD
+  cuda_device: "${COMFYUI_CUDA_DEVICE}"  # CUDA device ID - Env: COMFYUI_CUDA_DEVICE
+
+# ---- Dalle 3 ----
+dalle3:
+  enabled: "${DALLE3_ENABLED}" #To enable  - Env: DALLE3_ENABLED
+  quality: "${DALLE3_QUALITY}"  #set Quality - Env: DALLE3_QUALITY standard OR hd
+
+# -----RunwayML Gen-2 -----
+runwayml:
+  enabled: "${RUNWAYML_ENABLED}"  # to track the service - Env: RUNWAYML_ENABLED
+  api_key: "${RUNWAYML_API_KEY}" #API enable - Env: RUNWAYML_API_KEY
+  model: "${RUNWAYML_MODEL}" #set base - Env: RUNWAYML_MODEL
+
+#----- Pika Labs ---------
+pika_labs:
+  enabled: "${PIKA_LABS_ENABLED}" #To setup and be active- Env: PIKA_LABS_ENABLED
+  api_key: "${PIKA_LABS_API_KEY}"  #secure the Key - Env: PIKA_LABS_API_KEY
+  server: "${PIKA_LABS_SERVER}"  #Set up a base- Env: PIKA_LABS_SERVER
